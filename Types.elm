@@ -3,13 +3,14 @@ module Types exposing (..)
 import Graph
 import OpenSolid.Geometry.Types exposing (..)
 import Color exposing (Color)
+import Time exposing (Time)
 
 
 
 -- ALIASES
 
 type alias Graph =
-    Graph.Graph Element Transformation
+    Graph.Graph Element (Animated Transformation)
 
 
 type alias Node =
@@ -17,7 +18,7 @@ type alias Node =
 
 
 type alias Edge =
-    Graph.Edge Transformation
+    Graph.Edge (Animated Transformation)
 
 
 type alias Id =
@@ -25,7 +26,7 @@ type alias Id =
 
 
 type alias NodeContext =
-    Graph.NodeContext Element Transformation
+    Graph.NodeContext Element (Animated Transformation)
 
 
 -- GRAPH LABELS
@@ -51,10 +52,17 @@ type alias Transformation =
     }
 
 
+type alias Animated a =
+    { data : a
+    , animate : Time -> a -> a
+    }
+
+
 -- MODEL
 
 type alias Model =
-    { graph : Graph
+    { time : Time
+    , graph : Graph
     , rootId : Id
     }
 
@@ -65,6 +73,7 @@ type Msg
     -- STAGE VIEW
     = ZoomIn
     | ZoomOut
+    | TimeUpdate Time
     | NoOp
 
 

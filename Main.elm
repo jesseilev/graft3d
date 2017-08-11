@@ -1,20 +1,23 @@
 module Main exposing (..)
 
 import Types
-    exposing (Model, Msg, Graph, Node, NodeContext, Id, Element, Transformation)
+    exposing (Model, Msg(..), Graph, Node, NodeContext, Id, Element, Transformation)
+import Time
 import Graph.Extra as GraphEx
 import Html exposing (Html)
 import Color exposing (rgb)
 import Graph
 import IntDict
 import Maybe.Extra as MaybeEx
+import AnimationFrame as Ani
+import Tuple3
 import OpenSolid.Geometry.Types as Geo exposing (Vector3d)
 import OpenSolid.Vector3d as Vec3
 import AFrame exposing (scene, entity)
 import AFrame.Primitives exposing (sphere, box, cylinder, plane, sky)
 import AFrame.Primitives.Camera exposing (camera)
 import AFrame.Primitives.Light as Light exposing (light)
-import AFrame.Primitives.Attributes
+import AFrame.Primitives.Attributes as Attr
     exposing
         ( rotation
         , position
@@ -31,7 +34,8 @@ import AFrame.Primitives.Attributes
 
 model : Model
 model =
-    { rootId = 0
+    { time = 0
+    , rootId = 0
     , graph =
         Graph.fromNodesAndEdges
             [ Graph.Node 0
@@ -39,37 +43,95 @@ model =
                 , opacity = 0.75
                 }
             , Graph.Node 1
-                { color = Color.rgb 80 100 200
-                , opacity = 0.75
+                { color = Color.rgb 0 150 100
+                , opacity = 0.5
+                }
+            , Graph.Node 2
+                { color = Color.rgb 250 200 0
+                , opacity = 0.8
                 }
             ]
             [ Graph.Edge 0 1
-                { translation = Geo.Vector3d (-0.5, -0.1, 0.25)
-                , scale = 0.8
-                , rotation = vector3dZero
+                { data =
+                    { translation = Geo.Vector3d (0, 1, 0)
+                    , scale = 0.8
+                    , rotation = Geo.Vector3d (0, 0, 0)
+                    }
+                , animate =
+                    ( \time trans ->
+                        let
+                            newRotationComps =
+                                Tuple3.mapFirst ((+) (time / 100))
+                                    (Vec3.components trans.rotation)
+                        in
+                            { trans | rotation = Geo.Vector3d newRotationComps }
+                    )
                 }
             , Graph.Edge 1 0
-                { translation = Geo.Vector3d (0.25, -0.25, -0.5)
-                , scale = 0.6
-                , rotation = vector3dZero
+                { data =
+                    { translation = Geo.Vector3d (0, 0.75, 0)
+                    , scale = 0.4
+                    , rotation = Geo.Vector3d (0, 0, 0)
+                    }
+                , animate =
+                    ( \time trans ->
+                        let
+                            newTranslationComps =
+                                Tuple3.mapSecond (\z -> (time / 20) %% 100 / 50)
+                                    (Vec3.components trans.rotation)
+
+                            newRotationComps =
+                                Tuple3.mapSecond ((+) (time / 10))
+                                    (Vec3.components trans.rotation)
+                        in
+                            { trans
+                                |
+                                -- translation = Geo.Vector3d newTranslationComps
+                                -- ,
+                                rotation = Geo.Vector3d newRotationComps
+                            }
+                    )
                 }
-            , Graph.Edge 1 1
-                { translation = Geo.Vector3d (0, 1, 0)
-                , scale = 0.6
-                , rotation = Geo.Vector3d (0, 0, 30)
+            , Graph.Edge 2 0
+                { data =
+                    { translation = Geo.Vector3d (1, 0, 0)
+                    , scale = 0.6
+                    , rotation = Geo.Vector3d (0, 30, 0)
+                    }
+                , animate =
+                    (\_ -> identity)
+                }
+            , Graph.Edge 1 2
+                { data =
+                    { translation = Geo.Vector3d (0.5, 0.5, 0)
+                    , scale = 0.6
+                    , rotation = Geo.Vector3d (0, 0, 0)
+                    }
+                , animate =
+                    (\_ -> identity)
                 }
             ]
     }
 
 
+(%%) : Float -> Float -> Float
+(%%) small big =
+    round small % round big |> toFloat
+
+
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
-    model ! []
+    case msg of
+        TimeUpdate diff ->
+            { model | time = model.time + diff } ! []
+                -- |> Debug.log "model"
+
+        _ ->
+            model ! []
 
 
 subscriptions model =
-    Sub.none
-
+    Ani.diffs TimeUpdate
 
 
 view : Model -> Html msg
@@ -85,7 +147,7 @@ view model =
             ( listContainingRootElementView
                 -- ++ [ camera [ position 0 10 0] [] ]
                 ++
-                [ sky [ color (Color.rgb 60 0 40)] []
+                [ sky [ color (Color.rgb 120 90 150)] []
                 , light [ Light.type_ Light.Directional ] []
                 ]
             )
@@ -103,6 +165,7 @@ viewElement model ancestors nodeCtx =
                     (\parentId ->
                         GraphEx.getEdge parentId nodeCtx.node.id model.graph
                             |> Maybe.map .label
+                            |> Maybe.map (\at -> at.animate model.time at.data)
                     )
                 |> Maybe.withDefault { emptyTransformation | scale = 1 }
 
@@ -113,17 +176,17 @@ viewElement model ancestors nodeCtx =
                 |> MaybeEx.values
 
         viewChild =
-            if List.length ancestors < 7 then
+            if List.length ancestors < 8 then
                 viewElement model (nodeCtx.node.id :: ancestors)
             else
                 \_ -> box [ width 0, height 0 ] []
 
-        lamp =
+        lamp yTranslation =
             light
-                [ position 0 0 0
+                [ position 0 yTranslation 0
                 , Light.type_ Light.Point
-                , color Color.purple
-                , Light.intensity 0.1
+                , color element.color
+                , Light.intensity 0.3
                 ]
                 []
     in
@@ -133,11 +196,14 @@ viewElement model ancestors nodeCtx =
             , uncurry3 rotation (Vec3.components t.rotation)
             , color element.color
             , opacity element.opacity
+            , Attr.metalness 1
+            , Attr.roughness 1
+            , Attr.shader "flat"
             , height 0.01
             ]
             (
-                lamp ::
-                (List.map viewChild children)
+                List.map viewChild children
+                    -- ++ [ lamp 0.5, lamp -0.5 ]
             )
 
 
