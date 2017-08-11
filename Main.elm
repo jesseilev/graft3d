@@ -11,6 +11,7 @@ import IntDict
 import Maybe.Extra as MaybeEx
 import AnimationFrame as Ani
 import Tuple3
+import Ease
 import OpenSolid.Geometry.Types as Geo exposing (Vector3d)
 import OpenSolid.Vector3d as Vec3
 import AFrame exposing (scene, entity)
@@ -53,15 +54,30 @@ model =
             ]
             [ Graph.Edge 0 1
                 { data =
-                    { translation = Geo.Vector3d (0, 1, 0)
+                    { translation = Geo.Vector3d (0, 0.5, 0)
                     , scale = 0.8
                     , rotation = Geo.Vector3d (0, 0, 0)
                     }
                 , animate =
                     ( \time trans ->
                         let
+                            period =
+                                12000
+
+                            t =
+                                round time % period
+
+                            pct =
+                                toFloat  t / toFloat period
+
+                            eTime =
+                                Ease.inOutCubic pct
+
+                            angle =
+                                eTime * 360
+
                             newRotationComps =
-                                Tuple3.mapFirst ((+) (time / 100))
+                                Tuple3.mapThird ((+) angle)
                                     (Vec3.components trans.rotation)
                         in
                             { trans | rotation = Geo.Vector3d newRotationComps }
@@ -69,32 +85,40 @@ model =
                 }
             , Graph.Edge 1 0
                 { data =
-                    { translation = Geo.Vector3d (0, 0.75, 0)
+                    { translation = Geo.Vector3d (-3, 1.5, 0)
                     , scale = 0.4
                     , rotation = Geo.Vector3d (0, 0, 0)
                     }
                 , animate =
                     ( \time trans ->
                         let
-                            newTranslationComps =
-                                Tuple3.mapSecond (\z -> (time / 20) %% 100 / 50)
-                                    (Vec3.components trans.rotation)
+                            period =
+                                8000
+
+                            t =
+                                round time % period
+
+                            pct =
+                                toFloat  t / toFloat period
+
+                            eTime =
+                                Ease.inOutExpo pct
+
+                            angle =
+                                eTime * 360
 
                             newRotationComps =
-                                Tuple3.mapSecond ((+) (time / 10))
+                                Tuple3.mapFirst ((+) (angle))
                                     (Vec3.components trans.rotation)
                         in
                             { trans
-                                |
-                                -- translation = Geo.Vector3d newTranslationComps
-                                -- ,
-                                rotation = Geo.Vector3d newRotationComps
+                                | rotation = Geo.Vector3d newRotationComps
                             }
                     )
                 }
             , Graph.Edge 2 0
                 { data =
-                    { translation = Geo.Vector3d (1, 0, 0)
+                    { translation = Geo.Vector3d (3, 2, -1)
                     , scale = 0.6
                     , rotation = Geo.Vector3d (0, 30, 0)
                     }
@@ -103,12 +127,36 @@ model =
                 }
             , Graph.Edge 1 2
                 { data =
-                    { translation = Geo.Vector3d (0.5, 0.5, 0)
+                    { translation = Geo.Vector3d (0.5, 1.5, 2)
                     , scale = 0.6
                     , rotation = Geo.Vector3d (0, 0, 0)
                     }
                 , animate =
-                    (\_ -> identity)
+                    (\time trans ->
+                        let
+                            period =
+                                16000
+
+                            t =
+                                round time % period
+
+                            pct =
+                                toFloat  t / toFloat period
+
+                            eTime =
+                                Ease.inOutExpo pct
+
+                            angle =
+                                eTime * 360
+
+                            newRotationComps =
+                                Tuple3.mapSecond (flip (-) (angle))
+                                    (Vec3.components trans.rotation)
+                        in
+                            { trans
+                                | rotation = Geo.Vector3d newRotationComps
+                            }
+                    )
                 }
             ]
     }
@@ -190,7 +238,7 @@ viewElement model ancestors nodeCtx =
                 ]
                 []
     in
-        cylinder
+        AFrame.Primitives.sphere
             [ uncurry3 position (Vec3.components t.translation)
             , scale t.scale t.scale t.scale
             , uncurry3 rotation (Vec3.components t.rotation)
