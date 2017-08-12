@@ -85,15 +85,15 @@ model =
                 }
             , Graph.Edge 1 0
                 { data =
-                    { translation = Geo.Vector3d (-3, 1.5, 0)
-                    , scale = 0.4
+                    { translation = Geo.Vector3d (-3, 6.5, 0)
+                    , scale = 1.4
                     , rotation = Geo.Vector3d (0, 0, 0)
                     }
                 , animate =
                     ( \time trans ->
                         let
                             period =
-                                8000
+                                36000
 
                             t =
                                 round time % period
@@ -118,8 +118,8 @@ model =
                 }
             , Graph.Edge 2 0
                 { data =
-                    { translation = Geo.Vector3d (3, 2, -1)
-                    , scale = 0.6
+                    { translation = Geo.Vector3d (13, 2, -10)
+                    , scale = 3.6
                     , rotation = Geo.Vector3d (0, 30, 0)
                     }
                 , animate =
@@ -128,7 +128,7 @@ model =
             , Graph.Edge 1 2
                 { data =
                     { translation = Geo.Vector3d (0.5, 1.5, 2)
-                    , scale = 0.6
+                    , scale = 1.6
                     , rotation = Geo.Vector3d (0, 0, 0)
                     }
                 , animate =
@@ -188,6 +188,7 @@ view model =
         listContainingRootElementView =
             Graph.get model.rootId model.graph
                 |> Maybe.map (viewElement model [])
+                |> Maybe.map (\e -> sphere [ scale 0.005 0.005 0.005 ] [ e ])
                 |> MaybeEx.toList
     in
         scene
