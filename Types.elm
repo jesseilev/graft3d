@@ -4,10 +4,12 @@ import Graph
 import OpenSolid.Geometry.Types exposing (..)
 import Color exposing (Color)
 import Time exposing (Time)
+import AFrame.Primitives exposing (sphere, box, cylinder, plane, sky)
 
 
 
 -- ALIASES
+
 
 type alias Graph =
     Graph.Graph Element (Animated Transformation)
@@ -31,23 +33,23 @@ type alias NodeContext =
 
 -- GRAPH LABELS
 
+
 type alias Element =
-    { color : Color
+    { shape : Shape
+    , color : Color
     , opacity : Float
     }
 
 
 type Shape
-    = Circle
-    | Square
-    | Triangle
-    | HalfWedge
-    | QuarterWedge
+    = Box
+    | Sphere
+    | Cylinder
 
 
 type alias Transformation =
     { translation : Vector3d
-    , scale : Float
+    , scale : Vector3d
     , rotation : Vector3d
     }
 
@@ -55,7 +57,11 @@ type alias Transformation =
 type alias Animated a =
     { data : a
     , animate : Time -> a -> a
+    , isAnimating : Bool
     }
+
+
+
 
 
 -- MODEL
@@ -74,17 +80,10 @@ type Msg
     = ZoomIn
     | ZoomOut
     | TimeUpdate Time
+    | Click Id
     | NoOp
 
 
--- UTILS
-
-shapeFromString : String -> Result String Shape
-shapeFromString s =
-    case s of
-        "Circle" -> Ok Circle
-        "Triangle" -> Ok Triangle
-        "Square" -> Ok Square
-        "HalfWedge" -> Ok HalfWedge
-        "QuarterWedge" -> Ok QuarterWedge
-        _ -> Err ("'" ++ s ++ "' is not a valid Shape type")
+(%%) : Float -> Float -> Float
+(%%) small big =
+    round small % round big |> toFloat

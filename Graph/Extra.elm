@@ -12,6 +12,11 @@ getEdge from to =
     Graph.edges >> ListEx.find (edgeEqualsFromTo from to)
 
 
+getEdgesTo : Graph.NodeId -> Graph n e -> List (Graph.Edge e)
+getEdgesTo id =
+    Graph.edges >> List.filter (.to >> ((==) id))
+
+
 getNode nodeId =
     Graph.get nodeId >> Maybe.map .node
 

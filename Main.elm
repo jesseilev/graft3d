@@ -2,9 +2,11 @@ module Main exposing (..)
 
 import Types
     exposing (Model, Msg(..), Graph, Node, NodeContext, Id, Element, Transformation)
+import Worlds
 import Time
 import Graph.Extra as GraphEx
 import Html exposing (Html)
+import Html.Events as Events
 import Color exposing (rgb)
 import Graph
 import IntDict
@@ -18,6 +20,7 @@ import AFrame exposing (scene, entity)
 import AFrame.Primitives exposing (sphere, box, cylinder, plane, sky)
 import AFrame.Primitives.Camera exposing (camera)
 import AFrame.Primitives.Light as Light exposing (light)
+import AFrame.Primitives.Cursor as Cursor exposing (..)
 import AFrame.Primitives.Attributes as Attr
     exposing
         ( rotation
@@ -38,133 +41,8 @@ model =
     { time = 0
     , rootId = 0
     , graph =
-        Graph.fromNodesAndEdges
-            [ Graph.Node 0
-                { color = Color.rgb 180 0 90
-                , opacity = 0.75
-                }
-            , Graph.Node 1
-                { color = Color.rgb 0 150 100
-                , opacity = 0.5
-                }
-            , Graph.Node 2
-                { color = Color.rgb 250 200 0
-                , opacity = 0.8
-                }
-            ]
-            [ Graph.Edge 0 1
-                { data =
-                    { translation = Geo.Vector3d (0, 0.5, 0)
-                    , scale = 0.8
-                    , rotation = Geo.Vector3d (0, 0, 0)
-                    }
-                , animate =
-                    ( \time trans ->
-                        let
-                            period =
-                                12000
-
-                            t =
-                                round time % period
-
-                            pct =
-                                toFloat  t / toFloat period
-
-                            eTime =
-                                Ease.inOutCubic pct
-
-                            angle =
-                                eTime * 360
-
-                            newRotationComps =
-                                Tuple3.mapThird ((+) angle)
-                                    (Vec3.components trans.rotation)
-                        in
-                            { trans | rotation = Geo.Vector3d newRotationComps }
-                    )
-                }
-            , Graph.Edge 1 0
-                { data =
-                    { translation = Geo.Vector3d (-3, 6.5, 0)
-                    , scale = 1.4
-                    , rotation = Geo.Vector3d (0, 0, 0)
-                    }
-                , animate =
-                    ( \time trans ->
-                        let
-                            period =
-                                36000
-
-                            t =
-                                round time % period
-
-                            pct =
-                                toFloat  t / toFloat period
-
-                            eTime =
-                                Ease.inOutExpo pct
-
-                            angle =
-                                eTime * 360
-
-                            newRotationComps =
-                                Tuple3.mapFirst ((+) (angle))
-                                    (Vec3.components trans.rotation)
-                        in
-                            { trans
-                                | rotation = Geo.Vector3d newRotationComps
-                            }
-                    )
-                }
-            , Graph.Edge 2 0
-                { data =
-                    { translation = Geo.Vector3d (13, 2, -10)
-                    , scale = 3.6
-                    , rotation = Geo.Vector3d (0, 30, 0)
-                    }
-                , animate =
-                    (\_ -> identity)
-                }
-            , Graph.Edge 1 2
-                { data =
-                    { translation = Geo.Vector3d (0.5, 1.5, 2)
-                    , scale = 1.6
-                    , rotation = Geo.Vector3d (0, 0, 0)
-                    }
-                , animate =
-                    (\time trans ->
-                        let
-                            period =
-                                16000
-
-                            t =
-                                round time % period
-
-                            pct =
-                                toFloat  t / toFloat period
-
-                            eTime =
-                                Ease.inOutExpo pct
-
-                            angle =
-                                eTime * 360
-
-                            newRotationComps =
-                                Tuple3.mapSecond (flip (-) (angle))
-                                    (Vec3.components trans.rotation)
-                        in
-                            { trans
-                                | rotation = Geo.Vector3d newRotationComps
-                            }
-                    )
-                }
-            ]
+        Worlds.graph0
     }
-
-
-(%%) : Float -> Float -> Float
-(%%) small big =
-    round small % round big |> toFloat
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -174,35 +52,61 @@ update msg model =
             { model | time = model.time + diff } ! []
                 -- |> Debug.log "model"
 
+        Click id ->
+            { model | graph = toggleAnimation id model.graph } ! []
+                |> Debug.log ("Click" ++ toString id)
+
         _ ->
             model ! []
+
+
+toggleAnimation : Id -> Graph -> Graph
+toggleAnimation id graph =
+    case List.head (GraphEx.getEdgesTo id graph) of
+        Nothing ->
+            graph
+
+        Just edge ->
+            let
+                updater e =
+                    let oldLabel = e.label in
+                    { e | label =
+                        { oldLabel | isAnimating = not e.label.isAnimating }
+                    }
+            in
+                GraphEx.updateEdge edge.from edge.to updater graph
+
 
 
 subscriptions model =
     Ani.diffs TimeUpdate
 
 
-view : Model -> Html msg
+view : Model -> Html Msg
 view model =
     let
-        listContainingRootElementView =
+        rootElementView =
             Graph.get model.rootId model.graph
                 |> Maybe.map (viewElement model [])
-                |> Maybe.map (\e -> sphere [ scale 0.005 0.005 0.005 ] [ e ])
-                |> MaybeEx.toList
+                |> Maybe.map (\e -> box [ scale 0.05 0.05 0.05 ] [ e ])
     in
         scene
             []
-            ( listContainingRootElementView
-                -- ++ [ camera [ position 0 10 0] [] ]
+            ( MaybeEx.toList rootElementView
                 ++
-                [ sky [ color (Color.rgb 120 90 150)] []
+                [ sky [ color (Color.rgb 200 150 220)] []
                 , light [ Light.type_ Light.Directional ] []
+                , camera
+                    [ ] --position 0 10 0]
+                    [ cursor
+                        [ Cursor.fuse True, Cursor.timeout 1 ]
+                        [ sphere [ radius 0.1 ] [] ]
+                    ]
                 ]
             )
 
 
-viewElement : Model -> List Id -> NodeContext -> Html msg
+viewElement : Model -> List Id -> NodeContext -> Html Msg
 viewElement model ancestors nodeCtx =
     let
         element =
@@ -214,9 +118,16 @@ viewElement model ancestors nodeCtx =
                     (\parentId ->
                         GraphEx.getEdge parentId nodeCtx.node.id model.graph
                             |> Maybe.map .label
-                            |> Maybe.map (\at -> at.animate model.time at.data)
+                            |> Maybe.map
+                                (\at ->
+                                    at.data |>
+                                        if at.isAnimating then
+                                            at.animate model.time
+                                        else
+                                            identity
+                                )
                     )
-                |> Maybe.withDefault { emptyTransformation | scale = 1 }
+                |> Maybe.withDefault emptyTransformation
 
         children : List NodeContext
         children =
@@ -239,16 +150,19 @@ viewElement model ancestors nodeCtx =
                 ]
                 []
     in
-        AFrame.Primitives.sphere
+        box
             [ uncurry3 position (Vec3.components t.translation)
-            , scale t.scale t.scale t.scale
+            , uncurry3 scale (Vec3.components t.scale)
             , uncurry3 rotation (Vec3.components t.rotation)
             , color element.color
             , opacity element.opacity
             , Attr.metalness 1
             , Attr.roughness 1
             , Attr.shader "flat"
-            , height 0.01
+            , height 1
+            , width 1
+            , depth 1
+            , Events.onClick (Click nodeCtx.node.id)
             ]
             (
                 List.map viewChild children
@@ -259,47 +173,9 @@ viewElement model ancestors nodeCtx =
 
 emptyTransformation =
     { translation = vector3dZero
-    , scale = 1
+    , scale = Geo.Vector3d (1, 1, 1)
     , rotation = vector3dZero
     }
-
-            --
-            -- [ sphere
-            --     [ position 0 1 0
-            --     , radius 1.25
-            --     , color (Color.rgb 240 173 0)
-            --     , opacity 0.5
-            --     ]
-            --     [ box
-            --         [ position 0 0 0
-            --         , radius 0.5
-            --         , width 10
-            --         , height 0.5
-            --         , depth 1
-            --         , color (rgb 127 209 59)
-            --         ]
-            --         []
-            --     ]
-            -- , cylinder
-            --     [ position 1 0.75 -1
-            --     , radius 0.5
-            --     , height 1.5
-            --     , color (rgb 6 181 204)
-            --     ]
-            --     []
-            -- , plane
-            --     [ rotation -90 0 0
-            --     , width 4
-            --     , height 4
-            --     , color (rgb 90 99 120)
-            --     ]
-            --     []
-            -- , sky
-            --     []
-            --     []
-            -- ]
-            --
-            --
 
 
 main =
