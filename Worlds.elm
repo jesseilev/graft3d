@@ -36,56 +36,52 @@ graph0 =
         [ Graph.Edge 0 1
             { data =
                 { translation = Geo.Vector3d (0, 0.5, 0)
-                , scale = Geo.Vector3d (1.5, 0.5, 2)
+                , scale = Geo.Vector3d (0.5, 0.5, 0.5)
                 , rotation = Geo.Vector3d (0, 0, 0)
                 }
-            , isAnimating = False
+            , isAnimating = True
             , animate =
                 ( \time trans ->
                     let
                         percent =
-                            percentOfDuration 24000 Ease.inOutCubic time
+                            percentOfDuration 12000 Ease.inOutCubic time
 
-                        angle =
-                            percent * 360
-
-                        newRotationComps =
-                            Tuple3.mapThird ((+) angle)
-                                (Vec3.components trans.rotation)
+                        newScaleComps =
+                            Tuple3.mapFirst ((*) percent >> ((+) 1.5))
+                                (Vec3.components trans.scale)
                     in
-                        { trans | rotation = Geo.Vector3d newRotationComps }
+                        { trans | scale = Geo.Vector3d newScaleComps }
                 )
             }
         , Graph.Edge 1 0
             { data =
-                { translation = Geo.Vector3d (-3, 0.5, 0)
+                { translation = Geo.Vector3d (-3, -4.5, 0)
                 , scale = Geo.Vector3d (1.4, 3, 0.3)
                 , rotation = Geo.Vector3d (0, 0, 0)
                 }
-            , isAnimating = False
+            , isAnimating = True
             , animate =
                 ( \time trans ->
                     let
                         percent =
-                            percentOfDuration 36000 Ease.inOutExpo time
+                            percentOfDuration 1000 Ease.inOutExpo time
 
                         angle =
                             percent * 360
 
                         newScaleComps =
-                            Tuple3.mapSecond ((+) (percent * 4))
+                            Tuple3.mapSecond ((*) (percent * 1) >> ((+) 1))
                                 (Vec3.components trans.scale)
                     in
-                        -- { trans
-                        --     | scale = Geo.Vector3d newScaleComps
-                        -- }
-                        trans
+                        { trans
+                            | scale = Geo.Vector3d newScaleComps
+                        }
                 )
             }
         , Graph.Edge 2 0
             { data =
-                { translation = Geo.Vector3d (1, 2, -10)
-                , scale = Geo.Vector3d (3.6, 1, 2)
+                { translation = Geo.Vector3d (1, 5, 1)
+                , scale = Geo.Vector3d (0.6, 10, 2)
                 , rotation = Geo.Vector3d (0, 30, 0)
                 }
             , isAnimating =
@@ -95,7 +91,7 @@ graph0 =
             }
         , Graph.Edge 1 2
             { data =
-                { translation = Geo.Vector3d (0.5, 1.5, 2)
+                { translation = Geo.Vector3d (0.5, 3.5, 2)
                 , scale = Geo.Vector3d (1.6, 0.5, 1)
                 , rotation = Geo.Vector3d (0, 0, 0)
                 }

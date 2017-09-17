@@ -100,7 +100,7 @@ view model =
                     [ ] --position 0 10 0]
                     [ cursor
                         [ Cursor.fuse True, Cursor.timeout 1 ]
-                        [ sphere [ radius 0.1 ] [] ]
+                        [ sphere [ radius 0.01 ] [] ]
                     ]
                 ]
             )
@@ -136,7 +136,7 @@ viewElement model ancestors nodeCtx =
                 |> MaybeEx.values
 
         viewChild =
-            if List.length ancestors < 8 then
+            if List.length ancestors < 12 then
                 viewElement model (nodeCtx.node.id :: ancestors)
             else
                 \_ -> box [ width 0, height 0 ] []
