@@ -2,21 +2,23 @@ module Types exposing (..)
 
 import Graph
 import OpenSolid.Geometry.Types exposing (..)
+import OpenSolid.Vector3d as Vec3
 import Color exposing (Color)
 import Time exposing (Time)
 import AFrame.Primitives exposing (sphere, box, cylinder, plane, sky)
-
+import Monocle.Lens as Lens exposing (Lens)
+import Tuple3
 
 
 -- ALIASES
 
 
 type alias Graph =
-    Graph.Graph Element (Animated Transformation)
+    Graph.Graph Entity (Animated Transformation)
 
 
 type alias Node =
-    Graph.Node Element
+    Graph.Node Entity
 
 
 type alias Edge =
@@ -28,13 +30,13 @@ type alias Id =
 
 
 type alias NodeContext =
-    Graph.NodeContext Element (Animated Transformation)
+    Graph.NodeContext Entity (Animated Transformation)
 
 
 -- GRAPH LABELS
 
 
-type alias Element =
+type alias Entity =
     { shape : Shape
     , color : Color
     , opacity : Float
@@ -70,20 +72,175 @@ type alias Model =
     { time : Time
     , graph : Graph
     , rootId : Id
+    , selected : Maybe Selectable
     }
+
+
+type Selectable
+    = Node Id
+    | Edge Id Id
 
 
 -- MSG
 
 type Msg
-    -- STAGE VIEW
+    -- SCENE VIEW
     = ZoomIn
     | ZoomOut
     | TimeUpdate Time
     | Click Id
+    -- SIDEBAR
+    | Select (Selectable)
+    | ChangeColor Id String
+    | ChangeOpacity Id Float
+    | ChangeTransformation TransformAttribute XYorZ Id Id Float
     | NoOp
+
+
+type TransformAttribute
+    = Translation
+    | Scale
+    | Rotation
+
+
+type alias TransformUtils =
+    { edgeLens : Lens Edge Vector3d
+    , min : Float
+    , max : Float
+    , step : Float
+    }
+
+
+transformUtils : TransformAttribute -> TransformUtils
+transformUtils attribute =
+    case attribute of
+        Translation ->
+            TransformUtils edgeLensTranslation -10 10 0.1
+
+        Scale ->
+            TransformUtils edgeLensScale 0 4 0.02
+
+        Rotation ->
+            TransformUtils edgeLensRotation 0 360 1
+
+
+
+
+vec3Set_ tupleMap new_ =
+    Vector3d << tupleMap (\_ -> new_) << Vec3.components
+
+
+vec3SetX : Float -> Vector3d -> Vector3d
+vec3SetX =
+    vec3Set_ Tuple3.mapFirst
+
+
+vec3SetY : Float -> Vector3d -> Vector3d
+vec3SetY =
+    vec3Set_ Tuple3.mapSecond
+
+
+vec3SetZ : Float -> Vector3d -> Vector3d
+vec3SetZ =
+    vec3Set_ Tuple3.mapThird
+
+
+type XYorZ = X | Y | Z
+
+vec3Set : XYorZ -> (Float -> Vector3d -> Vector3d)
+vec3Set xyorz =
+    case xyorz of
+        X -> vec3SetX
+        Y -> vec3SetY
+        Z -> vec3SetZ
 
 
 (%%) : Float -> Float -> Float
 (%%) small big =
     round small % round big |> toFloat
+
+
+
+-- LENS
+
+-- LENS
+
+nodeLensEntity : Lens Node Entity
+nodeLensEntity =
+    Lens .label (\l n -> { n | label = l })
+
+
+elementLensColor : Lens Entity Color
+elementLensColor =
+    Lens .color (\c e -> { e | color = c })
+
+
+elementLensOpacity : Lens Entity Float
+elementLensOpacity =
+    Lens .opacity (\o e -> { e | opacity = o })
+
+
+elementLensShape : Lens Entity Shape
+elementLensShape =
+    Lens .shape (\s e -> { e | shape = s })
+
+
+nodeLensColor : Lens Node Color
+nodeLensColor =
+    Lens.compose nodeLensEntity elementLensColor
+
+
+nodeLensOpacity : Lens Node Float
+nodeLensOpacity =
+    Lens.compose nodeLensEntity elementLensOpacity
+
+
+nodeLensShape : Lens Node Shape
+nodeLensShape =
+    Lens.compose nodeLensEntity elementLensShape
+
+
+edgeLensAniTransformation : Lens Edge (Animated Transformation)
+edgeLensAniTransformation =
+    Lens .label (\at e -> { e | label = at })
+
+
+aniTransformationLensTransformation =
+    Lens .data (\d at -> { at | data = d })
+
+
+transformationLensScale : Lens Transformation Vector3d
+transformationLensScale =
+    Lens .scale (\s t -> { t | scale = s })
+
+
+transformationLensRotation : Lens Transformation Vector3d
+transformationLensRotation =
+    Lens .rotation (\r t -> { t | rotation = r })
+
+
+transformationLensTranslation : Lens Transformation Vector3d
+transformationLensTranslation =
+    Lens .translation (\tl tf -> { tf | translation = tl })
+
+
+edgeLensScale : Lens Edge Vector3d
+edgeLensScale =
+    Lens.compose edgeLensAniTransformation aniTransformationLensTransformation
+        |> flip Lens.compose transformationLensScale
+
+
+edgeLensRotation : Lens Edge Vector3d
+edgeLensRotation =
+    Lens.compose edgeLensAniTransformation aniTransformationLensTransformation
+        |> flip Lens.compose transformationLensRotation
+
+
+edgeLensTranslation =
+    Lens.compose edgeLensAniTransformation aniTransformationLensTransformation
+        |> flip Lens.compose transformationLensTranslation
+
+
+modelLensGraph : Lens Model Graph
+modelLensGraph =
+    Lens .graph (\g m -> { m | graph = g })

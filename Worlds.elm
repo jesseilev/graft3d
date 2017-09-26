@@ -32,11 +32,16 @@ graph0 =
             , color = Color.rgb 250 200 0
             , opacity = 0.8
             }
+        , Graph.Node 3
+            { shape = Box
+            , color = Color.rgb 80 200 100
+            , opacity = 0.9
+            }
         ]
         [ Graph.Edge 0 1
             { data =
-                { translation = Geo.Vector3d (0, 0.5, 0)
-                , scale = Geo.Vector3d (0.5, 0.5, 0.5)
+                { translation = Geo.Vector3d (2, -3.5, 2)
+                , scale = Geo.Vector3d (2.5, 2.5, 1.5)
                 , rotation = Geo.Vector3d (0, 0, 0)
                 }
             , isAnimating = True
@@ -53,10 +58,10 @@ graph0 =
                         { trans | scale = Geo.Vector3d newScaleComps }
                 )
             }
-        , Graph.Edge 1 0
+        , Graph.Edge 2 2
             { data =
-                { translation = Geo.Vector3d (-3, -4.5, 0)
-                , scale = Geo.Vector3d (1.4, 3, 0.3)
+                { translation = Geo.Vector3d (-3, -0.5, -4)
+                , scale = Geo.Vector3d (1.4, 3, 0.5)
                 , rotation = Geo.Vector3d (0, 0, 0)
                 }
             , isAnimating = True
@@ -80,8 +85,8 @@ graph0 =
             }
         , Graph.Edge 2 0
             { data =
-                { translation = Geo.Vector3d (1, 5, 1)
-                , scale = Geo.Vector3d (0.6, 10, 2)
+                { translation = Geo.Vector3d (1, -5, 1)
+                , scale = Geo.Vector3d (2.6, 1, 2)
                 , rotation = Geo.Vector3d (0, 30, 0)
                 }
             , isAnimating =
@@ -91,8 +96,8 @@ graph0 =
             }
         , Graph.Edge 1 2
             { data =
-                { translation = Geo.Vector3d (0.5, 3.5, 2)
-                , scale = Geo.Vector3d (1.6, 0.5, 1)
+                { translation = Geo.Vector3d (0.5, -3.5, 2)
+                , scale = Geo.Vector3d (0.1, 3.5, 1)
                 , rotation = Geo.Vector3d (0, 0, 0)
                 }
             , isAnimating =
@@ -115,6 +120,28 @@ graph0 =
                         }
                 )
             }
+            , Graph.Edge 2 3
+                { data =
+                    { translation = Geo.Vector3d (3, -2, 1)
+                    , scale = Geo.Vector3d (2.6, 4, 2)
+                    , rotation = Geo.Vector3d (0, 0, 0)
+                    }
+                , isAnimating =
+                    False
+                , animate =
+                    (\_ -> identity)
+                }
+            , Graph.Edge 3 1
+                { data =
+                    { translation = Geo.Vector3d (0, -3, 1)
+                    , scale = Geo.Vector3d (0.6, 0.5, 2)
+                    , rotation = Geo.Vector3d (0, 0, 0)
+                    }
+                , isAnimating =
+                    False
+                , animate =
+                    (\_ -> identity)
+                }
         ]
 
 
