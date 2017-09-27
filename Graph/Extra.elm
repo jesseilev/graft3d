@@ -6,7 +6,6 @@ import List.Extra as ListEx
 import Maybe.Extra as MaybeEx
 
 
-
 getEdge : Graph.NodeId -> Graph.NodeId -> Graph n e -> Maybe (Graph.Edge e)
 getEdge from to =
     Graph.edges >> ListEx.find (edgeEqualsFromTo from to)
@@ -22,12 +21,14 @@ getNode nodeId =
 
 
 neighborCount graph node =
-    let adjCount = IntDict.keys >> List.length in
-    Graph.get node.id graph
-        |> Maybe.map
-            (\{incoming, outgoing} -> adjCount incoming + adjCount outgoing)
-        |> Maybe.withDefault 0
-        |> Debug.log "neighborcount"
+    let
+        adjCount =
+            IntDict.keys >> List.length
+    in
+        Graph.get node.id graph
+            |> Maybe.map (\{ incoming, outgoing } -> adjCount incoming + adjCount outgoing)
+            |> Maybe.withDefault 0
+            |> Debug.log "neighborcount"
 
 
 edgeEqualsFromTo from to edge =
@@ -41,7 +42,13 @@ edgeEquals edge =
 
 updateNode id updater =
     updateNodes
-        <| List.map (\n -> if n.id == id then updater n else n)
+        <| List.map
+            (\n ->
+                if n.id == id then
+                    updater n
+                else
+                    n
+            )
 
 
 updateNodes updater graph =
@@ -50,12 +57,22 @@ updateNodes updater graph =
 
 updateEdge from to updater =
     updateEdges
-        <| List.map (\e -> if edgeEqualsFromTo from to e then updater e else e)
+        <| List.map
+            (\e ->
+                if edgeEqualsFromTo from to e then
+                    updater e
+                else
+                    e
+            )
 
 
 updateEdges : (List (Graph.Edge e) -> List (Graph.Edge e)) -> Graph n e -> Graph n e
 updateEdges updater graph =
     Graph.fromNodesAndEdges (Graph.nodes graph) (updater (Graph.edges graph))
+
+
+removeEdge from to =
+    updateEdges <| List.filter (\e -> e.from /= from || e.to /= to)
 
 
 insertEdge : Graph.Edge e -> Graph n e -> Graph n e
@@ -67,7 +84,23 @@ insertEdge newEdge graph =
                 |> Debug.log "edge already exists?"
 
         newEdges =
-            if alreadyExists then [] else [ newEdge ]
+            if alreadyExists then
+                []
+            else
+                [ newEdge ]
     in
         Graph.fromNodesAndEdges (Graph.nodes graph)
             (Graph.edges graph ++ newEdges)
+
+
+updateEdgeFrom newFrom edge =
+    removeEdge edge.from edge.to
+        >> insertEdge { edge | from = newFrom }
+
+
+insertNode node graph =
+    Graph.insert (isolatedNodeContext node) graph
+
+
+isolatedNodeContext node =
+    { node = node, incoming = IntDict.empty, outgoing = IntDict.empty }

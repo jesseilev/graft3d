@@ -19,6 +19,8 @@ type Style
     | NavLink
     | Badge
     | Hairline
+    | DeleteButton
+    | NewButton
 
 
 type Variation
@@ -46,6 +48,12 @@ styleSheet =
             [ Color.background Color.lightGrey
             , Border.right 1
             , Color.border Color.grey
+            , Shadow.box
+                { offset = ( 10, 0 )
+                , blur = 30
+                , size = -10
+                , color = Color.black
+                }
             ]
         , Style.style SelectorItem
             [ Color.background Color.lightGrey
@@ -58,15 +66,10 @@ styleSheet =
         , Style.style Badge
             [ Border.rounded 2
             , Shadow.simple
-              -- , Shadow.box
-              --     { offset = ( -2, -2 )
-              --     , size = -4
-              --     , blur = 10
-              --     , color = Color.black
-              --     }
-              -- , Border.all 1
-              -- , Color.border Color.black
-              -- , Shadow.textGlow Color.black 0.5
+            , Style.pseudo "active"
+                [ Color.background Color.lightCharcoal
+                , Shadow.box noShadow
+                ]
             ]
         , Style.style Header
             [ Font.size (scaled 2) ]
@@ -80,6 +83,24 @@ styleSheet =
             [ Font.alignRight ]
         , Style.style Hairline
             [ Color.border Color.black ]
+        , Style.style DeleteButton
+            [ Border.rounded 2
+            , Border.all 2
+            , Color.border <| Color.rgb 220 60 60
+            , Color.text <| Color.white
+            , Color.background <| Color.rgb 220 60 60
+            , Font.size (scaled -1)
+            ]
+        , Style.style NewButton
+            [ Border.rounded 2
+            , Shadow.simple
+            , Color.text Color.white
+            , Style.hover [ Color.background Color.darkGrey ]
+            , Style.pseudo "active"
+                [ Color.background Color.lightCharcoal
+                , Shadow.box noShadow
+                ]
+            ]
         ]
 
 
@@ -89,3 +110,7 @@ scaled =
 
 babyElectric =
     Color.rgb 180 220 255
+
+
+noShadow =
+    { offset = ( 0, 0 ), size = 0, blur = 0, color = Color.black }

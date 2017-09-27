@@ -8,6 +8,7 @@ import Time exposing (Time)
 import AFrame.Primitives exposing (sphere, box, cylinder, plane, sky)
 import Monocle.Lens as Lens exposing (Lens)
 import Tuple3
+import Element.Input as Input
 
 
 -- ALIASES
@@ -31,6 +32,7 @@ type alias Id =
 
 type alias NodeContext =
     Graph.NodeContext Entity (Animated Transformation)
+
 
 
 -- GRAPH LABELS
@@ -64,36 +66,42 @@ type alias Animated a =
 
 
 
-
-
 -- MODEL
+
 
 type alias Model =
     { time : Time
     , graph : Graph
     , rootId : Id
-    , selected : Maybe Selectable
+    , editing : Maybe Editable
+    , dropdownState : Input.SelectWith Id Msg
     }
 
 
-type Selectable
+type Editable
     = Node Id
     | Edge Id Id
 
 
+
 -- MSG
 
-type Msg
+
+type
+    Msg
     -- SCENE VIEW
     = ZoomIn
     | ZoomOut
     | TimeUpdate Time
     | Click Id
-    -- SIDEBAR
-    | Select (Selectable)
+      -- SIDEBAR
+    | Edit (Editable)
+    | Delete Editable
+    | NewNode
     | ChangeColor Id String
     | ChangeOpacity Id Float
     | ChangeTransformation TransformAttribute XYorZ Id Id Float
+    | EdgeFrom Id Id Id (Input.SelectMsg Id)
     | NoOp
 
 
@@ -124,8 +132,6 @@ transformUtils attribute =
             TransformUtils edgeLensRotation 0 360 1
 
 
-
-
 vec3Set_ tupleMap new_ =
     Vector3d << tupleMap (\_ -> new_) << Vec3.components
 
@@ -145,14 +151,23 @@ vec3SetZ =
     vec3Set_ Tuple3.mapThird
 
 
-type XYorZ = X | Y | Z
+type XYorZ
+    = X
+    | Y
+    | Z
+
 
 vec3Set : XYorZ -> (Float -> Vector3d -> Vector3d)
 vec3Set xyorz =
     case xyorz of
-        X -> vec3SetX
-        Y -> vec3SetY
-        Z -> vec3SetZ
+        X ->
+            vec3SetX
+
+        Y ->
+            vec3SetY
+
+        Z ->
+            vec3SetZ
 
 
 (%%) : Float -> Float -> Float
@@ -162,8 +177,8 @@ vec3Set xyorz =
 
 
 -- LENS
-
 -- LENS
+
 
 nodeLensEntity : Lens Node Entity
 nodeLensEntity =

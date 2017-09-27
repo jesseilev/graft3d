@@ -22,6 +22,7 @@ import OpenSolid.Vector3d as Vec3
 import Element as El
 import Element.Attributes as Attr
 import Element.Events as Events
+import Element.Input as Input
 import Style
 import Style.Color as Color
 import AFrame.Primitives.Attributes as AfAttr exposing (rotation, position, scale, radius, color, width, height, depth, opacity)
@@ -38,7 +39,8 @@ model =
     { time = 0
     , rootId = 0
     , graph = Worlds.graph0
-    , selected = Just (Edge 0 1)
+    , editing = Just (Edge 0 1)
+    , dropdownState = Input.autocomplete Nothing (EdgeFrom 0 0 0)
     }
 
 
@@ -54,8 +56,41 @@ update msg model =
                 ! []
                 |> Debug.log ("Click" ++ toString id)
 
-        Select selected ->
-            { model | selected = Just selected } ! []
+        Edit editing ->
+            { model | editing = Just editing } ! []
+
+        Delete item ->
+            let
+                graphUpdater =
+                    case item of
+                        Node id ->
+                            Graph.remove id
+
+                        Edge from to ->
+                            identity
+
+                --GraphEx.removeEdge from to
+            in
+                { model | graph = graphUpdater model.graph } ! []
+
+        NewNode ->
+            let
+                entity =
+                    { color = Color.charcoal, opacity = 0.5, shape = Box }
+
+                nextId =
+                    Graph.nodeIdRange model.graph
+                        |> Maybe.map (Tuple.second >> ((+) 1))
+                        |> Maybe.withDefault 0
+
+                node =
+                    { id = nextId, label = entity }
+            in
+                { model
+                    | graph = GraphEx.insertNode node model.graph
+                    , editing = Just (Node nextId)
+                }
+                    ! []
 
         ChangeColor nodeId hex ->
             let
@@ -85,6 +120,18 @@ update msg model =
                     Lens.modify lens modifier
             in
                 { model | graph = GraphEx.updateEdge from to edgeUpdater model.graph } ! []
+
+        EdgeFrom from to newFrom dropdownMsg ->
+            let
+                newDropdownState =
+                    Input.updateSelection dropdownMsg model.dropdownState
+
+                newGraph =
+                    GraphEx.getEdge from to model.graph
+                        |> Maybe.map (\e -> GraphEx.updateEdgeFrom newFrom e model.graph)
+                        |> Maybe.withDefault model.graph
+            in
+                { model | dropdownState = newDropdownState, graph = newGraph } ! []
 
         _ ->
             model ! []
@@ -172,7 +219,7 @@ viewDetailSidebar model =
                 ]
                 [ El.whenJust (getGraphData model.graph) viewDetail ]
     in
-        case model.selected of
+        case model.editing of
             Nothing ->
                 El.empty
 
@@ -216,7 +263,7 @@ viewNodeDetail model node =
                     []
     in
         El.column None
-            [ Attr.spacing 10 ]
+            [ Attr.spacing 20 ]
             [ El.column None
                 []
                 [ El.row None [] [ El.text "Color: " ]
@@ -227,6 +274,12 @@ viewNodeDetail model node =
                 [ El.row None [] [ El.text "Opacity: " ]
                 , opacitySlider
                 ]
+            , El.button DeleteButton
+                [ Attr.height <| Attr.px 50
+                , Attr.width <| Attr.px 100
+                , Events.onClick <| Delete (Node node.id)
+                ]
+                (El.text "Delete")
             ]
 
 
@@ -242,12 +295,33 @@ viewEdgeDetail model edge =
                 [ El.text label
                 , viewTransformationSliders model edge transformAttribute
                 ]
+
+        dropdown labelStr selectdVal msgConstructor =
+            Input.select None
+                []
+                { max = 100
+                , label = Input.labelLeft (El.text labelStr)
+                , with =
+                    Input.dropMenu (Just 0) (EdgeFrom 0 0 0)
+                , menu =
+                    Input.menu None
+                        []
+                        [ Input.choice 32 (El.text "Goo")
+                        , Input.choice 12 (El.text "blah")
+                        ]
+                    --(List.map (Input.choice None << El.text << toString)
+                    --    (Graph.nodeIds model.graph)
+                    --)
+                , options = []
+                }
     in
         El.column None
             [ Attr.spacing 20 ]
             [ El.header Header
                 []
                 (El.text <| toString edge.from ++ " ----> " ++ toString edge.to)
+            , dropdown "Every" edge.from (\_ -> NoOp)
+            , dropdown "generates a" edge.to (\_ -> NoOp)
             , El.hairline Hairline
             , sliderTriplet "Move along axis: " Translation
             , sliderTriplet "Resize along axis: " Scale
@@ -314,15 +388,30 @@ viewSelectionSidebar model =
 
 
 viewBadgeSelectors model getItems viewItems =
-    El.column None
-        [ Attr.padding 0, Attr.spacing 0 ]
-        (List.map (viewItems model) (getItems model.graph))
+    let
+        selectors =
+            List.map (viewItems model) (getItems model.graph)
+
+        button =
+            El.el None
+                [ Attr.padding 10 ]
+                (El.button NewButton
+                    [ Events.onClick NewNode
+                    , Attr.width <| Attr.px 40
+                    , Attr.height <| Attr.px 40
+                    ]
+                    (El.text "+")
+                )
+    in
+        El.column None
+            [ Attr.padding 0, Attr.spacing 0 ]
+            (selectors ++ [ button ])
 
 
 viewNodeSelector model node =
     El.el SelectorItem
-        [ Events.onClick <| Select (Node node.id)
-        , Attr.vary Selected <| model.selected == Just (Node node.id)
+        [ Events.onClick <| Edit (Node node.id)
+        , Attr.vary Selected <| model.editing == Just (Node node.id)
         , Attr.padding 10
         ]
         (viewNodeBadge model node 40 [])
@@ -354,8 +443,8 @@ viewEdgeSelector : Model -> Types.Edge -> Element Variation
 viewEdgeSelector model edge =
     El.row SelectorItem
         [ Attr.padding 10
-        , Events.onClick <| Select (Edge edge.from edge.to)
-        , Attr.vary Selected <| model.selected == Just (Edge edge.from edge.to)
+        , Events.onClick <| Edit (Edge edge.from edge.to)
+        , Attr.vary Selected <| model.editing == Just (Edge edge.from edge.to)
         ]
         [ viewEdgeBadge model edge ]
 
