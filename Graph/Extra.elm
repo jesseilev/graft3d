@@ -98,6 +98,11 @@ updateEdgeFrom newFrom edge =
         >> insertEdge { edge | from = newFrom }
 
 
+updateEdgeTo newTo edge =
+    removeEdge edge.from edge.to
+        >> insertEdge { edge | to = newTo }
+
+
 insertNode node graph =
     Graph.insert (isolatedNodeContext node) graph
 

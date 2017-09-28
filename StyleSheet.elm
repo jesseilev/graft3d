@@ -43,10 +43,11 @@ styleSheet =
               --weight "lighter"
             , Color.text Color.lightCharcoal
             , Style.cursor "default"
+            , Style.focus []
             ]
         , Style.style Sidebar
             [ Color.background Color.lightGrey
-            , Border.right 1
+            , Border.right 0.5
             , Color.border Color.grey
             , Shadow.box
                 { offset = ( 10, 0 )
@@ -85,19 +86,25 @@ styleSheet =
             [ Color.border Color.black ]
         , Style.style DeleteButton
             [ Border.rounded 2
-            , Border.all 2
-            , Color.border <| Color.rgb 220 60 60
-            , Color.text <| Color.white
-            , Color.background <| Color.rgb 220 60 60
-            , Font.size (scaled -1)
+            , Border.all 0
+            , Color.background <| Color.greyscale 0.2
+            , Color.text deleteRed
+            , Shadow.deep
+            , Style.hover [ Color.background <| Color.greyscale 0.25 ]
+            , Style.pseudo "active"
+                [ Shadow.box noShadow
+                , Color.background <| Color.greyscale 0.3
+                ]
             ]
         , Style.style NewButton
             [ Border.rounded 2
             , Shadow.simple
+            , Border.all 0
             , Color.text Color.white
-            , Style.hover [ Color.background Color.darkGrey ]
+            , Color.background <| Color.greyscale 0.2
+            , Style.hover [ Color.background <| Color.greyscale 0.25 ]
             , Style.pseudo "active"
-                [ Color.background Color.lightCharcoal
+                [ Color.background <| Color.greyscale 0.3
                 , Shadow.box noShadow
                 ]
             ]
@@ -110,6 +117,10 @@ scaled =
 
 babyElectric =
     Color.rgb 180 220 255
+
+
+deleteRed =
+    Color.rgb 220 100 150
 
 
 noShadow =

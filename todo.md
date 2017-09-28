@@ -6,3 +6,7 @@ examples
 blog
 nice code
 graph option?
+
+
+LATER
+objects as shells made of thin sheets

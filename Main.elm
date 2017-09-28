@@ -38,9 +38,8 @@ model : Model
 model =
     { time = 0
     , rootId = 0
-    , graph = Worlds.graph0
+    , graph = Worlds.graph1
     , editing = Just (Edge 0 1)
-    , dropdownState = Input.autocomplete Nothing (EdgeFrom 0 0 0)
     }
 
 
@@ -67,13 +66,11 @@ update msg model =
                             Graph.remove id
 
                         Edge from to ->
-                            identity
-
-                --GraphEx.removeEdge from to
+                            GraphEx.removeEdge from to
             in
                 { model | graph = graphUpdater model.graph } ! []
 
-        NewNode ->
+        NewNode from ->
             let
                 entity =
                     { color = Color.charcoal, opacity = 0.5, shape = Box }
@@ -85,10 +82,23 @@ update msg model =
 
                 node =
                     { id = nextId, label = entity }
+
+                newModel =
+                    { model | graph = GraphEx.insertNode node model.graph }
+            in
+                update (NewEdge from nextId) newModel
+
+        NewEdge from to ->
+            let
+                transformation =
+                    { data = emptyTransformation, isAnimating = False, animate = \_ -> identity }
+
+                edge =
+                    { from = from, to = to, label = transformation }
             in
                 { model
-                    | graph = GraphEx.insertNode node model.graph
-                    , editing = Just (Node nextId)
+                    | graph = GraphEx.insertEdge edge model.graph
+                    , editing = Just (Edge from to)
                 }
                     ! []
 
@@ -121,17 +131,23 @@ update msg model =
             in
                 { model | graph = GraphEx.updateEdge from to edgeUpdater model.graph } ! []
 
-        EdgeFrom from to newFrom dropdownMsg ->
+        EdgeFrom from to newFrom ->
             let
-                newDropdownState =
-                    Input.updateSelection dropdownMsg model.dropdownState
-
                 newGraph =
                     GraphEx.getEdge from to model.graph
                         |> Maybe.map (\e -> GraphEx.updateEdgeFrom newFrom e model.graph)
                         |> Maybe.withDefault model.graph
             in
-                { model | dropdownState = newDropdownState, graph = newGraph } ! []
+                { model | graph = newGraph, editing = Just (Edge newFrom to) } ! []
+
+        EdgeTo from to newTo ->
+            let
+                newGraph =
+                    GraphEx.getEdge from to model.graph
+                        |> Maybe.map (\e -> GraphEx.updateEdgeTo newTo e model.graph)
+                        |> Maybe.withDefault model.graph
+            in
+                { model | graph = newGraph, editing = Just (Edge from newTo) } ! []
 
         _ ->
             model ! []
@@ -217,9 +233,10 @@ viewDetailSidebar model =
                 , Attr.minWidth <| Attr.px 200
                 , Attr.padding 20
                 ]
-                [ El.whenJust (getGraphData model.graph) viewDetail ]
+                [ El.whenJust (getGraphData model.graph) viewDetail
+                ]
     in
-        case model.editing of
+        case model.editing |> Debug.log "editing" of
             Nothing ->
                 El.empty
 
@@ -296,37 +313,46 @@ viewEdgeDetail model edge =
                 , viewTransformationSliders model edge transformAttribute
                 ]
 
-        dropdown labelStr selectdVal msgConstructor =
-            Input.select None
+        dropdownChoice node =
+            Html.option [ HtmlAttr.value <| toString node.id ]
+                [ El.toHtml styleSheet <| viewNodeBadge model node 20 [] ]
+
+        dropdown : String -> Id -> (Id -> Msg) -> Element v
+        dropdown labelStr selectedVal msgConstructor =
+            El.row None
                 []
-                { max = 100
-                , label = Input.labelLeft (El.text labelStr)
-                , with =
-                    Input.dropMenu (Just 0) (EdgeFrom 0 0 0)
-                , menu =
-                    Input.menu None
-                        []
-                        [ Input.choice 32 (El.text "Goo")
-                        , Input.choice 12 (El.text "blah")
+                [ El.el None [ Attr.paddingRight 4, Attr.verticalCenter ] (El.text labelStr)
+                , El.html
+                    <| Html.select
+                        [ HtmlAttr.value <| toString selectedVal
+                        , HtmlEvents.onInput (msgConstructor |> msgFromString String.toInt)
                         ]
-                    --(List.map (Input.choice None << El.text << toString)
-                    --    (Graph.nodeIds model.graph)
-                    --)
-                , options = []
-                }
+                        (List.map dropdownChoice (Graph.nodes model.graph))
+                ]
     in
         El.column None
-            [ Attr.spacing 20 ]
-            [ El.header Header
-                []
-                (El.text <| toString edge.from ++ " ----> " ++ toString edge.to)
-            , dropdown "Every" edge.from (\_ -> NoOp)
-            , dropdown "generates a" edge.to (\_ -> NoOp)
-            , El.hairline Hairline
+            [ Attr.spacing 10 ]
+            [ dropdown "Every" edge.from (EdgeFrom edge.from edge.to)
+            , dropdown "generates a" edge.to (EdgeTo edge.from edge.to)
+            , El.hairline None
             , sliderTriplet "Move along axis: " Translation
             , sliderTriplet "Resize along axis: " Scale
             , sliderTriplet "Rotate around axis: " Rotation
+            , El.hairline None
+            , El.button DeleteButton
+                [ Attr.height <| Attr.px 50
+                , Attr.width <| Attr.px 100
+                , Events.onClick <| Delete (Edge edge.from edge.to)
+                ]
+                (El.text "Delete")
             ]
+
+
+msgFromString : (String -> Result err a) -> (a -> Msg) -> String -> Msg
+msgFromString convertString constructMsg str =
+    convertString str
+        |> Result.map constructMsg
+        |> Result.withDefault NoOp
 
 
 viewTransformationSliders model edge transformAttribute =
@@ -373,39 +399,45 @@ viewTransformationSliders model edge transformAttribute =
 
 
 viewSelectionSidebar model =
-    El.sidebar Sidebar
-        [ Attr.height <| Attr.percent 100
-          -- , Attr.paddingTop 20
-        , Attr.paddingXY 6 20
-        , Attr.spacing 6
-        ]
-        [ El.row None
-            [ Attr.spacing 10 ]
-            [ viewBadgeSelectors model Graph.nodes viewNodeSelector
-            , viewBadgeSelectors model Graph.edges viewEdgeSelector
-            ]
-        ]
-
-
-viewBadgeSelectors model getItems viewItems =
     let
-        selectors =
-            List.map (viewItems model) (getItems model.graph)
+        viewBadgeSelectors model getItems viewItems button =
+            El.column None
+                [ Attr.padding 0, Attr.spacing 0 ]
+                (List.map (viewItems model) (getItems model.graph) ++ [ button ])
 
-        button =
+        newButton size msg =
             El.el None
                 [ Attr.padding 10 ]
                 (El.button NewButton
-                    [ Events.onClick NewNode
-                    , Attr.width <| Attr.px 40
-                    , Attr.height <| Attr.px 40
+                    [ Events.onClick msg
+                    , Attr.width <| Attr.px size
+                    , Attr.height <| Attr.px size
                     ]
                     (El.text "+")
                 )
+
+        ( _, maxId ) =
+            Graph.nodeIdRange model.graph
+                |> Maybe.withDefault ( 0, 0 )
     in
-        El.column None
-            [ Attr.padding 0, Attr.spacing 0 ]
-            (selectors ++ [ button ])
+        El.sidebar Sidebar
+            [ Attr.height <| Attr.percent 100
+              -- , Attr.paddingTop 20
+            , Attr.paddingXY 6 20
+            , Attr.spacing 6
+            ]
+            [ El.row None
+                [ Attr.spacing 10 ]
+                [ viewBadgeSelectors model
+                    Graph.nodes
+                    viewNodeSelector
+                    (newButton 40 <| NewNode 0)
+                , viewBadgeSelectors model
+                    (List.reverse << Graph.edges)
+                    viewEdgeSelector
+                    (newButton 45 <| NewEdge maxId 0)
+                ]
+            ]
 
 
 viewNodeSelector model node =
@@ -485,7 +517,7 @@ viewScene model =
         rootEntityView =
             Graph.get model.rootId model.graph
                 |> Maybe.map (viewEntity model [])
-                |> Maybe.map (\e -> box [ scale 0.05 0.05 0.05 ] [ e ])
+                |> Maybe.map (\e -> box [ scale 10 10 10 ] [ e ])
     in
         scene [ HtmlAttr.attribute "embedded" "true" ]
             (MaybeEx.toList rootEntityView
@@ -500,8 +532,7 @@ viewScene model =
                         , position 200 200 200
                         ]
                         []
-                   , camera []
-                        --position 0 10 0]
+                   , camera [ position 0 0 10 ]
                         [-- cursor
                          --     [ Cursor.fuse True, Cursor.timeout 1 ]
                          --     [ sphere [ radius 0.00 ] [] ]

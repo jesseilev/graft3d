@@ -1,6 +1,5 @@
 module Worlds exposing (..)
 
-
 import Types exposing (..)
 import Graph
 import OpenSolid.Geometry.Types as Geo exposing (Vector3d)
@@ -12,6 +11,33 @@ import AFrame
 import AFrame.Primitives exposing (sphere, box, cylinder, plane, sky)
 
 
+graph1 : Graph
+graph1 =
+    Graph.fromNodesAndEdges
+        [ Graph.Node 0
+            { shape = Box
+            , color = Color.rgb 0 90 180
+            , opacity = 0.75
+            }
+        , Graph.Node 1
+            { shape = Box
+            , color = Color.rgb 0 150 100
+            , opacity = 0.5
+            }
+        ]
+        [ Graph.Edge 0 1
+            <| noAnimation
+                { translation = Geo.Vector3d ( 2, -3.5, 2 )
+                , scale = Geo.Vector3d ( 2.5, 2.5, 1.5 )
+                , rotation = Geo.Vector3d ( 0, 0, 0 )
+                }
+        , Graph.Edge 1 0
+            <| noAnimation
+            <| { translation = Geo.Vector3d ( 1, -5, 1 )
+               , scale = Geo.Vector3d ( 2.6, 1, 2 )
+               , rotation = Geo.Vector3d ( 0, 30, 0 )
+               }
+        ]
 
 
 graph0 : Graph
@@ -38,15 +64,16 @@ graph0 =
             , opacity = 0.9
             }
         ]
-        [ Graph.Edge 0 1
+        [ Graph.Edge 0
+            1
             { data =
-                { translation = Geo.Vector3d (2, -3.5, 2)
-                , scale = Geo.Vector3d (2.5, 2.5, 1.5)
-                , rotation = Geo.Vector3d (0, 0, 0)
+                { translation = Geo.Vector3d ( 2, -3.5, 2 )
+                , scale = Geo.Vector3d ( 2.5, 2.5, 1.5 )
+                , rotation = Geo.Vector3d ( 0, 0, 0 )
                 }
             , isAnimating = True
             , animate =
-                ( \time trans ->
+                (\time trans ->
                     let
                         percent =
                             percentOfDuration 12000 Ease.inOutCubic time
@@ -58,15 +85,16 @@ graph0 =
                         { trans | scale = Geo.Vector3d newScaleComps }
                 )
             }
-        , Graph.Edge 2 2
+        , Graph.Edge 2
+            2
             { data =
-                { translation = Geo.Vector3d (-3, -0.5, -4)
-                , scale = Geo.Vector3d (1.4, 3, 0.5)
-                , rotation = Geo.Vector3d (0, 0, 0)
+                { translation = Geo.Vector3d ( -3, -0.5, -4 )
+                , scale = Geo.Vector3d ( 1.4, 3, 0.5 )
+                , rotation = Geo.Vector3d ( 0, 0, 0 )
                 }
             , isAnimating = True
             , animate =
-                ( \time trans ->
+                (\time trans ->
                     let
                         percent =
                             percentOfDuration 1000 Ease.inOutExpo time
@@ -83,22 +111,24 @@ graph0 =
                         }
                 )
             }
-        , Graph.Edge 2 0
+        , Graph.Edge 2
+            0
             { data =
-                { translation = Geo.Vector3d (1, -5, 1)
-                , scale = Geo.Vector3d (2.6, 1, 2)
-                , rotation = Geo.Vector3d (0, 30, 0)
+                { translation = Geo.Vector3d ( 1, -5, 1 )
+                , scale = Geo.Vector3d ( 2.6, 1, 2 )
+                , rotation = Geo.Vector3d ( 0, 30, 0 )
                 }
             , isAnimating =
                 False
             , animate =
                 (\_ -> identity)
             }
-        , Graph.Edge 1 2
+        , Graph.Edge 1
+            2
             { data =
-                { translation = Geo.Vector3d (0.5, -3.5, 2)
-                , scale = Geo.Vector3d (0.1, 3.5, 1)
-                , rotation = Geo.Vector3d (0, 0, 0)
+                { translation = Geo.Vector3d ( 0.5, -3.5, 2 )
+                , scale = Geo.Vector3d ( 0.1, 3.5, 1 )
+                , rotation = Geo.Vector3d ( 0, 0, 0 )
                 }
             , isAnimating =
                 False
@@ -120,28 +150,30 @@ graph0 =
                         }
                 )
             }
-            , Graph.Edge 2 3
-                { data =
-                    { translation = Geo.Vector3d (3, -2, 1)
-                    , scale = Geo.Vector3d (2.6, 4, 2)
-                    , rotation = Geo.Vector3d (0, 0, 0)
-                    }
-                , isAnimating =
-                    False
-                , animate =
-                    (\_ -> identity)
+        , Graph.Edge 2
+            3
+            { data =
+                { translation = Geo.Vector3d ( 3, -2, 1 )
+                , scale = Geo.Vector3d ( 2.6, 4, 2 )
+                , rotation = Geo.Vector3d ( 0, 0, 0 )
                 }
-            , Graph.Edge 3 1
-                { data =
-                    { translation = Geo.Vector3d (0, -3, 1)
-                    , scale = Geo.Vector3d (0.6, 0.5, 2)
-                    , rotation = Geo.Vector3d (0, 0, 0)
-                    }
-                , isAnimating =
-                    False
-                , animate =
-                    (\_ -> identity)
+            , isAnimating =
+                False
+            , animate =
+                (\_ -> identity)
+            }
+        , Graph.Edge 3
+            1
+            { data =
+                { translation = Geo.Vector3d ( 0, -3, 1 )
+                , scale = Geo.Vector3d ( 0.6, 0.5, 2 )
+                , rotation = Geo.Vector3d ( 0, 0, 0 )
                 }
+            , isAnimating =
+                False
+            , animate =
+                (\_ -> identity)
+            }
         ]
 
 

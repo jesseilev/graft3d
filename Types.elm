@@ -74,7 +74,6 @@ type alias Model =
     , graph : Graph
     , rootId : Id
     , editing : Maybe Editable
-    , dropdownState : Input.SelectWith Id Msg
     }
 
 
@@ -97,11 +96,13 @@ type
       -- SIDEBAR
     | Edit (Editable)
     | Delete Editable
-    | NewNode
+    | NewNode Id
+    | NewEdge Id Id
     | ChangeColor Id String
     | ChangeOpacity Id Float
     | ChangeTransformation TransformAttribute XYorZ Id Id Float
-    | EdgeFrom Id Id Id (Input.SelectMsg Id)
+    | EdgeFrom Id Id Id
+    | EdgeTo Id Id Id
     | NoOp
 
 
@@ -123,10 +124,10 @@ transformUtils : TransformAttribute -> TransformUtils
 transformUtils attribute =
     case attribute of
         Translation ->
-            TransformUtils edgeLensTranslation -10 10 0.1
+            TransformUtils edgeLensTranslation -4 4 0.1
 
         Scale ->
-            TransformUtils edgeLensScale 0 4 0.02
+            TransformUtils edgeLensScale 0 2 0.01
 
         Rotation ->
             TransformUtils edgeLensRotation 0 360 1
@@ -173,6 +174,11 @@ vec3Set xyorz =
 (%%) : Float -> Float -> Float
 (%%) small big =
     round small % round big |> toFloat
+
+
+noAnimation : a -> Animated a
+noAnimation data =
+    { data = data, isAnimating = False, animate = \_ -> identity }
 
 
 
