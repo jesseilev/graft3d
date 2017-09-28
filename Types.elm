@@ -9,6 +9,8 @@ import AFrame.Primitives exposing (sphere, box, cylinder, plane, sky)
 import Monocle.Lens as Lens exposing (Lens)
 import Tuple3
 import Element.Input as Input
+import Json.Decode as Decode exposing (Decoder)
+import Json.Encode as Encode exposing (Encoder)
 
 
 -- ALIASES
@@ -265,3 +267,14 @@ edgeLensTranslation =
 modelLensGraph : Lens Model Graph
 modelLensGraph =
     Lens .graph (\g m -> { m | graph = g })
+
+
+
+-- JSON
+
+
+type alias Value =
+    Encode.Value
+
+
+encodeGraph : Graph -> Value
