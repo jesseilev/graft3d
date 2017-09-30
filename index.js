@@ -28222,6 +28222,183 @@ var _user$project$Graph_Extra$getEdge = F2(
 		};
 	});
 
+var _user$project$Types$hexToColorSafe = function (_p0) {
+	return A2(
+		_elm_lang$core$Maybe$withDefault,
+		_elm_lang$core$Color$black,
+		_eskimoblood$elm_color_extra$Color_Convert$hexToColor(_p0));
+};
+var _user$project$Types$decodeVec3 = A4(
+	_elm_lang$core$Json_Decode$map3,
+	F3(
+		function (x, y, z) {
+			return _opensolid$geometry$OpenSolid_Geometry_Types$Vector3d(
+				{ctor: '_Tuple3', _0: x, _1: y, _2: z});
+		}),
+	A2(_elm_lang$core$Json_Decode$field, 'x', _elm_lang$core$Json_Decode$float),
+	A2(_elm_lang$core$Json_Decode$field, 'y', _elm_lang$core$Json_Decode$float),
+	A2(_elm_lang$core$Json_Decode$field, 'z', _elm_lang$core$Json_Decode$float));
+var _user$project$Types_ops = _user$project$Types_ops || {};
+_user$project$Types_ops['=>'] = F2(
+	function (v0, v1) {
+		return {ctor: '_Tuple2', _0: v0, _1: v1};
+	});
+var _user$project$Types$encodeEntity = function (label) {
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: A2(
+				_user$project$Types_ops['=>'],
+				'color',
+				_elm_lang$core$Json_Encode$string(
+					_eskimoblood$elm_color_extra$Color_Convert$colorToHex(label.color))),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_user$project$Types_ops['=>'],
+					'opacity',
+					_elm_lang$core$Json_Encode$float(label.opacity)),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_user$project$Types_ops['=>'],
+						'shape',
+						_elm_lang$core$Json_Encode$string(
+							_elm_lang$core$Basics$toString(label.shape))),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$Types$encodeNode = function (node) {
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: A2(
+				_user$project$Types_ops['=>'],
+				'id',
+				_elm_lang$core$Json_Encode$int(node.id)),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_user$project$Types_ops['=>'],
+					'label',
+					_user$project$Types$encodeEntity(node.label)),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Types$encodeVec3 = function (vec) {
+	var _p1 = _opensolid$geometry$OpenSolid_Vector3d$components(vec);
+	var x = _p1._0;
+	var y = _p1._1;
+	var z = _p1._2;
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: A2(
+				_user$project$Types_ops['=>'],
+				'x',
+				_elm_lang$core$Json_Encode$float(x)),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_user$project$Types_ops['=>'],
+					'y',
+					_elm_lang$core$Json_Encode$float(y)),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_user$project$Types_ops['=>'],
+						'z',
+						_elm_lang$core$Json_Encode$float(z)),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$Types$encodeTransformation = function (trans) {
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: A2(
+				_user$project$Types_ops['=>'],
+				'translation',
+				_user$project$Types$encodeVec3(trans.translation)),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_user$project$Types_ops['=>'],
+					'scale',
+					_user$project$Types$encodeVec3(trans.scale)),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_user$project$Types_ops['=>'],
+						'rotation',
+						_user$project$Types$encodeVec3(trans.rotation)),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$Types$encodeEdge = function (edge) {
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: A2(
+				_user$project$Types_ops['=>'],
+				'from',
+				_elm_lang$core$Json_Encode$int(edge.from)),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_user$project$Types_ops['=>'],
+					'to',
+					_elm_lang$core$Json_Encode$int(edge.to)),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_user$project$Types_ops['=>'],
+						'label',
+						_user$project$Types$encodeTransformation(edge.label.data)),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$Types$encodeGraph = function (graph) {
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: A2(
+				_user$project$Types_ops['=>'],
+				'nodes',
+				_elm_lang$core$Json_Encode$list(
+					A2(
+						_elm_lang$core$List$map,
+						_user$project$Types$encodeNode,
+						_elm_community$graph$Graph$nodes(graph)))),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_user$project$Types_ops['=>'],
+					'edges',
+					_elm_lang$core$Json_Encode$list(
+						A2(
+							_elm_lang$core$List$map,
+							_user$project$Types$encodeEdge,
+							_elm_community$graph$Graph$edges(graph)))),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Types$graphToJson = function (_p2) {
+	return A2(
+		_elm_lang$core$Json_Encode$encode,
+		0,
+		_user$project$Types$encodeGraph(_p2));
+};
 var _user$project$Types$modelLensGraph = A2(
 	_arturopala$elm_monocle$Monocle_Lens$Lens,
 	function (_) {
@@ -28350,11 +28527,26 @@ var _user$project$Types$nodeLensEntity = A2(
 var _user$project$Types$nodeLensColor = A2(_arturopala$elm_monocle$Monocle_Lens$compose, _user$project$Types$nodeLensEntity, _user$project$Types$elementLensColor);
 var _user$project$Types$nodeLensOpacity = A2(_arturopala$elm_monocle$Monocle_Lens$compose, _user$project$Types$nodeLensEntity, _user$project$Types$elementLensOpacity);
 var _user$project$Types$nodeLensShape = A2(_arturopala$elm_monocle$Monocle_Lens$compose, _user$project$Types$nodeLensEntity, _user$project$Types$elementLensShape);
+var _user$project$Types$vector3dZero = _opensolid$geometry$OpenSolid_Geometry_Types$Vector3d(
+	{ctor: '_Tuple3', _0: 0, _1: 0, _2: 0});
+var _user$project$Types$emptyTransformation = {
+	translation: _user$project$Types$vector3dZero,
+	scale: _opensolid$geometry$OpenSolid_Geometry_Types$Vector3d(
+		{ctor: '_Tuple3', _0: 1, _1: 1, _2: 1}),
+	rotation: _user$project$Types$vector3dZero
+};
+var _user$project$Types$fakeTransformation = {
+	data: _user$project$Types$emptyTransformation,
+	isAnimating: false,
+	animate: function (_p3) {
+		return _elm_lang$core$Basics$identity;
+	}
+};
 var _user$project$Types$noAnimation = function (data) {
 	return {
 		data: data,
 		isAnimating: false,
-		animate: function (_p0) {
+		animate: function (_p4) {
 			return _elm_lang$core$Basics$identity;
 		}
 	};
@@ -28370,22 +28562,22 @@ _user$project$Types_ops['%%'] = F2(
 	});
 var _user$project$Types$vec3Set_ = F2(
 	function (tupleMap, new_) {
-		return function (_p1) {
+		return function (_p5) {
 			return _opensolid$geometry$OpenSolid_Geometry_Types$Vector3d(
 				A2(
 					tupleMap,
-					function (_p2) {
+					function (_p6) {
 						return new_;
 					},
-					_opensolid$geometry$OpenSolid_Vector3d$components(_p1)));
+					_opensolid$geometry$OpenSolid_Vector3d$components(_p5)));
 		};
 	});
 var _user$project$Types$vec3SetX = _user$project$Types$vec3Set_(_Fresheyeball$elm_tuple_extra$Tuple3$mapFirst);
 var _user$project$Types$vec3SetY = _user$project$Types$vec3Set_(_Fresheyeball$elm_tuple_extra$Tuple3$mapSecond);
 var _user$project$Types$vec3SetZ = _user$project$Types$vec3Set_(_Fresheyeball$elm_tuple_extra$Tuple3$mapThird);
 var _user$project$Types$vec3Set = function (xyorz) {
-	var _p3 = xyorz;
-	switch (_p3.ctor) {
+	var _p7 = xyorz;
+	switch (_p7.ctor) {
 		case 'X':
 			return _user$project$Types$vec3SetX;
 		case 'Y':
@@ -28402,21 +28594,36 @@ var _user$project$Types$Transformation = F3(
 	function (a, b, c) {
 		return {translation: a, scale: b, rotation: c};
 	});
+var _user$project$Types$transformationDecoder = A4(
+	_elm_lang$core$Json_Decode$map3,
+	_user$project$Types$Transformation,
+	A2(_elm_lang$core$Json_Decode$field, 'translation', _user$project$Types$decodeVec3),
+	A2(_elm_lang$core$Json_Decode$field, 'scale', _user$project$Types$decodeVec3),
+	A2(_elm_lang$core$Json_Decode$field, 'rotation', _user$project$Types$decodeVec3));
+var _user$project$Types$edgeDecoder = A4(
+	_elm_lang$core$Json_Decode$map3,
+	_elm_community$graph$Graph$Edge,
+	A2(_elm_lang$core$Json_Decode$field, 'from', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode$field, 'to', _elm_lang$core$Json_Decode$int),
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'label',
+		A2(_elm_lang$core$Json_Decode$map, _user$project$Types$noAnimation, _user$project$Types$transformationDecoder)));
 var _user$project$Types$Animated = F3(
 	function (a, b, c) {
 		return {data: a, animate: b, isAnimating: c};
 	});
-var _user$project$Types$Model = F4(
-	function (a, b, c, d) {
-		return {time: a, graph: b, rootId: c, editing: d};
+var _user$project$Types$Model = F5(
+	function (a, b, c, d, e) {
+		return {time: a, graph: b, examples: c, rootId: d, editing: e};
 	});
 var _user$project$Types$TransformUtils = F4(
 	function (a, b, c, d) {
 		return {edgeLens: a, min: b, max: c, step: d};
 	});
 var _user$project$Types$transformUtils = function (attribute) {
-	var _p4 = attribute;
-	switch (_p4.ctor) {
+	var _p8 = attribute;
+	switch (_p8.ctor) {
 		case 'Translation':
 			return A4(_user$project$Types$TransformUtils, _user$project$Types$edgeLensTranslation, -4, 4, 0.1);
 		case 'Scale':
@@ -28425,9 +28632,55 @@ var _user$project$Types$transformUtils = function (attribute) {
 			return A4(_user$project$Types$TransformUtils, _user$project$Types$edgeLensRotation, 0, 360, 1);
 	}
 };
+var _user$project$Types$AlmostGraph = F2(
+	function (a, b) {
+		return {nodes: a, edges: b};
+	});
 var _user$project$Types$Cylinder = {ctor: 'Cylinder'};
 var _user$project$Types$Sphere = {ctor: 'Sphere'};
 var _user$project$Types$Box = {ctor: 'Box'};
+var _user$project$Types$entityDecoder = A4(
+	_elm_lang$core$Json_Decode$map3,
+	_user$project$Types$Entity,
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'shape',
+		A2(
+			_elm_lang$core$Json_Decode$map,
+			function (_p9) {
+				return _user$project$Types$Box;
+			},
+			_elm_lang$core$Json_Decode$string)),
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'color',
+		A2(_elm_lang$core$Json_Decode$map, _user$project$Types$hexToColorSafe, _elm_lang$core$Json_Decode$string)),
+	A2(_elm_lang$core$Json_Decode$field, 'opacity', _elm_lang$core$Json_Decode$float));
+var _user$project$Types$nodeDecoder = A3(
+	_elm_lang$core$Json_Decode$map2,
+	_elm_community$graph$Graph$Node,
+	A2(_elm_lang$core$Json_Decode$field, 'id', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode$field, 'label', _user$project$Types$entityDecoder));
+var _user$project$Types$graphDecoder = A3(
+	_elm_lang$core$Json_Decode$map2,
+	_user$project$Types$AlmostGraph,
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'nodes',
+		_elm_lang$core$Json_Decode$list(_user$project$Types$nodeDecoder)),
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'edges',
+		_elm_lang$core$Json_Decode$list(_user$project$Types$edgeDecoder)));
+var _user$project$Types$decodeGraph = function (_p10) {
+	return A2(
+		_elm_lang$core$Result$map,
+		function (_p11) {
+			var _p12 = _p11;
+			return A2(_elm_community$graph$Graph$fromNodesAndEdges, _p12.nodes, _p12.edges);
+		},
+		A2(_elm_lang$core$Json_Decode$decodeString, _user$project$Types$graphDecoder, _p10));
+};
 var _user$project$Types$Edge = F2(
 	function (a, b) {
 		return {ctor: 'Edge', _0: a, _1: b};
@@ -28436,6 +28689,10 @@ var _user$project$Types$Node = function (a) {
 	return {ctor: 'Node', _0: a};
 };
 var _user$project$Types$NoOp = {ctor: 'NoOp'};
+var _user$project$Types$Load = function (a) {
+	return {ctor: 'Load', _0: a};
+};
+var _user$project$Types$Save = {ctor: 'Save'};
 var _user$project$Types$EdgeTo = F3(
 	function (a, b, c) {
 		return {ctor: 'EdgeTo', _0: a, _1: b, _2: c};
@@ -28493,6 +28750,8 @@ var _user$project$StyleSheet$noShadow = {
 var _user$project$StyleSheet$deleteRed = A3(_elm_lang$core$Color$rgb, 220, 100, 150);
 var _user$project$StyleSheet$babyElectric = A3(_elm_lang$core$Color$rgb, 180, 220, 255);
 var _user$project$StyleSheet$scaled = A2(_mdgriffith$style_elements$Style_Scale$modular, 16, 1.618);
+var _user$project$StyleSheet$DropdownItem = {ctor: 'DropdownItem'};
+var _user$project$StyleSheet$Dropdown = {ctor: 'Dropdown'};
 var _user$project$StyleSheet$NewButton = {ctor: 'NewButton'};
 var _user$project$StyleSheet$DeleteButton = {ctor: 'DeleteButton'};
 var _user$project$StyleSheet$Hairline = {ctor: 'Hairline'};
@@ -28808,7 +29067,40 @@ var _user$project$StyleSheet$styleSheet = _mdgriffith$style_elements$Style$style
 															}
 														}
 													}),
-												_1: {ctor: '[]'}
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_mdgriffith$style_elements$Style$style,
+														_user$project$StyleSheet$Dropdown,
+														{
+															ctor: '::',
+															_0: _mdgriffith$style_elements$Style_Color$background(
+																_elm_lang$core$Color$greyscale(0.75)),
+															_1: {
+																ctor: '::',
+																_0: _mdgriffith$style_elements$Style_Shadow$simple,
+																_1: {ctor: '[]'}
+															}
+														}),
+													_1: {
+														ctor: '::',
+														_0: A2(
+															_mdgriffith$style_elements$Style$style,
+															_user$project$StyleSheet$DropdownItem,
+															{
+																ctor: '::',
+																_0: _mdgriffith$style_elements$Style$hover(
+																	{
+																		ctor: '::',
+																		_0: _mdgriffith$style_elements$Style_Color$background(
+																			_elm_lang$core$Color$greyscale(0.7)),
+																		_1: {ctor: '[]'}
+																	}),
+																_1: {ctor: '[]'}
+															}),
+														_1: {ctor: '[]'}
+													}
+												}
 											}
 										}
 									}
@@ -29076,7 +29368,7 @@ var _user$project$Worlds$graph1 = A2(
 			{
 				shape: _user$project$Types$Box,
 				color: A3(_elm_lang$core$Color$rgb, 0, 90, 180),
-				opacity: 0.75
+				opacity: 0.15
 			}),
 		_1: {
 			ctor: '::',
@@ -29086,7 +29378,7 @@ var _user$project$Worlds$graph1 = A2(
 				{
 					shape: _user$project$Types$Box,
 					color: A3(_elm_lang$core$Color$rgb, 0, 150, 100),
-					opacity: 0.5
+					opacity: 0.25
 				}),
 			_1: {ctor: '[]'}
 		}
@@ -29100,9 +29392,9 @@ var _user$project$Worlds$graph1 = A2(
 			_user$project$Types$noAnimation(
 				{
 					translation: _opensolid$geometry$OpenSolid_Geometry_Types$Vector3d(
-						{ctor: '_Tuple3', _0: 2, _1: -3.5, _2: 2}),
+						{ctor: '_Tuple3', _0: 2, _1: -0.5, _2: 0}),
 					scale: _opensolid$geometry$OpenSolid_Geometry_Types$Vector3d(
-						{ctor: '_Tuple3', _0: 2.5, _1: 2.5, _2: 1.5}),
+						{ctor: '_Tuple3', _0: 0.5, _1: 0.25, _2: 1}),
 					rotation: _opensolid$geometry$OpenSolid_Geometry_Types$Vector3d(
 						{ctor: '_Tuple3', _0: 0, _1: 0, _2: 0})
 				})),
@@ -29115,29 +29407,31 @@ var _user$project$Worlds$graph1 = A2(
 				_user$project$Types$noAnimation(
 					{
 						translation: _opensolid$geometry$OpenSolid_Geometry_Types$Vector3d(
-							{ctor: '_Tuple3', _0: 1, _1: -5, _2: 1}),
+							{ctor: '_Tuple3', _0: 0, _1: -0.5, _2: 1}),
 						scale: _opensolid$geometry$OpenSolid_Geometry_Types$Vector3d(
-							{ctor: '_Tuple3', _0: 2.6, _1: 1, _2: 2}),
+							{ctor: '_Tuple3', _0: 0.6, _1: 1, _2: 0.2}),
 						rotation: _opensolid$geometry$OpenSolid_Geometry_Types$Vector3d(
 							{ctor: '_Tuple3', _0: 0, _1: 30, _2: 0})
 					})),
 			_1: {ctor: '[]'}
 		}
 	});
+var _user$project$Worlds$jsonExamples = _elm_lang$core$Dict$fromList(
+	{
+		ctor: '::',
+		_0: A2(_user$project$Types_ops['=>'], 'graph1', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#005ab4\",\"opacity\":0.82,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#009664\",\"opacity\":0.55,\"shape\":\"Box\"}}],\"edges\":[{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.5,\"z\":1},\"scale\":{\"x\":0.6,\"y\":1,\"z\":0.2},\"rotation\":{\"x\":0,\"y\":30,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-1.5,\"y\":0.1,\"z\":-0.2},\"scale\":{\"x\":1.14,\"y\":0.94,\"z\":1.9},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
+		_1: {
+			ctor: '::',
+			_0: A2(_user$project$Types_ops['=>'], 'graph2', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#005ab4\",\"opacity\":0.28,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#009664\",\"opacity\":0.73,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#555753\",\"opacity\":0.5,\"shape\":\"Box\"}}],\"edges\":[{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":0,\"z\":0},\"scale\":{\"x\":0.5,\"y\":0.53,\"z\":1.06},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-1.1,\"y\":-0.5,\"z\":0},\"scale\":{\"x\":0.43,\"y\":0.43,\"z\":0.2},\"rotation\":{\"x\":249,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":0,\"label\":{\"translation\":{\"x\":-1.5,\"y\":0.1,\"z\":-0.2},\"scale\":{\"x\":1.28,\"y\":0.8,\"z\":1.8},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
+			_1: {ctor: '[]'}
+		}
+	});
 
-var _user$project$Main$vector3dZero = _opensolid$geometry$OpenSolid_Geometry_Types$Vector3d(
-	{ctor: '_Tuple3', _0: 0, _1: 0, _2: 0});
 var _user$project$Main$uncurry3 = F2(
 	function (func, _p0) {
 		var _p1 = _p0;
 		return A3(func, _p1._0, _p1._1, _p1._2);
 	});
-var _user$project$Main$emptyTransformation = {
-	translation: _user$project$Main$vector3dZero,
-	scale: _opensolid$geometry$OpenSolid_Geometry_Types$Vector3d(
-		{ctor: '_Tuple3', _0: 1, _1: 1, _2: 1}),
-	rotation: _user$project$Main$vector3dZero
-};
 var _user$project$Main$viewEntity = F3(
 	function (model, ancestors, nodeCtx) {
 		var viewChild = (_elm_lang$core$Native_Utils.cmp(
@@ -29166,7 +29460,7 @@ var _user$project$Main$viewEntity = F3(
 				_elm_community$intdict$IntDict$keys(nodeCtx.outgoing)));
 		var t = A2(
 			_elm_lang$core$Maybe$withDefault,
-			_user$project$Main$emptyTransformation,
+			_user$project$Types$emptyTransformation,
 			A2(
 				_elm_lang$core$Maybe$andThen,
 				function (parentId) {
@@ -29234,18 +29528,22 @@ var _user$project$Main$viewEntity = F3(
 								_0: _halfzebra$elm_aframe$AFrame_Primitives_Attributes$opacity(entity.opacity),
 								_1: {
 									ctor: '::',
-									_0: _halfzebra$elm_aframe$AFrame_Primitives_Attributes$height(1),
+									_0: _halfzebra$elm_aframe$AFrame_Primitives_Attributes$shader('flat'),
 									_1: {
 										ctor: '::',
-										_0: _halfzebra$elm_aframe$AFrame_Primitives_Attributes$width(1),
+										_0: _halfzebra$elm_aframe$AFrame_Primitives_Attributes$height(1),
 										_1: {
 											ctor: '::',
-											_0: _halfzebra$elm_aframe$AFrame_Primitives_Attributes$depth(1),
+											_0: _halfzebra$elm_aframe$AFrame_Primitives_Attributes$width(1),
 											_1: {
 												ctor: '::',
-												_0: _elm_lang$html$Html_Events$onClick(
-													_user$project$Types$Click(nodeCtx.node.id)),
-												_1: {ctor: '[]'}
+												_0: _halfzebra$elm_aframe$AFrame_Primitives_Attributes$depth(1),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Events$onClick(
+														_user$project$Types$Click(nodeCtx.node.id)),
+													_1: {ctor: '[]'}
+												}
 											}
 										}
 									}
@@ -29265,7 +29563,7 @@ var _user$project$Main$viewScene = function (model) {
 				_halfzebra$elm_aframe$AFrame_Primitives$box,
 				{
 					ctor: '::',
-					_0: A3(_halfzebra$elm_aframe$AFrame_Primitives_Attributes$scale, 10, 10, 10),
+					_0: A3(_halfzebra$elm_aframe$AFrame_Primitives_Attributes$scale, 1, 1, 1),
 					_1: {ctor: '[]'}
 				},
 				{
@@ -29298,7 +29596,7 @@ var _user$project$Main$viewScene = function (model) {
 					{
 						ctor: '::',
 						_0: _halfzebra$elm_aframe$AFrame_Primitives_Attributes$color(
-							A3(_elm_lang$core$Color$rgb, 200, 150, 220)),
+							A3(_elm_lang$core$Color$rgb, 210, 230, 250)),
 						_1: {ctor: '[]'}
 					},
 					{ctor: '[]'}),
@@ -29530,6 +29828,62 @@ var _user$project$Main$viewNodeSelector = F2(
 				40,
 				{ctor: '[]'}));
 	});
+var _user$project$Main$viewExamplesMenu = function (model) {
+	var exampleRow = function (title) {
+		return A3(
+			_mdgriffith$style_elements$Element$row,
+			_user$project$StyleSheet$DropdownItem,
+			{
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$padding(10),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Events$onClick(
+						_user$project$Types$Load(title)),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element$text(title),
+				_1: {ctor: '[]'}
+			});
+	};
+	return A3(
+		_mdgriffith$style_elements$Element$el,
+		_user$project$StyleSheet$Dropdown,
+		{
+			ctor: '::',
+			_0: _mdgriffith$style_elements$Element_Attributes$width(
+				_mdgriffith$style_elements$Element_Attributes$px(200)),
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$alignRight,
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Attributes$inlineStyle(
+						{
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'z-index', _1: '10'},
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
+		},
+		A3(
+			_mdgriffith$style_elements$Element$column,
+			_user$project$StyleSheet$None,
+			{
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$alignLeft,
+				_1: {ctor: '[]'}
+			},
+			A2(
+				_elm_lang$core$List$map,
+				exampleRow,
+				_elm_lang$core$Dict$keys(model.examples))));
+};
 var _user$project$Main$viewSelectionSidebar = function (model) {
 	var _p4 = A2(
 		_elm_lang$core$Maybe$withDefault,
@@ -29647,7 +30001,27 @@ var _user$project$Main$viewSelectionSidebar = function (model) {
 						_1: {ctor: '[]'}
 					}
 				}),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: A3(
+					_mdgriffith$style_elements$Element$button,
+					_user$project$StyleSheet$NewButton,
+					{
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Events$onClick(_user$project$Types$Save),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$style_elements$Element_Attributes$alignBottom,
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$style_elements$Element_Attributes$center,
+								_1: {ctor: '[]'}
+							}
+						}
+					},
+					_mdgriffith$style_elements$Element$text('Save')),
+				_1: {ctor: '[]'}
+			}
 		});
 };
 var _user$project$Main$viewTransformationSliders = F3(
@@ -30190,7 +30564,14 @@ var _user$project$Main$navbar = function (model) {
 						name: 'Graft 3D',
 						options: {
 							ctor: '::',
-							_0: navlink('Examples'),
+							_0: A2(
+								_mdgriffith$style_elements$Element$below,
+								{
+									ctor: '::',
+									_0: _user$project$Main$viewExamplesMenu(model),
+									_1: {ctor: '[]'}
+								},
+								navlink('Examples')),
 							_1: {
 								ctor: '::',
 								_0: navlink('Blog'),
@@ -30367,7 +30748,7 @@ var _user$project$Main$update = F2(
 					var _p17 = _p11._1;
 					var _p16 = _p11._0;
 					var transformation = {
-						data: _user$project$Main$emptyTransformation,
+						data: _user$project$Types$emptyTransformation,
 						isAnimating: false,
 						animate: function (_p15) {
 							return _elm_lang$core$Basics$identity;
@@ -30469,6 +30850,27 @@ var _user$project$Main$update = F2(
 									A2(_user$project$Types$Edge, _p20, _p21))
 							}),
 						{ctor: '[]'});
+				case 'Save':
+					var json = A2(
+						_elm_lang$core$Debug$log,
+						'json',
+						_user$project$Types$graphToJson(model.graph));
+					var _v8 = _user$project$Types$NoOp,
+						_v9 = model;
+					msg = _v8;
+					model = _v9;
+					continue update;
+				case 'Load':
+					var newGraph = A2(
+						_elm_lang$core$Maybe$withDefault,
+						model.graph,
+						A2(_elm_lang$core$Dict$get, _p11._0, model.examples));
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{graph: newGraph}),
+						{ctor: '[]'});
 				default:
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
@@ -30477,19 +30879,41 @@ var _user$project$Main$update = F2(
 			}
 		}
 	});
+var _user$project$Main$removeNothings = F3(
+	function (name, maybeGraph, dict) {
+		var _p22 = maybeGraph;
+		if (_p22.ctor === 'Nothing') {
+			return dict;
+		} else {
+			return A3(_elm_lang$core$Dict$insert, name, _p22._0, dict);
+		}
+	});
 var _user$project$Main$model = {
 	time: 0,
 	rootId: 0,
 	graph: _user$project$Worlds$graph1,
+	examples: A3(
+		_elm_lang$core$Dict$foldr,
+		_user$project$Main$removeNothings,
+		_elm_lang$core$Dict$empty,
+		A2(
+			_elm_lang$core$Dict$map,
+			function (_p23) {
+				return function (_p24) {
+					return _elm_lang$core$Result$toMaybe(
+						_user$project$Types$decodeGraph(_p24));
+				};
+			},
+			_user$project$Worlds$jsonExamples)),
 	editing: _elm_lang$core$Maybe$Just(
 		A2(_user$project$Types$Edge, 0, 1))
 };
 var _user$project$Main$main = _elm_lang$html$Html$program(
 	{
 		init: A2(
-			_elm_lang$core$Platform_Cmd_ops['!'],
-			_user$project$Main$model,
-			{ctor: '[]'}),
+			_user$project$Main$update,
+			_user$project$Types$Load('graph2'),
+			_user$project$Main$model),
 		view: _user$project$Main$view,
 		update: _user$project$Main$update,
 		subscriptions: _user$project$Main$subscriptions

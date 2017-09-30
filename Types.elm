@@ -4,13 +4,15 @@ import Graph
 import OpenSolid.Geometry.Types exposing (..)
 import OpenSolid.Vector3d as Vec3
 import Color exposing (Color)
+import Dict exposing (Dict)
 import Time exposing (Time)
 import AFrame.Primitives exposing (sphere, box, cylinder, plane, sky)
 import Monocle.Lens as Lens exposing (Lens)
 import Tuple3
 import Element.Input as Input
 import Json.Decode as Decode exposing (Decoder)
-import Json.Encode as Encode exposing (Encoder)
+import Json.Encode as Encode
+import Color.Convert exposing (colorToHex, hexToColor)
 
 
 -- ALIASES
@@ -74,6 +76,7 @@ type alias Animated a =
 type alias Model =
     { time : Time
     , graph : Graph
+    , examples : Dict String Graph
     , rootId : Id
     , editing : Maybe Editable
     }
@@ -105,6 +108,9 @@ type
     | ChangeTransformation TransformAttribute XYorZ Id Id Float
     | EdgeFrom Id Id Id
     | EdgeTo Id Id Id
+      -- META
+    | Save
+    | Load String
     | NoOp
 
 
@@ -181,6 +187,17 @@ vec3Set xyorz =
 noAnimation : a -> Animated a
 noAnimation data =
     { data = data, isAnimating = False, animate = \_ -> identity }
+
+
+emptyTransformation =
+    { translation = vector3dZero
+    , scale = Vector3d ( 1, 1, 1 )
+    , rotation = vector3dZero
+    }
+
+
+vector3dZero =
+    Vector3d ( 0, 0, 0 )
 
 
 
@@ -273,8 +290,133 @@ modelLensGraph =
 -- JSON
 
 
+(=>) =
+    (,)
+
+
 type alias Value =
     Encode.Value
 
 
+graphToJson : Graph -> String
+graphToJson =
+    Encode.encode 0 << encodeGraph
+
+
 encodeGraph : Graph -> Value
+encodeGraph graph =
+    Encode.object
+        [ "nodes" => Encode.list (List.map encodeNode <| Graph.nodes graph)
+        , "edges" => Encode.list (List.map encodeEdge <| Graph.edges graph)
+        ]
+
+
+encodeNode : Node -> Value
+encodeNode node =
+    Encode.object
+        [ "id" => Encode.int node.id
+        , "label" => encodeEntity node.label
+        ]
+
+
+encodeEntity label =
+    Encode.object
+        [ "color" => Encode.string (colorToHex label.color)
+        , "opacity" => Encode.float label.opacity
+        , "shape" => Encode.string (toString label.shape)
+        ]
+
+
+encodeEdge edge =
+    Encode.object
+        [ "from" => Encode.int edge.from
+        , "to" => Encode.int edge.to
+        , "label" => encodeTransformation edge.label.data
+        ]
+
+
+encodeTransformation trans =
+    Encode.object
+        [ "translation" => encodeVec3 trans.translation
+        , "scale" => encodeVec3 trans.scale
+        , "rotation" => encodeVec3 trans.rotation
+        ]
+
+
+encodeVec3 vec =
+    let
+        ( x, y, z ) =
+            Vec3.components vec
+    in
+        Encode.object
+            [ "x" => Encode.float x
+            , "y" => Encode.float y
+            , "z" => Encode.float z
+            ]
+
+
+decodeGraph : String -> Result String Graph
+decodeGraph =
+    Decode.decodeString graphDecoder
+        >> Result.map (\{ nodes, edges } -> Graph.fromNodesAndEdges nodes edges)
+
+
+type alias AlmostGraph =
+    { nodes : List Node, edges : List Edge }
+
+
+graphDecoder : Decoder AlmostGraph
+graphDecoder =
+    Decode.map2 AlmostGraph
+        (Decode.field "nodes" <| Decode.list nodeDecoder)
+        (Decode.field "edges" <| Decode.list edgeDecoder)
+
+
+nodeDecoder : Decoder Node
+nodeDecoder =
+    Decode.map2 Graph.Node
+        (Decode.field "id" Decode.int)
+        (Decode.field "label" entityDecoder)
+
+
+entityDecoder : Decoder Entity
+entityDecoder =
+    Decode.map3 Entity
+        (Decode.field "shape" <| Decode.map (\_ -> Box) Decode.string)
+        (Decode.field "color" <| Decode.map hexToColorSafe Decode.string)
+        (Decode.field "opacity" <| Decode.float)
+
+
+edgeDecoder : Decoder Edge
+edgeDecoder =
+    Decode.map3 Graph.Edge
+        (Decode.field "from" Decode.int)
+        (Decode.field "to" Decode.int)
+        (Decode.field "label" <| Decode.map noAnimation transformationDecoder)
+
+
+transformationDecoder : Decoder Transformation
+transformationDecoder =
+    Decode.map3 Transformation
+        (Decode.field "translation" decodeVec3)
+        (Decode.field "scale" decodeVec3)
+        (Decode.field "rotation" decodeVec3)
+
+
+decodeVec3 : Decoder Vector3d
+decodeVec3 =
+    Decode.map3 (\x y z -> Vector3d ( x, y, z ))
+        (Decode.field "x" Decode.float)
+        (Decode.field "y" Decode.float)
+        (Decode.field "z" Decode.float)
+
+
+hexToColorSafe =
+    hexToColor >> Maybe.withDefault Color.black
+
+
+fakeTransformation =
+    { data = emptyTransformation
+    , isAnimating = False
+    , animate = \_ -> identity
+    }

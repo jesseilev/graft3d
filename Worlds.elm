@@ -9,6 +9,17 @@ import Ease
 import Color
 import AFrame
 import AFrame.Primitives exposing (sphere, box, cylinder, plane, sky)
+import Dict exposing (Dict)
+
+
+jsonExamples : Dict String String
+jsonExamples =
+    Dict.fromList
+        [ "graph1"
+            => "{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#005ab4\",\"opacity\":0.82,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#009664\",\"opacity\":0.55,\"shape\":\"Box\"}}],\"edges\":[{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.5,\"z\":1},\"scale\":{\"x\":0.6,\"y\":1,\"z\":0.2},\"rotation\":{\"x\":0,\"y\":30,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-1.5,\"y\":0.1,\"z\":-0.2},\"scale\":{\"x\":1.14,\"y\":0.94,\"z\":1.9},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}"
+        , "graph2"
+            => "{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#005ab4\",\"opacity\":0.28,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#009664\",\"opacity\":0.73,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#555753\",\"opacity\":0.5,\"shape\":\"Box\"}}],\"edges\":[{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":0,\"z\":0},\"scale\":{\"x\":0.5,\"y\":0.53,\"z\":1.06},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-1.1,\"y\":-0.5,\"z\":0},\"scale\":{\"x\":0.43,\"y\":0.43,\"z\":0.2},\"rotation\":{\"x\":249,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":0,\"label\":{\"translation\":{\"x\":-1.5,\"y\":0.1,\"z\":-0.2},\"scale\":{\"x\":1.28,\"y\":0.8,\"z\":1.8},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}"
+        ]
 
 
 graph1 : Graph
@@ -17,24 +28,24 @@ graph1 =
         [ Graph.Node 0
             { shape = Box
             , color = Color.rgb 0 90 180
-            , opacity = 0.75
+            , opacity = 0.15
             }
         , Graph.Node 1
             { shape = Box
             , color = Color.rgb 0 150 100
-            , opacity = 0.5
+            , opacity = 0.25
             }
         ]
         [ Graph.Edge 0 1
             <| noAnimation
-                { translation = Geo.Vector3d ( 2, -3.5, 2 )
-                , scale = Geo.Vector3d ( 2.5, 2.5, 1.5 )
+                { translation = Geo.Vector3d ( 2, -0.5, 0 )
+                , scale = Geo.Vector3d ( 0.5, 0.25, 1 )
                 , rotation = Geo.Vector3d ( 0, 0, 0 )
                 }
         , Graph.Edge 1 0
             <| noAnimation
-            <| { translation = Geo.Vector3d ( 1, -5, 1 )
-               , scale = Geo.Vector3d ( 2.6, 1, 2 )
+            <| { translation = Geo.Vector3d ( 0, -0.5, 1 )
+               , scale = Geo.Vector3d ( 0.6, 1, 0.2 )
                , rotation = Geo.Vector3d ( 0, 30, 0 )
                }
         ]

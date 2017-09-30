@@ -4,6 +4,7 @@ import Types exposing (..)
 import StyleSheet exposing (styleSheet, Style(..), Variation(..))
 import Worlds
 import Time
+import Dict exposing (Dict)
 import Graph.Extra as GraphEx
 import Html exposing (Html)
 import Html.Attributes as HtmlAttr
@@ -32,15 +33,34 @@ import AFrame.Primitives exposing (sphere, box, cylinder, plane, sky)
 import AFrame.Primitives.Camera exposing (camera)
 import AFrame.Primitives.Light as Light exposing (light)
 import AFrame.Primitives.Cursor as Cursor exposing (..)
+import Maybe.Extra as MaybeEx
 
 
 model : Model
 model =
     { time = 0
     , rootId = 0
-    , graph = Worlds.graph1
+    , graph =
+        Worlds.graph1
+        --decodeGraph Worlds.json1
+        --    |> Debug.log "decoded graph attempt"
+        --    |> Result.withDefault Worlds.graph0
+    , examples =
+        Worlds.jsonExamples
+            |> Dict.map (\_ -> (decodeGraph >> Result.toMaybe))
+            |> Dict.foldr removeNothings Dict.empty
     , editing = Just (Edge 0 1)
     }
+
+
+removeNothings : String -> Maybe Graph -> Dict String Graph -> Dict String Graph
+removeNothings name maybeGraph dict =
+    case maybeGraph of
+        Nothing ->
+            dict
+
+        Just graph ->
+            Dict.insert name graph dict
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -149,6 +169,22 @@ update msg model =
             in
                 { model | graph = newGraph, editing = Just (Edge from newTo) } ! []
 
+        Save ->
+            let
+                json =
+                    graphToJson model.graph
+                        |> Debug.log "json"
+            in
+                update NoOp model
+
+        Load title ->
+            let
+                newGraph =
+                    Dict.get title model.examples
+                        |> Maybe.withDefault model.graph
+            in
+                { model | graph = newGraph } ! []
+
         _ ->
             model ! []
 
@@ -217,6 +253,7 @@ navbar model =
                 { name = "Graft 3D"
                 , options =
                     [ navlink "Examples"
+                        |> El.below [ viewExamplesMenu model ]
                     , navlink "Blog"
                     , navlink "Github"
                     , navlink "Graft"
@@ -437,7 +474,39 @@ viewSelectionSidebar model =
                     viewEdgeSelector
                     (newButton 45 <| NewEdge maxId 0)
                 ]
+            , El.button NewButton
+                [ Events.onClick Save
+                , Attr.alignBottom
+                , Attr.center
+                ]
+                (El.text "Save")
             ]
+
+
+viewExamplesMenu model =
+    let
+        exampleRow title =
+            El.row DropdownItem
+                [ Attr.padding 10
+                , Events.onClick (Load title)
+                ]
+                [ El.text title ]
+    in
+        El.el Dropdown
+            [ Attr.width <| Attr.px 200
+              --, Attr.height <| Attr.px 400
+            , Attr.alignRight
+              --, Attr.verticalCenter
+            , Attr.inlineStyle [ ( "z-index", "10" ) ]
+            ]
+            (El.column None
+                [ Attr.alignLeft ]
+                (List.map exampleRow <| Dict.keys model.examples)
+            )
+
+
+
+--|> El.screen
 
 
 viewNodeSelector model node =
@@ -517,11 +586,11 @@ viewScene model =
         rootEntityView =
             Graph.get model.rootId model.graph
                 |> Maybe.map (viewEntity model [])
-                |> Maybe.map (\e -> box [ scale 10 10 10 ] [ e ])
+                |> Maybe.map (\e -> box [ scale 1 1 1 ] [ e ])
     in
         scene [ HtmlAttr.attribute "embedded" "true" ]
             (MaybeEx.toList rootEntityView
-                ++ [ sky [ color (Color.rgb 200 150 220) ] []
+                ++ [ sky [ color (Color.rgb 210 230 250) ] []
                    , light
                         [ Light.type_ Light.Ambient
                         , position 20 100 0
@@ -593,7 +662,7 @@ viewEntity model ancestors nodeCtx =
             , opacity entity.opacity
               -- , AfAttr.metalness 1
               -- , AfAttr.roughness 1
-              -- , AfAttr.shader "flat"
+            , AfAttr.shader "flat"
             , height 1
             , width 1
             , depth 1
@@ -605,20 +674,14 @@ viewEntity model ancestors nodeCtx =
 
 
 main =
-    Html.program { init = model ! [], view = view, update = update, subscriptions = subscriptions }
-
-
-emptyTransformation =
-    { translation = vector3dZero
-    , scale = Geo.Vector3d ( 1, 1, 1 )
-    , rotation = vector3dZero
-    }
+    Html.program
+        { init = update (Load "graph2") model
+        , view = view
+        , update = update
+        , subscriptions = subscriptions
+        }
 
 
 uncurry3 : (a -> b -> c -> d) -> ( a, b, c ) -> d
 uncurry3 func ( x, y, z ) =
     func x y z
-
-
-vector3dZero =
-    Geo.Vector3d ( 0, 0, 0 )

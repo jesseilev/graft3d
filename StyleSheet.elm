@@ -21,6 +21,8 @@ type Style
     | Hairline
     | DeleteButton
     | NewButton
+    | Dropdown
+    | DropdownItem
 
 
 type Variation
@@ -108,6 +110,12 @@ styleSheet =
                 , Shadow.box noShadow
                 ]
             ]
+        , Style.style Dropdown
+            [ Color.background <| Color.greyscale 0.75
+            , Shadow.simple
+            ]
+        , Style.style DropdownItem
+            [ Style.hover [ Color.background <| Color.greyscale 0.7 ] ]
         ]
 
 
