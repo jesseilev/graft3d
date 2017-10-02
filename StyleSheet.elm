@@ -83,7 +83,11 @@ styleSheet =
               -- , Shadow.simple
             ]
         , Style.style NavLink
-            [ Font.alignRight ]
+            [ Font.alignRight
+            , Style.hover
+                [ Color.background <| Color.greyscale 0.7
+                ]
+            ]
         , Style.style Hairline
             [ Color.border Color.black ]
         , Style.style DeleteButton
@@ -115,7 +119,9 @@ styleSheet =
             , Shadow.simple
             ]
         , Style.style DropdownItem
-            [ Style.hover [ Color.background <| Color.greyscale 0.7 ] ]
+            [ Color.background <| Color.greyscale 0.7
+            , Style.hover [ Color.background <| Color.greyscale 0.65 ]
+            ]
         ]
 
 

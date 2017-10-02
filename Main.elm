@@ -50,6 +50,7 @@ model =
             |> Dict.map (\_ -> (decodeGraph >> Result.toMaybe))
             |> Dict.foldr removeNothings Dict.empty
     , editing = Just (Edge 0 1)
+    , menuHover = Nothing
     }
 
 
@@ -185,6 +186,9 @@ update msg model =
             in
                 { model | graph = newGraph } ! []
 
+        SetMenuHover menuHover ->
+            { model | menuHover = menuHover } ! []
+
         _ ->
             model ! []
 
@@ -242,8 +246,10 @@ view model =
 
 navbar model =
     let
-        navlink str =
-            El.el NavLink [] (El.text str)
+        navlink str attrs =
+            El.el NavLink
+                (attrs ++ [ Attr.padding 6 ])
+                (El.text str)
     in
         El.row Nav
             [ Attr.spread, Attr.paddingXY 20 20, Attr.verticalCenter ]
@@ -253,10 +259,14 @@ navbar model =
                 { name = "Graft 3D"
                 , options =
                     [ navlink "Examples"
+                        [ Events.onMouseEnter <| SetMenuHover (Just Examples)
+                        , Events.onMouseLeave <| SetMenuHover Nothing
+                        ]
                         |> El.below [ viewExamplesMenu model ]
-                    , navlink "Blog"
-                    , navlink "Github"
-                    , navlink "Graft"
+                      --[ viewExamplesMenu model ]
+                    , navlink "Blog" []
+                    , navlink "Github" []
+                    , navlink "Graft" []
                     ]
                 }
             ]
@@ -488,7 +498,10 @@ viewExamplesMenu model =
         exampleRow title =
             El.row DropdownItem
                 [ Attr.padding 10
+                , Attr.alignLeft
                 , Events.onClick (Load title)
+                , Events.onMouseEnter <| SetMenuHover (Just Examples)
+                , Events.onMouseLeave <| SetMenuHover Nothing
                 ]
                 [ El.text title ]
     in
@@ -498,9 +511,13 @@ viewExamplesMenu model =
             , Attr.alignRight
               --, Attr.verticalCenter
             , Attr.inlineStyle [ ( "z-index", "10" ) ]
+            , if model.menuHover /= Just Examples then
+                Attr.hidden
+              else
+                Attr.attribute "class" ""
             ]
             (El.column None
-                [ Attr.alignLeft ]
+                [ Attr.width <| Attr.percent 100 ]
                 (List.map exampleRow <| Dict.keys model.examples)
             )
 
@@ -675,7 +692,7 @@ viewEntity model ancestors nodeCtx =
 
 main =
     Html.program
-        { init = update (Load "graph2") model
+        { init = update (Load "Simple") model
         , view = view
         , update = update
         , subscriptions = subscriptions

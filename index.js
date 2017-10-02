@@ -28613,9 +28613,9 @@ var _user$project$Types$Animated = F3(
 	function (a, b, c) {
 		return {data: a, animate: b, isAnimating: c};
 	});
-var _user$project$Types$Model = F5(
-	function (a, b, c, d, e) {
-		return {time: a, graph: b, examples: c, rootId: d, editing: e};
+var _user$project$Types$Model = F6(
+	function (a, b, c, d, e, f) {
+		return {time: a, graph: b, examples: c, rootId: d, editing: e, menuHover: f};
 	});
 var _user$project$Types$TransformUtils = F4(
 	function (a, b, c, d) {
@@ -28688,7 +28688,11 @@ var _user$project$Types$Edge = F2(
 var _user$project$Types$Node = function (a) {
 	return {ctor: 'Node', _0: a};
 };
+var _user$project$Types$Examples = {ctor: 'Examples'};
 var _user$project$Types$NoOp = {ctor: 'NoOp'};
+var _user$project$Types$SetMenuHover = function (a) {
+	return {ctor: 'SetMenuHover', _0: a};
+};
 var _user$project$Types$Load = function (a) {
 	return {ctor: 'Load', _0: a};
 };
@@ -28949,7 +28953,17 @@ var _user$project$StyleSheet$styleSheet = _mdgriffith$style_elements$Style$style
 										{
 											ctor: '::',
 											_0: _mdgriffith$style_elements$Style_Font$alignRight,
-											_1: {ctor: '[]'}
+											_1: {
+												ctor: '::',
+												_0: _mdgriffith$style_elements$Style$hover(
+													{
+														ctor: '::',
+														_0: _mdgriffith$style_elements$Style_Color$background(
+															_elm_lang$core$Color$greyscale(0.7)),
+														_1: {ctor: '[]'}
+													}),
+												_1: {ctor: '[]'}
+											}
 										}),
 									_1: {
 										ctor: '::',
@@ -29089,14 +29103,19 @@ var _user$project$StyleSheet$styleSheet = _mdgriffith$style_elements$Style$style
 															_user$project$StyleSheet$DropdownItem,
 															{
 																ctor: '::',
-																_0: _mdgriffith$style_elements$Style$hover(
-																	{
-																		ctor: '::',
-																		_0: _mdgriffith$style_elements$Style_Color$background(
-																			_elm_lang$core$Color$greyscale(0.7)),
-																		_1: {ctor: '[]'}
-																	}),
-																_1: {ctor: '[]'}
+																_0: _mdgriffith$style_elements$Style_Color$background(
+																	_elm_lang$core$Color$greyscale(0.7)),
+																_1: {
+																	ctor: '::',
+																	_0: _mdgriffith$style_elements$Style$hover(
+																		{
+																			ctor: '::',
+																			_0: _mdgriffith$style_elements$Style_Color$background(
+																				_elm_lang$core$Color$greyscale(0.65)),
+																			_1: {ctor: '[]'}
+																		}),
+																	_1: {ctor: '[]'}
+																}
 															}),
 														_1: {ctor: '[]'}
 													}
@@ -29419,11 +29438,19 @@ var _user$project$Worlds$graph1 = A2(
 var _user$project$Worlds$jsonExamples = _elm_lang$core$Dict$fromList(
 	{
 		ctor: '::',
-		_0: A2(_user$project$Types_ops['=>'], 'graph1', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#005ab4\",\"opacity\":0.82,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#009664\",\"opacity\":0.55,\"shape\":\"Box\"}}],\"edges\":[{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.5,\"z\":1},\"scale\":{\"x\":0.6,\"y\":1,\"z\":0.2},\"rotation\":{\"x\":0,\"y\":30,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-1.5,\"y\":0.1,\"z\":-0.2},\"scale\":{\"x\":1.14,\"y\":0.94,\"z\":1.9},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
+		_0: A2(_user$project$Types_ops['=>'], 'Simple', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#005ab4\",\"opacity\":0.82,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#009664\",\"opacity\":0.55,\"shape\":\"Box\"}}],\"edges\":[{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.5,\"z\":1},\"scale\":{\"x\":0.6,\"y\":1,\"z\":0.2},\"rotation\":{\"x\":0,\"y\":30,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-1.5,\"y\":0.1,\"z\":-0.2},\"scale\":{\"x\":1.14,\"y\":0.94,\"z\":1.9},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
 		_1: {
 			ctor: '::',
-			_0: A2(_user$project$Types_ops['=>'], 'graph2', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#005ab4\",\"opacity\":0.28,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#009664\",\"opacity\":0.73,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#555753\",\"opacity\":0.5,\"shape\":\"Box\"}}],\"edges\":[{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":0,\"z\":0},\"scale\":{\"x\":0.5,\"y\":0.53,\"z\":1.06},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-1.1,\"y\":-0.5,\"z\":0},\"scale\":{\"x\":0.43,\"y\":0.43,\"z\":0.2},\"rotation\":{\"x\":249,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":0,\"label\":{\"translation\":{\"x\":-1.5,\"y\":0.1,\"z\":-0.2},\"scale\":{\"x\":1.28,\"y\":0.8,\"z\":1.8},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
-			_1: {ctor: '[]'}
+			_0: A2(_user$project$Types_ops['=>'], 'Planks', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#005ab4\",\"opacity\":0.28,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#009664\",\"opacity\":0.73,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#555753\",\"opacity\":0.5,\"shape\":\"Box\"}}],\"edges\":[{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":0,\"z\":0},\"scale\":{\"x\":0.5,\"y\":0.53,\"z\":1.06},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-1.1,\"y\":-0.5,\"z\":0},\"scale\":{\"x\":0.43,\"y\":0.43,\"z\":0.2},\"rotation\":{\"x\":249,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":0,\"label\":{\"translation\":{\"x\":-1.5,\"y\":0.1,\"z\":-0.2},\"scale\":{\"x\":1.28,\"y\":0.8,\"z\":1.8},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
+			_1: {
+				ctor: '::',
+				_0: A2(_user$project$Types_ops['=>'], 'Wavy Thing', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#008040\",\"opacity\":0.24,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#e6e6e6\",\"opacity\":0.22,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#008080\",\"opacity\":0.6,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":1,\"z\":0},\"scale\":{\"x\":1,\"y\":1.34,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":0.6,\"y\":1,\"z\":0.48},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":2.4,\"y\":-1,\"z\":-1.6},\"scale\":{\"x\":0.5,\"y\":1.09,\"z\":0.31},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-0.1,\"y\":-0.1,\"z\":0.4},\"scale\":{\"x\":1.14,\"y\":0.67,\"z\":1.13},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$Types_ops['=>'], 'Sea Shell', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#00964e\",\"opacity\":0.39,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#ff8000\",\"opacity\":0.33,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#00ff80\",\"opacity\":0.62,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.1,\"z\":0},\"scale\":{\"x\":0.68,\"y\":1.32,\"z\":0.78},\"rotation\":{\"x\":91,\"y\":301,\"z\":286}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":0.2,\"z\":0.2},\"scale\":{\"x\":0.6,\"y\":1,\"z\":0.48},\"rotation\":{\"x\":360,\"y\":360,\"z\":360}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":0.6,\"y\":0.2,\"z\":0.1},\"scale\":{\"x\":1.33,\"y\":1.48,\"z\":0.45},\"rotation\":{\"x\":255,\"y\":184,\"z\":166}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-0.1,\"y\":-0.1,\"z\":0.4},\"scale\":{\"x\":1.14,\"y\":0.67,\"z\":1.13},\"rotation\":{\"x\":0,\"y\":0,\"z\":346}}}]}'),
+					_1: {ctor: '[]'}
+				}
+			}
 		}
 	});
 
@@ -29838,9 +29865,24 @@ var _user$project$Main$viewExamplesMenu = function (model) {
 				_0: _mdgriffith$style_elements$Element_Attributes$padding(10),
 				_1: {
 					ctor: '::',
-					_0: _mdgriffith$style_elements$Element_Events$onClick(
-						_user$project$Types$Load(title)),
-					_1: {ctor: '[]'}
+					_0: _mdgriffith$style_elements$Element_Attributes$alignLeft,
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Events$onClick(
+							_user$project$Types$Load(title)),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$style_elements$Element_Events$onMouseEnter(
+								_user$project$Types$SetMenuHover(
+									_elm_lang$core$Maybe$Just(_user$project$Types$Examples))),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$style_elements$Element_Events$onMouseLeave(
+									_user$project$Types$SetMenuHover(_elm_lang$core$Maybe$Nothing)),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
 				}
 			},
 			{
@@ -29867,7 +29909,13 @@ var _user$project$Main$viewExamplesMenu = function (model) {
 							_0: {ctor: '_Tuple2', _0: 'z-index', _1: '10'},
 							_1: {ctor: '[]'}
 						}),
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: (!_elm_lang$core$Native_Utils.eq(
+							model.menuHover,
+							_elm_lang$core$Maybe$Just(_user$project$Types$Examples))) ? _mdgriffith$style_elements$Element_Attributes$hidden : A2(_mdgriffith$style_elements$Element_Attributes$attribute, 'class', ''),
+						_1: {ctor: '[]'}
+					}
 				}
 			}
 		},
@@ -29876,7 +29924,8 @@ var _user$project$Main$viewExamplesMenu = function (model) {
 			_user$project$StyleSheet$None,
 			{
 				ctor: '::',
-				_0: _mdgriffith$style_elements$Element_Attributes$alignLeft,
+				_0: _mdgriffith$style_elements$Element_Attributes$width(
+					_mdgriffith$style_elements$Element_Attributes$percent(100)),
 				_1: {ctor: '[]'}
 			},
 			A2(
@@ -30512,13 +30561,21 @@ var _user$project$Main$viewDetailSidebar = function (model) {
 	}
 };
 var _user$project$Main$navbar = function (model) {
-	var navlink = function (str) {
-		return A3(
-			_mdgriffith$style_elements$Element$el,
-			_user$project$StyleSheet$NavLink,
-			{ctor: '[]'},
-			_mdgriffith$style_elements$Element$text(str));
-	};
+	var navlink = F2(
+		function (str, attrs) {
+			return A3(
+				_mdgriffith$style_elements$Element$el,
+				_user$project$StyleSheet$NavLink,
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					attrs,
+					{
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$padding(6),
+						_1: {ctor: '[]'}
+					}),
+				_mdgriffith$style_elements$Element$text(str));
+		});
 	return A3(
 		_mdgriffith$style_elements$Element$row,
 		_user$project$StyleSheet$Nav,
@@ -30571,16 +30628,39 @@ var _user$project$Main$navbar = function (model) {
 									_0: _user$project$Main$viewExamplesMenu(model),
 									_1: {ctor: '[]'}
 								},
-								navlink('Examples')),
+								A2(
+									navlink,
+									'Examples',
+									{
+										ctor: '::',
+										_0: _mdgriffith$style_elements$Element_Events$onMouseEnter(
+											_user$project$Types$SetMenuHover(
+												_elm_lang$core$Maybe$Just(_user$project$Types$Examples))),
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$style_elements$Element_Events$onMouseLeave(
+												_user$project$Types$SetMenuHover(_elm_lang$core$Maybe$Nothing)),
+											_1: {ctor: '[]'}
+										}
+									})),
 							_1: {
 								ctor: '::',
-								_0: navlink('Blog'),
+								_0: A2(
+									navlink,
+									'Blog',
+									{ctor: '[]'}),
 								_1: {
 									ctor: '::',
-									_0: navlink('Github'),
+									_0: A2(
+										navlink,
+										'Github',
+										{ctor: '[]'}),
 									_1: {
 										ctor: '::',
-										_0: navlink('Graft'),
+										_0: A2(
+											navlink,
+											'Graft',
+											{ctor: '[]'}),
 										_1: {ctor: '[]'}
 									}
 								}
@@ -30871,6 +30951,13 @@ var _user$project$Main$update = F2(
 							model,
 							{graph: newGraph}),
 						{ctor: '[]'});
+				case 'SetMenuHover':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						_elm_lang$core$Native_Utils.update(
+							model,
+							{menuHover: _p11._0}),
+						{ctor: '[]'});
 				default:
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
@@ -30906,13 +30993,14 @@ var _user$project$Main$model = {
 			},
 			_user$project$Worlds$jsonExamples)),
 	editing: _elm_lang$core$Maybe$Just(
-		A2(_user$project$Types$Edge, 0, 1))
+		A2(_user$project$Types$Edge, 0, 1)),
+	menuHover: _elm_lang$core$Maybe$Nothing
 };
 var _user$project$Main$main = _elm_lang$html$Html$program(
 	{
 		init: A2(
 			_user$project$Main$update,
-			_user$project$Types$Load('graph2'),
+			_user$project$Types$Load('Simple'),
 			_user$project$Main$model),
 		view: _user$project$Main$view,
 		update: _user$project$Main$update,

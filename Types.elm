@@ -79,12 +79,17 @@ type alias Model =
     , examples : Dict String Graph
     , rootId : Id
     , editing : Maybe Editable
+    , menuHover : Maybe MenuHover
     }
 
 
 type Editable
     = Node Id
     | Edge Id Id
+
+
+type MenuHover
+    = Examples
 
 
 
@@ -111,6 +116,7 @@ type
       -- META
     | Save
     | Load String
+    | SetMenuHover (Maybe MenuHover)
     | NoOp
 
 
