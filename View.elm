@@ -1,7 +1,7 @@
 module View exposing (root)
 
 import Types exposing (..)
-import StyleSheet exposing (styleSheet, Style(..), Variation(..))
+import MyStyles exposing (Style(..), Variation(..))
 import Graph.Extra as GraphEx
 import Html exposing (Html)
 import Html.Attributes as HtmlAttr
@@ -37,10 +37,10 @@ type alias Element variation =
 
 root : Model -> Html Msg
 root model =
-    El.viewport styleSheet
+    El.viewport MyStyles.stylesheet
         <| El.column Main
             [ Attr.height Attr.fill ]
-            [ navbar model
+            [ viewNavbar model
             , El.row None
                 [ Attr.width Attr.fill
                 , Attr.height Attr.fill
@@ -48,15 +48,12 @@ root model =
                 [ viewSelectionSidebar model
                 , viewDetailSidebar model
                 , viewSceneContainer model
-                  --|> El.within
-                  --    [ viewSelectionSidebar model
-                  --        |> El.onRight [ viewDetailSidebar model ]
-                  --    ]
                 ]
             ]
 
 
-navbar model =
+viewNavbar : Model -> Element Variation
+viewNavbar model =
     let
         navlink text href attrs =
             El.el NavLink
@@ -78,8 +75,6 @@ navbar model =
                         , Events.onMouseLeave <| ChangeMenuHover Hide Examples
                         ]
                         |> El.below [ viewExamplesMenu model ]
-                      --[ viewExamplesMenu model ]
-                      --, navlink "Blog" []
                     , navlink "Graft2D" "https://jesseilev.github.io/graft" []
                     , navlink "Github" "https://github.com/jesseilev/graft3d" []
                     ]
@@ -89,14 +84,15 @@ navbar model =
 
 viewDetailSidebar model =
     let
-        showDetails getGraphData viewDetail =
-            El.sidebar Sidebar
-                [ Attr.height <| Attr.percent 100
-                , Attr.minWidth <| Attr.px 280
-                  --, Attr.padding 20
-                ]
-                [ El.whenJust (getGraphData model.graph) viewDetail
-                ]
+        showDetails getGraphData viewDetailContent =
+            El.whenJust (getGraphData model.graph)
+                <| (\detailData ->
+                        El.sidebar Sidebar
+                            [ Attr.height <| Attr.percent 100
+                            , Attr.minWidth <| Attr.px 280
+                            ]
+                            [ viewDetailContent detailData ]
+                   )
     in
         case model.editing of
             Nothing ->
@@ -118,7 +114,7 @@ viewNodeDetail model node =
                     [ HtmlAttr.type_ "color"
                     , HtmlAttr.value <| colorToHex node.label.color
                     , HtmlEvents.onInput (ChangeColor node.id)
-                    , HtmlAttr.style [ ( "width", "100%" ) ]
+                    , HtmlAttr.style MyStyles.colorPicker
                     ]
                     []
 
@@ -138,16 +134,8 @@ viewNodeDetail model node =
                     , HtmlAttr.step "0.01"
                     , HtmlEvents.onInput (createMsg ChangeOpacity)
                     , HtmlAttr.style
-                        [ ( "width", "100%" )
-                        , ( "-webkit-appearance", "none" )
-                        , ( "height", "4px" )
-                          --, ( "width", "150px" )
-                        , ( "background"
-                          , ("linear-gradient(to right, rgba(0,0,0,0), "
-                                ++ colorToCssRgba node.label.color
-                            )
-                          )
-                        ]
+                        <| MyStyles.slider
+                        ++ (MyStyles.opacitySlider node.label.color)
                     ]
                     []
     in
@@ -203,7 +191,7 @@ viewEdgeDetail model edge =
 
         dropdownChoice node =
             Html.option [ HtmlAttr.value <| toString node.id ]
-                [ El.toHtml styleSheet <| viewNodeBadge model node 20 [] ]
+                [ El.toHtml MyStyles.stylesheet <| viewNodeBadge model node 20 [] ]
 
         dropdown : String -> Id -> (Id -> Msg) -> Element v
         dropdown labelStr selectedVal msgConstructor =

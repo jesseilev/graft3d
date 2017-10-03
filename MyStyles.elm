@@ -1,4 +1,4 @@
-module StyleSheet exposing (..)
+module MyStyles exposing (..)
 
 import Style exposing (StyleSheet, style)
 import Style.Color as Color
@@ -7,6 +7,8 @@ import Style.Font as Font
 import Style.Scale as Scale
 import Style.Shadow as Shadow
 import Color exposing (Color)
+import Html.Attributes as Attr
+import Color.Convert exposing (colorToCssRgba)
 
 
 type Style
@@ -32,8 +34,8 @@ type Variation
     | Title
 
 
-styleSheet : StyleSheet Style Variation
-styleSheet =
+stylesheet : StyleSheet Style Variation
+stylesheet =
     Style.styleSheet
         [ Style.style None
             []
@@ -152,6 +154,30 @@ styleSheet =
         , Style.style PropertyLabel
             [ Font.weight 400 ]
         ]
+
+
+slider : List ( String, String )
+slider =
+    [ "width" => "100%"
+    , "-webkit-appearance" => "none"
+    , "height" => "4px"
+    ]
+
+
+opacitySlider : Color -> List ( String, String )
+opacitySlider color =
+    [ "background"
+        => ("linear-gradient(to right, rgba(0,0,0,0), " ++ colorToCssRgba color)
+    ]
+
+
+colorPicker : List ( String, String )
+colorPicker =
+    [ "width" => "100%" ]
+
+
+(=>) =
+    (,)
 
 
 scaled =
