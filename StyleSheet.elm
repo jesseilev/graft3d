@@ -56,7 +56,7 @@ styleSheet =
             , Shadow.box
                 { offset = ( 10, 0 )
                 , blur = 30
-                , size = -10
+                , size = -25
                 , color = Color.black
                 }
             ]
