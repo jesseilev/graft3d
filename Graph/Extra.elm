@@ -103,8 +103,23 @@ updateEdgeTo newTo edge =
         >> insertEdge { edge | to = newTo }
 
 
+updateEdgeFromTo newFrom newTo edge =
+    removeEdge edge.from edge.to
+        >> insertEdge { edge | from = newFrom, to = newTo }
+
+
 insertNode node graph =
     Graph.insert (isolatedNodeContext node) graph
+
+
+availableEdges : Graph n e -> List ( Id, Id )
+availableEdges graph =
+    ListEx.lift2 (,) (Graph.nodeIds graph) (Graph.nodeIds graph)
+        |> List.filter (\pair -> uncurry getEdge pair graph == Nothing)
+
+
+type alias Id =
+    Graph.NodeId
 
 
 isolatedNodeContext node =

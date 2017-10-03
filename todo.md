@@ -10,3 +10,7 @@ graph option?
 
 LATER
 objects as shells made of thin sheets
+
+
+TINY
+hideUnless

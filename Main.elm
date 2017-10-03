@@ -33,7 +33,6 @@ import AFrame.Primitives exposing (sphere, box, cylinder, plane, sky)
 import AFrame.Primitives.Camera exposing (camera)
 import AFrame.Primitives.Light as Light exposing (light)
 import AFrame.Primitives.Cursor as Cursor exposing (..)
-import Maybe.Extra as MaybeEx
 
 
 model : Model
@@ -50,7 +49,7 @@ model =
             |> Dict.map (\_ -> (decodeGraph >> Result.toMaybe))
             |> Dict.foldr removeNothings Dict.empty
     , editing = Just (Edge 0 1)
-    , menuHover = Nothing
+    , menuHover = NoMenu
     }
 
 
@@ -74,8 +73,8 @@ update msg model =
         Click id ->
             { model | graph = toggleAnimation id model.graph }
                 ! []
-                |> Debug.log ("Click" ++ toString id)
 
+        --|> Debug.log ("Click" ++ toString id)
         Edit editing ->
             { model | editing = Just editing } ! []
 
@@ -94,7 +93,7 @@ update msg model =
         NewNode from ->
             let
                 entity =
-                    { color = Color.charcoal, opacity = 0.5, shape = Box }
+                    { color = Color.greyscale 0.5, opacity = 0.5, shape = Box }
 
                 nextId =
                     Graph.nodeIdRange model.graph
@@ -120,6 +119,7 @@ update msg model =
                 { model
                     | graph = GraphEx.insertEdge edge model.graph
                     , editing = Just (Edge from to)
+                    , menuHover = NoMenu
                 }
                     ! []
 
@@ -152,23 +152,14 @@ update msg model =
             in
                 { model | graph = GraphEx.updateEdge from to edgeUpdater model.graph } ! []
 
-        EdgeFrom from to newFrom ->
+        EdgeFromTo from to newFrom newTo ->
             let
                 newGraph =
                     GraphEx.getEdge from to model.graph
-                        |> Maybe.map (\e -> GraphEx.updateEdgeFrom newFrom e model.graph)
+                        |> Maybe.map (\e -> GraphEx.updateEdgeFromTo newFrom newTo e model.graph)
                         |> Maybe.withDefault model.graph
             in
-                { model | graph = newGraph, editing = Just (Edge newFrom to) } ! []
-
-        EdgeTo from to newTo ->
-            let
-                newGraph =
-                    GraphEx.getEdge from to model.graph
-                        |> Maybe.map (\e -> GraphEx.updateEdgeTo newTo e model.graph)
-                        |> Maybe.withDefault model.graph
-            in
-                { model | graph = newGraph, editing = Just (Edge from newTo) } ! []
+                { model | graph = newGraph, editing = Just (Edge newFrom newTo) } ! []
 
         Save ->
             let
@@ -186,8 +177,23 @@ update msg model =
             in
                 { model | graph = newGraph } ! []
 
-        SetMenuHover menuHover ->
-            { model | menuHover = menuHover } ! []
+        ChangeMenuHover setter menuHover ->
+            let
+                answer =
+                    case setter of
+                        Show ->
+                            menuHover
+
+                        Hide ->
+                            NoMenu
+
+                        Toggle ->
+                            if model.menuHover == menuHover then
+                                NoMenu
+                            else
+                                menuHover
+            in
+                { model | menuHover = answer } ! []
 
         _ ->
             model ! []
@@ -253,14 +259,14 @@ navbar model =
     in
         El.row Nav
             [ Attr.spread, Attr.paddingXY 20 20, Attr.verticalCenter ]
-            [ El.el Header [] (El.text "Graft3D")
+            [ El.el Header [ Attr.vary Title True ] (El.text "Graft3D")
             , El.navigation None
                 [ Attr.padding 0, Attr.spacing 10, Attr.verticalCenter ]
                 { name = "Graft 3D"
                 , options =
                     [ navlink "Examples"
-                        [ Events.onMouseEnter <| SetMenuHover (Just Examples)
-                        , Events.onMouseLeave <| SetMenuHover Nothing
+                        [ Events.onMouseEnter <| ChangeMenuHover Show Examples
+                        , Events.onMouseLeave <| ChangeMenuHover Hide Examples
                         ]
                         |> El.below [ viewExamplesMenu model ]
                       --[ viewExamplesMenu model ]
@@ -278,12 +284,12 @@ viewDetailSidebar model =
             El.sidebar Sidebar
                 [ Attr.height <| Attr.percent 100
                 , Attr.minWidth <| Attr.px 200
-                , Attr.padding 20
+                  --, Attr.padding 20
                 ]
                 [ El.whenJust (getGraphData model.graph) viewDetail
                 ]
     in
-        case model.editing |> Debug.log "editing" of
+        case model.editing of
             Nothing ->
                 El.empty
 
@@ -327,7 +333,7 @@ viewNodeDetail model node =
                     []
     in
         El.column None
-            [ Attr.spacing 20 ]
+            [ Attr.spacing 20, Attr.padding 20 ]
             [ El.column None
                 []
                 [ El.row None [] [ El.text "Color: " ]
@@ -355,10 +361,18 @@ viewEdgeDetail model edge =
     let
         sliderTriplet label transformAttribute =
             El.column None
-                []
+                [ Attr.spacing 4 ]
                 [ El.text label
                 , viewTransformationSliders model edge transformAttribute
                 ]
+
+        fromToNodes =
+            case ( Graph.get edge.from model.graph, Graph.get edge.to model.graph ) of
+                ( Just from, Just to ) ->
+                    Just ( from.node, to.node )
+
+                _ ->
+                    Nothing
 
         dropdownChoice node =
             Html.option [ HtmlAttr.value <| toString node.id ]
@@ -376,22 +390,89 @@ viewEdgeDetail model edge =
                         ]
                         (List.map dropdownChoice (Graph.nodes model.graph))
                 ]
+
+        dropdownMenu =
+            El.row None
+                [ Attr.verticalCenter ]
+                [ El.el SelectorItem
+                    [ Attr.center
+                    , Attr.verticalCenter
+                      --, Attr.width <| Attr.px 45
+                      --, Attr.height <| Attr.px 45
+                    , Attr.padding 10
+                    , Attr.vary Selected (model.menuHover == EditingEdgeNodes)
+                    , Events.onClick <| ChangeMenuHover Toggle EditingEdgeNodes
+                    ]
+                    (viewEdgeBadge model edge)
+                    |> El.below
+                        [ El.el Dropdown
+                            [ Attr.inlineStyle [ ( "z-index", "10" ) ]
+                            , if model.menuHover /= EditingEdgeNodes then
+                                Attr.hidden
+                              else
+                                Attr.attribute "class" ""
+                            ]
+                            (El.row None
+                                [ Attr.width <| Attr.percent 100 ]
+                                (GraphEx.availableEdges model.graph
+                                    |> List.map
+                                        (\( from, to ) ->
+                                            El.column DropdownItem
+                                                [ Attr.paddingXY 16 8
+                                                , Events.onClick <| EdgeFromTo edge.from edge.to from to
+                                                , Attr.center
+                                                ]
+                                                [ El.el None
+                                                    [ Attr.paddingBottom 4 ]
+                                                    (El.text "Change to")
+                                                , viewEdgeBadge model (Graph.Edge from to emptyTransformation)
+                                                ]
+                                        )
+                                )
+                            )
+                        ]
+                ]
+
+        description =
+            fromToNodes
+                |> MaybeEx.unwrap El.empty
+                    (\( from, to ) ->
+                        (El.row Header
+                            [ Attr.padding 20
+                            , Attr.spacing 8
+                            , Attr.alignBottom
+                            ]
+                            [ El.text "Each"
+                            , viewNodeBadge model from 25 []
+                            , El.text "Spawns a"
+                            , viewNodeBadge model to 25 []
+                            ]
+                        )
+                    )
     in
         El.column None
-            [ Attr.spacing 10 ]
-            [ dropdown "Every" edge.from (EdgeFrom edge.from edge.to)
-            , dropdown "generates a" edge.to (EdgeTo edge.from edge.to)
-            , El.hairline None
-            , sliderTriplet "Move along axis: " Translation
-            , sliderTriplet "Resize along axis: " Scale
-            , sliderTriplet "Rotate around axis: " Rotation
-            , El.hairline None
-            , El.button DeleteButton
-                [ Attr.height <| Attr.px 50
-                , Attr.width <| Attr.px 100
-                , Events.onClick <| Delete (Edge edge.from edge.to)
+            []
+            [ description
+            , El.hairline Hairline
+            , El.column None
+                [ Attr.paddingXY 20 6
+                , Attr.spacing 14
                 ]
-                (El.text "Delete")
+                [ dropdownMenu
+                , El.hairline Hairline
+                , sliderTriplet "Move along axis: " Translation
+                , El.hairline Hairline
+                , sliderTriplet "Resize along axis: " Scale
+                , El.hairline Hairline
+                , sliderTriplet "Rotate around axis: " Rotation
+                , El.hairline Hairline
+                , El.button DeleteButton
+                    [ Attr.height <| Attr.px 50
+                    , Attr.width <| Attr.px 100
+                    , Events.onClick <| Delete (Edge edge.from edge.to)
+                    ]
+                    (El.text "Delete")
+                ]
             ]
 
 
@@ -431,7 +512,7 @@ viewTransformationSliders model edge transformAttribute =
 
         labeledSlider labelStr msgPartial vec3Get =
             El.row None
-                [ Attr.padding 10 ]
+                [ Attr.paddingXY 10 4 ]
                 [ El.text labelStr
                 , slider msgPartial vec3Get
                 , El.text <| toString <| currentValue vec3Get
@@ -447,14 +528,16 @@ viewTransformationSliders model edge transformAttribute =
 
 viewSelectionSidebar model =
     let
-        viewBadgeSelectors model getItems viewItems button =
+        viewBadgeSelectors model getItems viewItems stuffAfterBadges =
             El.column None
                 [ Attr.padding 0, Attr.spacing 0 ]
-                (List.map (viewItems model) (getItems model.graph) ++ [ button ])
+                (List.map (viewItems model) (getItems model.graph) ++ stuffAfterBadges)
 
-        newButton size msg =
-            El.el None
-                [ Attr.padding 10 ]
+        newButton size menuType msg =
+            El.el SelectorItem
+                [ Attr.padding 10
+                , Attr.vary Selected (model.menuHover == menuType)
+                ]
                 (El.button NewButton
                     [ Events.onClick msg
                     , Attr.width <| Attr.px size
@@ -478,11 +561,69 @@ viewSelectionSidebar model =
                 [ viewBadgeSelectors model
                     Graph.nodes
                     viewNodeSelector
-                    (newButton 40 <| NewNode 0)
+                    [ (newButton 40 Nodes <| ChangeMenuHover Toggle Nodes)
+                        |> El.below
+                            [ El.el Dropdown
+                                [ Attr.height <| Attr.px 200
+                                  --, Attr.alignRight
+                                , Attr.inlineStyle [ ( "z-index", "10" ) ]
+                                , if model.menuHover /= Nodes then
+                                    Attr.hidden
+                                  else
+                                    Attr.attribute "class" ""
+                                ]
+                                (El.row None
+                                    [ Attr.width <| Attr.percent 100 ]
+                                    (Graph.nodes model.graph
+                                        |> List.map
+                                            (\n ->
+                                                El.column DropdownItem
+                                                    [ Attr.paddingXY 16 8
+                                                    , Events.onClick <| NewNode n.id
+                                                    ]
+                                                    [ El.el None
+                                                        [ Attr.paddingBottom 4 ]
+                                                        (El.text "from")
+                                                    , viewNodeBadge model n 30 []
+                                                    ]
+                                            )
+                                    )
+                                )
+                            ]
+                    ]
                 , viewBadgeSelectors model
                     (List.reverse << Graph.edges)
                     viewEdgeSelector
-                    (newButton 45 <| NewEdge maxId 0)
+                    [ (newButton 45 Edges <| ChangeMenuHover Toggle Edges)
+                        |> El.below
+                            [ El.el Dropdown
+                                [ Attr.height <| Attr.px 200
+                                  --, Attr.alignRight
+                                , Attr.inlineStyle [ ( "z-index", "10" ) ]
+                                , if model.menuHover /= Edges then
+                                    Attr.hidden
+                                  else
+                                    Attr.attribute "class" ""
+                                ]
+                                (El.row None
+                                    [ Attr.width <| Attr.percent 100 ]
+                                    (GraphEx.availableEdges model.graph
+                                        |> List.map
+                                            (\( from, to ) ->
+                                                El.column DropdownItem
+                                                    [ Attr.paddingXY 16 8
+                                                    , Events.onClick <| NewEdge from to
+                                                    ]
+                                                    [ El.el None
+                                                        [ Attr.paddingBottom 4 ]
+                                                        (El.text "")
+                                                    , viewEdgeBadge model (Graph.Edge from to emptyTransformation)
+                                                    ]
+                                            )
+                                    )
+                                )
+                            ]
+                    ]
                 ]
             , El.button NewButton
                 [ Events.onClick Save
@@ -500,8 +641,8 @@ viewExamplesMenu model =
                 [ Attr.padding 10
                 , Attr.alignLeft
                 , Events.onClick (Load title)
-                , Events.onMouseEnter <| SetMenuHover (Just Examples)
-                , Events.onMouseLeave <| SetMenuHover Nothing
+                , Events.onMouseEnter <| ChangeMenuHover Show Examples
+                , Events.onMouseLeave <| ChangeMenuHover Hide Examples
                 ]
                 [ El.text title ]
     in
@@ -509,9 +650,9 @@ viewExamplesMenu model =
             [ Attr.width <| Attr.px 200
               --, Attr.height <| Attr.px 400
             , Attr.alignRight
-              --, Attr.verticalCenter
+            , Attr.vary NavMenu True
             , Attr.inlineStyle [ ( "z-index", "10" ) ]
-            , if model.menuHover /= Just Examples then
+            , if model.menuHover /= Examples then
                 Attr.hidden
               else
                 Attr.attribute "class" ""
@@ -578,7 +719,7 @@ viewEdgeBadge model edge =
                     |> El.within
                         [ viewNodeBadge model
                             to
-                            20
+                            25
                             [ Attr.alignRight
                             , Attr.alignBottom
                             ]
@@ -607,7 +748,7 @@ viewScene model =
     in
         scene [ HtmlAttr.attribute "embedded" "true" ]
             (MaybeEx.toList rootEntityView
-                ++ [ sky [ color (Color.rgb 210 230 250) ] []
+                ++ [ sky [ color (Color.rgb 100 120 160) ] []
                    , light
                         [ Light.type_ Light.Ambient
                         , position 20 100 0
@@ -671,7 +812,7 @@ viewEntity model ancestors nodeCtx =
                 ]
                 []
     in
-        box
+        sphere
             [ uncurry3 position (Vec3.components t.translation)
             , uncurry3 scale (Vec3.components t.scale)
             , uncurry3 rotation (Vec3.components t.rotation)

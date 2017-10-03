@@ -27,6 +27,8 @@ type Style
 
 type Variation
     = Selected
+    | NavMenu
+    | Title
 
 
 styleSheet : StyleSheet Style Variation
@@ -62,8 +64,8 @@ styleSheet =
             [ Color.background Color.lightGrey
             , Style.hover [ Color.background Color.grey ]
             , Style.variation Selected
-                [ Color.background Color.darkGrey
-                , Style.hover [ Color.background Color.darkGrey ]
+                [ Color.background <| Color.greyscale 0.7
+                , Style.hover [ Color.background <| Color.greyscale 0.7 ]
                 ]
             ]
         , Style.style Badge
@@ -75,7 +77,14 @@ styleSheet =
                 ]
             ]
         , Style.style Header
-            [ Font.size (scaled 2) ]
+            [ Font.size (scaled 3)
+            , Style.variation Title
+                [ Font.size (scaled 10) ]
+              --, Font.weight 4
+              --, Color.text <| Color.greyscale 0.8
+              --, Shadow.deep
+              --, Color.background <| Color.greyscale 0.25
+            ]
         , Style.style Nav
             [ Font.alignRight
             , Color.background <| Color.greyscale 0.75
@@ -89,7 +98,9 @@ styleSheet =
                 ]
             ]
         , Style.style Hairline
-            [ Color.border Color.black ]
+            [ Color.border <| Color.rgba 0 0 0 0.1
+            , Border.bottom 1
+            ]
         , Style.style DeleteButton
             [ Border.rounded 2
             , Border.all 0
@@ -116,17 +127,24 @@ styleSheet =
             ]
         , Style.style Dropdown
             [ Color.background <| Color.greyscale 0.75
-            , Shadow.simple
+            , Shadow.deep
             ]
         , Style.style DropdownItem
-            [ Color.background <| Color.greyscale 0.7
+            [ Color.text <| Color.lightGrey
+              --, Color.background <| Color.darkGrey
+              --, Style.hover [ Color.background <| Color.greyscale 0.3 ]
+            , Color.background <| Color.greyscale 0.7
             , Style.hover [ Color.background <| Color.greyscale 0.65 ]
+            , Style.variation NavMenu
+                [ Color.background <| Color.greyscale 0.7
+                , Style.hover [ Color.background <| Color.greyscale 0.65 ]
+                ]
             ]
         ]
 
 
 scaled =
-    Scale.modular 16 1.618
+    Scale.modular 16 1.05
 
 
 babyElectric =

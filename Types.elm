@@ -79,7 +79,7 @@ type alias Model =
     , examples : Dict String Graph
     , rootId : Id
     , editing : Maybe Editable
-    , menuHover : Maybe MenuHover
+    , menuHover : MenuHover
     }
 
 
@@ -89,7 +89,17 @@ type Editable
 
 
 type MenuHover
-    = Examples
+    = NoMenu
+    | Examples
+    | Nodes
+    | Edges
+    | EditingEdgeNodes
+
+
+type MenuSetter
+    = Show
+    | Hide
+    | Toggle
 
 
 
@@ -111,12 +121,11 @@ type
     | ChangeColor Id String
     | ChangeOpacity Id Float
     | ChangeTransformation TransformAttribute XYorZ Id Id Float
-    | EdgeFrom Id Id Id
-    | EdgeTo Id Id Id
+    | EdgeFromTo Id Id Id Id
       -- META
     | Save
     | Load String
-    | SetMenuHover (Maybe MenuHover)
+    | ChangeMenuHover MenuSetter MenuHover
     | NoOp
 
 
