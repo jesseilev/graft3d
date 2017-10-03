@@ -9300,29 +9300,6 @@ _elm_community$maybe_extra$Maybe_Extra_ops['?'] = F2(
 		return A2(_elm_lang$core$Maybe$withDefault, x, mx);
 	});
 
-var _elm_lang$animation_frame$Native_AnimationFrame = function()
-{
-
-function create()
-{
-	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
-	{
-		var id = requestAnimationFrame(function() {
-			callback(_elm_lang$core$Native_Scheduler.succeed(Date.now()));
-		});
-
-		return function() {
-			cancelAnimationFrame(id);
-		};
-	});
-}
-
-return {
-	create: create
-};
-
-}();
-
 var _elm_lang$core$Task$onError = _elm_lang$core$Native_Scheduler.onError;
 var _elm_lang$core$Task$andThen = _elm_lang$core$Native_Scheduler.andThen;
 var _elm_lang$core$Task$spawnCmd = F2(
@@ -9738,148 +9715,6 @@ _elm_lang$core$Native_Platform.effectManagers['Time'] = {pkg: 'elm-lang/core', i
 var _elm_lang$core$Process$kill = _elm_lang$core$Native_Scheduler.kill;
 var _elm_lang$core$Process$sleep = _elm_lang$core$Native_Scheduler.sleep;
 var _elm_lang$core$Process$spawn = _elm_lang$core$Native_Scheduler.spawn;
-
-var _elm_lang$animation_frame$AnimationFrame$rAF = _elm_lang$animation_frame$Native_AnimationFrame.create(
-	{ctor: '_Tuple0'});
-var _elm_lang$animation_frame$AnimationFrame$subscription = _elm_lang$core$Native_Platform.leaf('AnimationFrame');
-var _elm_lang$animation_frame$AnimationFrame$State = F3(
-	function (a, b, c) {
-		return {subs: a, request: b, oldTime: c};
-	});
-var _elm_lang$animation_frame$AnimationFrame$init = _elm_lang$core$Task$succeed(
-	A3(
-		_elm_lang$animation_frame$AnimationFrame$State,
-		{ctor: '[]'},
-		_elm_lang$core$Maybe$Nothing,
-		0));
-var _elm_lang$animation_frame$AnimationFrame$onEffects = F3(
-	function (router, subs, _p0) {
-		var _p1 = _p0;
-		var _p5 = _p1.request;
-		var _p4 = _p1.oldTime;
-		var _p2 = {ctor: '_Tuple2', _0: _p5, _1: subs};
-		if (_p2._0.ctor === 'Nothing') {
-			if (_p2._1.ctor === '[]') {
-				return _elm_lang$core$Task$succeed(
-					A3(
-						_elm_lang$animation_frame$AnimationFrame$State,
-						{ctor: '[]'},
-						_elm_lang$core$Maybe$Nothing,
-						_p4));
-			} else {
-				return A2(
-					_elm_lang$core$Task$andThen,
-					function (pid) {
-						return A2(
-							_elm_lang$core$Task$andThen,
-							function (time) {
-								return _elm_lang$core$Task$succeed(
-									A3(
-										_elm_lang$animation_frame$AnimationFrame$State,
-										subs,
-										_elm_lang$core$Maybe$Just(pid),
-										time));
-							},
-							_elm_lang$core$Time$now);
-					},
-					_elm_lang$core$Process$spawn(
-						A2(
-							_elm_lang$core$Task$andThen,
-							_elm_lang$core$Platform$sendToSelf(router),
-							_elm_lang$animation_frame$AnimationFrame$rAF)));
-			}
-		} else {
-			if (_p2._1.ctor === '[]') {
-				return A2(
-					_elm_lang$core$Task$andThen,
-					function (_p3) {
-						return _elm_lang$core$Task$succeed(
-							A3(
-								_elm_lang$animation_frame$AnimationFrame$State,
-								{ctor: '[]'},
-								_elm_lang$core$Maybe$Nothing,
-								_p4));
-					},
-					_elm_lang$core$Process$kill(_p2._0._0));
-			} else {
-				return _elm_lang$core$Task$succeed(
-					A3(_elm_lang$animation_frame$AnimationFrame$State, subs, _p5, _p4));
-			}
-		}
-	});
-var _elm_lang$animation_frame$AnimationFrame$onSelfMsg = F3(
-	function (router, newTime, _p6) {
-		var _p7 = _p6;
-		var _p10 = _p7.subs;
-		var diff = newTime - _p7.oldTime;
-		var send = function (sub) {
-			var _p8 = sub;
-			if (_p8.ctor === 'Time') {
-				return A2(
-					_elm_lang$core$Platform$sendToApp,
-					router,
-					_p8._0(newTime));
-			} else {
-				return A2(
-					_elm_lang$core$Platform$sendToApp,
-					router,
-					_p8._0(diff));
-			}
-		};
-		return A2(
-			_elm_lang$core$Task$andThen,
-			function (pid) {
-				return A2(
-					_elm_lang$core$Task$andThen,
-					function (_p9) {
-						return _elm_lang$core$Task$succeed(
-							A3(
-								_elm_lang$animation_frame$AnimationFrame$State,
-								_p10,
-								_elm_lang$core$Maybe$Just(pid),
-								newTime));
-					},
-					_elm_lang$core$Task$sequence(
-						A2(_elm_lang$core$List$map, send, _p10)));
-			},
-			_elm_lang$core$Process$spawn(
-				A2(
-					_elm_lang$core$Task$andThen,
-					_elm_lang$core$Platform$sendToSelf(router),
-					_elm_lang$animation_frame$AnimationFrame$rAF)));
-	});
-var _elm_lang$animation_frame$AnimationFrame$Diff = function (a) {
-	return {ctor: 'Diff', _0: a};
-};
-var _elm_lang$animation_frame$AnimationFrame$diffs = function (tagger) {
-	return _elm_lang$animation_frame$AnimationFrame$subscription(
-		_elm_lang$animation_frame$AnimationFrame$Diff(tagger));
-};
-var _elm_lang$animation_frame$AnimationFrame$Time = function (a) {
-	return {ctor: 'Time', _0: a};
-};
-var _elm_lang$animation_frame$AnimationFrame$times = function (tagger) {
-	return _elm_lang$animation_frame$AnimationFrame$subscription(
-		_elm_lang$animation_frame$AnimationFrame$Time(tagger));
-};
-var _elm_lang$animation_frame$AnimationFrame$subMap = F2(
-	function (func, sub) {
-		var _p11 = sub;
-		if (_p11.ctor === 'Time') {
-			return _elm_lang$animation_frame$AnimationFrame$Time(
-				function (_p12) {
-					return func(
-						_p11._0(_p12));
-				});
-		} else {
-			return _elm_lang$animation_frame$AnimationFrame$Diff(
-				function (_p13) {
-					return func(
-						_p11._0(_p13));
-				});
-		}
-	});
-_elm_lang$core$Native_Platform.effectManagers['AnimationFrame'] = {pkg: 'elm-lang/animation-frame', init: _elm_lang$animation_frame$AnimationFrame$init, onEffects: _elm_lang$animation_frame$AnimationFrame$onEffects, onSelfMsg: _elm_lang$animation_frame$AnimationFrame$onSelfMsg, tag: 'sub', subMap: _elm_lang$animation_frame$AnimationFrame$subMap};
 
 var _elm_lang$core$Color$fmod = F2(
 	function (f, n) {
@@ -29545,12 +29380,12 @@ var _user$project$Worlds$jsonExamples = _elm_lang$core$Dict$fromList(
 		}
 	});
 
-var _user$project$Main$uncurry3 = F2(
+var _user$project$View$uncurry3 = F2(
 	function (func, _p0) {
 		var _p1 = _p0;
 		return A3(func, _p1._0, _p1._1, _p1._2);
 	});
-var _user$project$Main$alphaChar = function (id) {
+var _user$project$View$alphaChar = function (id) {
 	return A3(
 		_elm_community$maybe_extra$Maybe_Extra$unwrap,
 		'Z',
@@ -29561,13 +29396,13 @@ var _user$project$Main$alphaChar = function (id) {
 			_elm_lang$core$Array$fromList(
 				_elm_lang$core$String$toList('abcdefghijklmnopqrstuvwxyz'))));
 };
-var _user$project$Main$backgroundColor = A3(_elm_lang$core$Color$rgb, 100, 120, 160);
-var _user$project$Main$viewEntity = F3(
+var _user$project$View$backgroundColor = A3(_elm_lang$core$Color$rgb, 100, 120, 160);
+var _user$project$View$viewEntity = F3(
 	function (model, ancestors, nodeCtx) {
 		var viewChild = (_elm_lang$core$Native_Utils.cmp(
 			_elm_lang$core$List$length(ancestors),
 			10) < 0) ? A2(
-			_user$project$Main$viewEntity,
+			_user$project$View$viewEntity,
 			model,
 			{ctor: '::', _0: nodeCtx.node.id, _1: ancestors}) : function (_p2) {
 			return A2(
@@ -29635,19 +29470,19 @@ var _user$project$Main$viewEntity = F3(
 			{
 				ctor: '::',
 				_0: A2(
-					_user$project$Main$uncurry3,
+					_user$project$View$uncurry3,
 					_halfzebra$elm_aframe$AFrame_Primitives_Attributes$position,
 					_opensolid$geometry$OpenSolid_Vector3d$components(t.translation)),
 				_1: {
 					ctor: '::',
 					_0: A2(
-						_user$project$Main$uncurry3,
+						_user$project$View$uncurry3,
 						_halfzebra$elm_aframe$AFrame_Primitives_Attributes$scale,
 						_opensolid$geometry$OpenSolid_Vector3d$components(t.scale)),
 					_1: {
 						ctor: '::',
 						_0: A2(
-							_user$project$Main$uncurry3,
+							_user$project$View$uncurry3,
 							_halfzebra$elm_aframe$AFrame_Primitives_Attributes$rotation,
 							_opensolid$geometry$OpenSolid_Vector3d$components(t.rotation)),
 						_1: {
@@ -29685,7 +29520,7 @@ var _user$project$Main$viewEntity = F3(
 			},
 			A2(_elm_lang$core$List$map, viewChild, children));
 	});
-var _user$project$Main$viewScene = function (model) {
+var _user$project$View$viewScene = function (model) {
 	var rootEntityView = A2(
 		_elm_lang$core$Maybe$map,
 		function (e) {
@@ -29705,7 +29540,7 @@ var _user$project$Main$viewScene = function (model) {
 		A2(
 			_elm_lang$core$Maybe$map,
 			A2(
-				_user$project$Main$viewEntity,
+				_user$project$View$viewEntity,
 				model,
 				{ctor: '[]'}),
 			A2(_elm_community$graph$Graph$get, model.rootId, model.graph)));
@@ -29722,7 +29557,7 @@ var _user$project$Main$viewScene = function (model) {
 					A2(
 						_elm_lang$core$Basics_ops['++'],
 						'type: linear; density: 0.05; color: ',
-						_eskimoblood$elm_color_extra$Color_Convert$colorToHex(_user$project$Main$backgroundColor))),
+						_eskimoblood$elm_color_extra$Color_Convert$colorToHex(_user$project$View$backgroundColor))),
 				_1: {ctor: '[]'}
 			}
 		},
@@ -29779,7 +29614,7 @@ var _user$project$Main$viewScene = function (model) {
 				}
 			}));
 };
-var _user$project$Main$viewSceneContainer = function (model) {
+var _user$project$View$viewSceneContainer = function (model) {
 	return A3(
 		_mdgriffith$style_elements$Element$row,
 		_user$project$StyleSheet$None,
@@ -29795,7 +29630,7 @@ var _user$project$Main$viewSceneContainer = function (model) {
 		{
 			ctor: '::',
 			_0: _mdgriffith$style_elements$Element$html(
-				_user$project$Main$viewScene(model)),
+				_user$project$View$viewScene(model)),
 			_1: {
 				ctor: '::',
 				_0: A3(
@@ -29849,7 +29684,7 @@ var _user$project$Main$viewSceneContainer = function (model) {
 			}
 		});
 };
-var _user$project$Main$viewNodeBadge = F4(
+var _user$project$View$viewNodeBadge = F4(
 	function (model, node, size, attrs) {
 		return A3(
 			_mdgriffith$style_elements$Element$el,
@@ -29905,11 +29740,11 @@ var _user$project$Main$viewNodeBadge = F4(
 					{
 						ctor: '::',
 						_0: _elm_lang$html$Html$text(
-							_user$project$Main$alphaChar(node.id)),
+							_user$project$View$alphaChar(node.id)),
 						_1: {ctor: '[]'}
 					})));
 	});
-var _user$project$Main$viewEdgeBadge = F2(
+var _user$project$View$viewEdgeBadge = F2(
 	function (model, edge) {
 		var getNode = A2(_elm_lang$core$Basics$flip, _user$project$Graph_Extra$getNode, model.graph);
 		var _p3 = {
@@ -29923,7 +29758,7 @@ var _user$project$Main$viewEdgeBadge = F2(
 				{
 					ctor: '::',
 					_0: A4(
-						_user$project$Main$viewNodeBadge,
+						_user$project$View$viewNodeBadge,
 						model,
 						_p3._1._0,
 						25,
@@ -29939,7 +29774,7 @@ var _user$project$Main$viewEdgeBadge = F2(
 					_1: {ctor: '[]'}
 				},
 				A4(
-					_user$project$Main$viewNodeBadge,
+					_user$project$View$viewNodeBadge,
 					model,
 					_p3._0._0,
 					45,
@@ -29948,7 +29783,7 @@ var _user$project$Main$viewEdgeBadge = F2(
 			return _mdgriffith$style_elements$Element$empty;
 		}
 	});
-var _user$project$Main$viewEdgeSelector = F2(
+var _user$project$View$viewEdgeSelector = F2(
 	function (model, edge) {
 		return A3(
 			_mdgriffith$style_elements$Element$row,
@@ -29976,11 +29811,11 @@ var _user$project$Main$viewEdgeSelector = F2(
 			},
 			{
 				ctor: '::',
-				_0: A2(_user$project$Main$viewEdgeBadge, model, edge),
+				_0: A2(_user$project$View$viewEdgeBadge, model, edge),
 				_1: {ctor: '[]'}
 			});
 	});
-var _user$project$Main$viewNodeSelector = F2(
+var _user$project$View$viewNodeSelector = F2(
 	function (model, node) {
 		return A3(
 			_mdgriffith$style_elements$Element$el,
@@ -30007,13 +29842,13 @@ var _user$project$Main$viewNodeSelector = F2(
 				}
 			},
 			A4(
-				_user$project$Main$viewNodeBadge,
+				_user$project$View$viewNodeBadge,
 				model,
 				node,
 				40,
 				{ctor: '[]'}));
 	});
-var _user$project$Main$viewExamplesMenu = function (model) {
+var _user$project$View$viewExamplesMenu = function (model) {
 	var exampleRow = function (title) {
 		return A3(
 			_mdgriffith$style_elements$Element$row,
@@ -30092,7 +29927,7 @@ var _user$project$Main$viewExamplesMenu = function (model) {
 				exampleRow,
 				_elm_lang$core$Dict$keys(model.examples))));
 };
-var _user$project$Main$viewSelectionSidebar = function (model) {
+var _user$project$View$viewSelectionSidebar = function (model) {
 	var _p4 = A2(
 		_elm_lang$core$Maybe$withDefault,
 		{ctor: '_Tuple2', _0: 0, _1: 0},
@@ -30190,7 +30025,7 @@ var _user$project$Main$viewSelectionSidebar = function (model) {
 						viewBadgeSelectors,
 						model,
 						_elm_community$graph$Graph$nodes,
-						_user$project$Main$viewNodeSelector,
+						_user$project$View$viewNodeSelector,
 						{
 							ctor: '::',
 							_0: A2(
@@ -30258,7 +30093,7 @@ var _user$project$Main$viewSelectionSidebar = function (model) {
 															_1: {
 																ctor: '::',
 																_0: A4(
-																	_user$project$Main$viewNodeBadge,
+																	_user$project$View$viewNodeBadge,
 																	model,
 																	n,
 																	30,
@@ -30286,7 +30121,7 @@ var _user$project$Main$viewSelectionSidebar = function (model) {
 								return _elm_lang$core$List$reverse(
 									_elm_community$graph$Graph$edges(_p5));
 							},
-							_user$project$Main$viewEdgeSelector,
+							_user$project$View$viewEdgeSelector,
 							{
 								ctor: '::',
 								_0: A2(
@@ -30357,7 +30192,7 @@ var _user$project$Main$viewSelectionSidebar = function (model) {
 																_1: {
 																	ctor: '::',
 																	_0: A2(
-																		_user$project$Main$viewEdgeBadge,
+																		_user$project$View$viewEdgeBadge,
 																		model,
 																		A3(_elm_community$graph$Graph$Edge, _p8, _p9, _user$project$Types$emptyTransformation)),
 																	_1: {ctor: '[]'}
@@ -30380,7 +30215,7 @@ var _user$project$Main$viewSelectionSidebar = function (model) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Main$viewTransformationSliders = F3(
+var _user$project$View$viewTransformationSliders = F3(
 	function (model, edge, transformAttribute) {
 		var createMsg = function (xyorz) {
 			return function (_p10) {
@@ -30508,7 +30343,7 @@ var _user$project$Main$viewTransformationSliders = F3(
 				}
 			});
 	});
-var _user$project$Main$msgFromString = F3(
+var _user$project$View$msgFromString = F3(
 	function (convertString, constructMsg, str) {
 		return A2(
 			_elm_lang$core$Result$withDefault,
@@ -30518,7 +30353,7 @@ var _user$project$Main$msgFromString = F3(
 				constructMsg,
 				convertString(str)));
 	});
-var _user$project$Main$viewEdgeDetail = F2(
+var _user$project$View$viewEdgeDetail = F2(
 	function (model, edge) {
 		var dropdownMenu = A3(
 			_mdgriffith$style_elements$Element$row,
@@ -30597,7 +30432,7 @@ var _user$project$Main$viewEdgeDetail = F2(
 												_1: {
 													ctor: '::',
 													_0: A2(
-														_user$project$Main$viewEdgeBadge,
+														_user$project$View$viewEdgeBadge,
 														model,
 														A3(_elm_community$graph$Graph$Edge, _p13, _p14, _user$project$Types$emptyTransformation)),
 													_1: {ctor: '[]'}
@@ -30635,7 +30470,7 @@ var _user$project$Main$viewEdgeDetail = F2(
 								}
 							}
 						},
-						A2(_user$project$Main$viewEdgeBadge, model, edge))),
+						A2(_user$project$View$viewEdgeBadge, model, edge))),
 				_1: {ctor: '[]'}
 			});
 		var dropdownChoice = function (node) {
@@ -30653,7 +30488,7 @@ var _user$project$Main$viewEdgeDetail = F2(
 						_mdgriffith$style_elements$Element$toHtml,
 						_user$project$StyleSheet$styleSheet,
 						A4(
-							_user$project$Main$viewNodeBadge,
+							_user$project$View$viewNodeBadge,
 							model,
 							node,
 							20,
@@ -30694,7 +30529,7 @@ var _user$project$Main$viewEdgeDetail = F2(
 										_1: {
 											ctor: '::',
 											_0: _elm_lang$html$Html_Events$onInput(
-												A2(_user$project$Main$msgFromString, _elm_lang$core$String$toInt, msgConstructor)),
+												A2(_user$project$View$msgFromString, _elm_lang$core$String$toInt, msgConstructor)),
 											_1: {ctor: '[]'}
 										}
 									},
@@ -30746,7 +30581,7 @@ var _user$project$Main$viewEdgeDetail = F2(
 						_1: {
 							ctor: '::',
 							_0: A4(
-								_user$project$Main$viewNodeBadge,
+								_user$project$View$viewNodeBadge,
 								model,
 								_p17._0,
 								25,
@@ -30757,7 +30592,7 @@ var _user$project$Main$viewEdgeDetail = F2(
 								_1: {
 									ctor: '::',
 									_0: A4(
-										_user$project$Main$viewNodeBadge,
+										_user$project$View$viewNodeBadge,
 										model,
 										_p17._1,
 										25,
@@ -30784,7 +30619,7 @@ var _user$project$Main$viewEdgeDetail = F2(
 						_0: _mdgriffith$style_elements$Element$text(label),
 						_1: {
 							ctor: '::',
-							_0: A3(_user$project$Main$viewTransformationSliders, model, edge, transformAttribute),
+							_0: A3(_user$project$View$viewTransformationSliders, model, edge, transformAttribute),
 							_1: {ctor: '[]'}
 						}
 					});
@@ -30875,7 +30710,7 @@ var _user$project$Main$viewEdgeDetail = F2(
 				}
 			});
 	});
-var _user$project$Main$viewNodeDetail = F2(
+var _user$project$View$viewNodeDetail = F2(
 	function (model, node) {
 		var createMsg = function (msgConstructor) {
 			return function (_p18) {
@@ -31042,7 +30877,7 @@ var _user$project$Main$viewNodeDetail = F2(
 				}
 			});
 	});
-var _user$project$Main$viewDetailSidebar = function (model) {
+var _user$project$View$viewDetailSidebar = function (model) {
 	var showDetails = F2(
 		function (getGraphData, viewDetail) {
 			return A3(
@@ -31076,16 +30911,16 @@ var _user$project$Main$viewDetailSidebar = function (model) {
 			return A2(
 				showDetails,
 				_user$project$Graph_Extra$getNode(_p19._0._0),
-				_user$project$Main$viewNodeDetail(model));
+				_user$project$View$viewNodeDetail(model));
 		} else {
 			return A2(
 				showDetails,
 				A2(_user$project$Graph_Extra$getEdge, _p19._0._0, _p19._0._1),
-				_user$project$Main$viewEdgeDetail(model));
+				_user$project$View$viewEdgeDetail(model));
 		}
 	}
 };
-var _user$project$Main$navbar = function (model) {
+var _user$project$View$navbar = function (model) {
 	var navlink = F3(
 		function (text, href, attrs) {
 			return A3(
@@ -31158,7 +30993,7 @@ var _user$project$Main$navbar = function (model) {
 								_mdgriffith$style_elements$Element$below,
 								{
 									ctor: '::',
-									_0: _user$project$Main$viewExamplesMenu(model),
+									_0: _user$project$View$viewExamplesMenu(model),
 									_1: {ctor: '[]'}
 								},
 								A3(
@@ -31199,7 +31034,7 @@ var _user$project$Main$navbar = function (model) {
 			}
 		});
 };
-var _user$project$Main$view = function (model) {
+var _user$project$View$root = function (model) {
 	return A2(
 		_mdgriffith$style_elements$Element$viewport,
 		_user$project$StyleSheet$styleSheet,
@@ -31213,7 +31048,7 @@ var _user$project$Main$view = function (model) {
 			},
 			{
 				ctor: '::',
-				_0: _user$project$Main$navbar(model),
+				_0: _user$project$View$navbar(model),
 				_1: {
 					ctor: '::',
 					_0: A3(
@@ -31230,13 +31065,13 @@ var _user$project$Main$view = function (model) {
 						},
 						{
 							ctor: '::',
-							_0: _user$project$Main$viewSelectionSidebar(model),
+							_0: _user$project$View$viewSelectionSidebar(model),
 							_1: {
 								ctor: '::',
-								_0: _user$project$Main$viewDetailSidebar(model),
+								_0: _user$project$View$viewDetailSidebar(model),
 								_1: {
 									ctor: '::',
-									_0: _user$project$Main$viewSceneContainer(model),
+									_0: _user$project$View$viewSceneContainer(model),
 									_1: {ctor: '[]'}
 								}
 							}
@@ -31245,17 +31080,18 @@ var _user$project$Main$view = function (model) {
 				}
 			}));
 };
+
 var _user$project$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
 var _user$project$Main$toggleAnimation = F2(
 	function (id, graph) {
-		var _p20 = _elm_lang$core$List$head(
+		var _p0 = _elm_lang$core$List$head(
 			A2(_user$project$Graph_Extra$getEdgesTo, id, graph));
-		if (_p20.ctor === 'Nothing') {
+		if (_p0.ctor === 'Nothing') {
 			return graph;
 		} else {
-			var _p21 = _p20._0;
+			var _p1 = _p0._0;
 			var updater = function (e) {
 				var oldLabel = e.label;
 				return _elm_lang$core$Native_Utils.update(
@@ -31266,21 +31102,21 @@ var _user$project$Main$toggleAnimation = F2(
 							{isAnimating: !e.label.isAnimating})
 					});
 			};
-			return A4(_user$project$Graph_Extra$updateEdge, _p21.from, _p21.to, updater, graph);
+			return A4(_user$project$Graph_Extra$updateEdge, _p1.from, _p1.to, updater, graph);
 		}
 	});
 var _user$project$Main$update = F2(
 	function (msg, model) {
 		update:
 		while (true) {
-			var _p22 = msg;
-			switch (_p22.ctor) {
+			var _p2 = msg;
+			switch (_p2.ctor) {
 				case 'TimeUpdate':
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
 							model,
-							{time: model.time + _p22._0}),
+							{time: model.time + _p2._0}),
 						{ctor: '[]'});
 				case 'Click':
 					return A2(
@@ -31288,7 +31124,7 @@ var _user$project$Main$update = F2(
 						_elm_lang$core$Native_Utils.update(
 							model,
 							{
-								graph: A2(_user$project$Main$toggleAnimation, _p22._0, model.graph)
+								graph: A2(_user$project$Main$toggleAnimation, _p2._0, model.graph)
 							}),
 						{ctor: '[]'});
 				case 'Edit':
@@ -31297,16 +31133,16 @@ var _user$project$Main$update = F2(
 						_elm_lang$core$Native_Utils.update(
 							model,
 							{
-								editing: _elm_lang$core$Maybe$Just(_p22._0)
+								editing: _elm_lang$core$Maybe$Just(_p2._0)
 							}),
 						{ctor: '[]'});
 				case 'Delete':
 					var graphUpdater = function () {
-						var _p23 = _p22._0;
-						if (_p23.ctor === 'Node') {
-							return _elm_community$graph$Graph$remove(_p23._0);
+						var _p3 = _p2._0;
+						if (_p3.ctor === 'Node') {
+							return _elm_community$graph$Graph$remove(_p3._0);
 						} else {
-							return A2(_user$project$Graph_Extra$removeEdge, _p23._0, _p23._1);
+							return A2(_user$project$Graph_Extra$removeEdge, _p3._0, _p3._1);
 						}
 					}();
 					return A2(
@@ -31323,14 +31159,14 @@ var _user$project$Main$update = F2(
 						0,
 						A2(
 							_elm_lang$core$Maybe$map,
-							function (_p24) {
+							function (_p4) {
 								return A2(
 									F2(
 										function (x, y) {
 											return x + y;
 										}),
 									1,
-									_elm_lang$core$Tuple$second(_p24));
+									_elm_lang$core$Tuple$second(_p4));
 							},
 							_elm_community$graph$Graph$nodeIdRange(model.graph)));
 					var entity = {
@@ -31344,22 +31180,22 @@ var _user$project$Main$update = F2(
 						{
 							graph: A2(_user$project$Graph_Extra$insertNode, node, model.graph)
 						});
-					var _v10 = A2(_user$project$Types$NewEdge, _p22._0, nextId),
-						_v11 = newModel;
-					msg = _v10;
-					model = _v11;
+					var _v3 = A2(_user$project$Types$NewEdge, _p2._0, nextId),
+						_v4 = newModel;
+					msg = _v3;
+					model = _v4;
 					continue update;
 				case 'NewEdge':
-					var _p27 = _p22._1;
-					var _p26 = _p22._0;
+					var _p7 = _p2._1;
+					var _p6 = _p2._0;
 					var transformation = {
 						data: _user$project$Types$emptyTransformation,
 						isAnimating: false,
-						animate: function (_p25) {
+						animate: function (_p5) {
 							return _elm_lang$core$Basics$identity;
 						}
 					};
-					var edge = {from: _p26, to: _p27, label: transformation};
+					var edge = {from: _p6, to: _p7, label: transformation};
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
@@ -31367,7 +31203,7 @@ var _user$project$Main$update = F2(
 							{
 								graph: A2(_user$project$Graph_Extra$insertEdge, edge, model.graph),
 								editing: _elm_lang$core$Maybe$Just(
-									A2(_user$project$Types$Edge, _p26, _p27)),
+									A2(_user$project$Types$Edge, _p6, _p7)),
 								menuHover: _user$project$Types$NoMenu
 							}),
 						{ctor: '[]'});
@@ -31378,52 +31214,52 @@ var _user$project$Main$update = F2(
 						A2(
 							_elm_lang$core$Maybe$map,
 							_user$project$Types$nodeLensColor.set,
-							_eskimoblood$elm_color_extra$Color_Convert$hexToColor(_p22._1)));
+							_eskimoblood$elm_color_extra$Color_Convert$hexToColor(_p2._1)));
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
 							model,
 							{
-								graph: A3(_user$project$Graph_Extra$updateNode, _p22._0, nodeUpdater, model.graph)
+								graph: A3(_user$project$Graph_Extra$updateNode, _p2._0, nodeUpdater, model.graph)
 							}),
 						{ctor: '[]'});
 				case 'ChangeOpacity':
-					var nodeUpdater = _user$project$Types$nodeLensOpacity.set(_p22._1);
+					var nodeUpdater = _user$project$Types$nodeLensOpacity.set(_p2._1);
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
 							model,
 							{
-								graph: A3(_user$project$Graph_Extra$updateNode, _p22._0, nodeUpdater, model.graph)
+								graph: A3(_user$project$Graph_Extra$updateNode, _p2._0, nodeUpdater, model.graph)
 							}),
 						{ctor: '[]'});
 				case 'ChangeTransformation':
 					var lens = function (_) {
 						return _.edgeLens;
 					}(
-						_user$project$Types$transformUtils(_p22._0));
-					var modifier = A2(_user$project$Types$vec3Set, _p22._1, _p22._4);
+						_user$project$Types$transformUtils(_p2._0));
+					var modifier = A2(_user$project$Types$vec3Set, _p2._1, _p2._4);
 					var edgeUpdater = A2(_arturopala$elm_monocle$Monocle_Lens$modify, lens, modifier);
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
 							model,
 							{
-								graph: A4(_user$project$Graph_Extra$updateEdge, _p22._2, _p22._3, edgeUpdater, model.graph)
+								graph: A4(_user$project$Graph_Extra$updateEdge, _p2._2, _p2._3, edgeUpdater, model.graph)
 							}),
 						{ctor: '[]'});
 				case 'EdgeFromTo':
-					var _p29 = _p22._3;
-					var _p28 = _p22._2;
+					var _p9 = _p2._3;
+					var _p8 = _p2._2;
 					var newGraph = A2(
 						_elm_lang$core$Maybe$withDefault,
 						model.graph,
 						A2(
 							_elm_lang$core$Maybe$map,
 							function (e) {
-								return A4(_user$project$Graph_Extra$updateEdgeFromTo, _p28, _p29, e, model.graph);
+								return A4(_user$project$Graph_Extra$updateEdgeFromTo, _p8, _p9, e, model.graph);
 							},
-							A3(_user$project$Graph_Extra$getEdge, _p22._0, _p22._1, model.graph)));
+							A3(_user$project$Graph_Extra$getEdge, _p2._0, _p2._1, model.graph)));
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
@@ -31431,7 +31267,7 @@ var _user$project$Main$update = F2(
 							{
 								graph: newGraph,
 								editing: _elm_lang$core$Maybe$Just(
-									A2(_user$project$Types$Edge, _p28, _p29))
+									A2(_user$project$Types$Edge, _p8, _p9))
 							}),
 						{ctor: '[]'});
 				case 'Save':
@@ -31439,16 +31275,16 @@ var _user$project$Main$update = F2(
 						_elm_lang$core$Debug$log,
 						'json',
 						_user$project$Types$graphToJson(model.graph));
-					var _v12 = _user$project$Types$NoOp,
-						_v13 = model;
-					msg = _v12;
-					model = _v13;
+					var _v5 = _user$project$Types$NoOp,
+						_v6 = model;
+					msg = _v5;
+					model = _v6;
 					continue update;
 				case 'Load':
 					var newGraph = A2(
 						_elm_lang$core$Maybe$withDefault,
 						model.graph,
-						A2(_elm_lang$core$Dict$get, _p22._0, model.examples));
+						A2(_elm_lang$core$Dict$get, _p2._0, model.examples));
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
@@ -31456,16 +31292,16 @@ var _user$project$Main$update = F2(
 							{graph: newGraph}),
 						{ctor: '[]'});
 				case 'ChangeMenuHover':
-					var _p31 = _p22._1;
+					var _p11 = _p2._1;
 					var answer = function () {
-						var _p30 = _p22._0;
-						switch (_p30.ctor) {
+						var _p10 = _p2._0;
+						switch (_p10.ctor) {
 							case 'Show':
-								return _p31;
+								return _p11;
 							case 'Hide':
 								return _user$project$Types$NoMenu;
 							default:
-								return _elm_lang$core$Native_Utils.eq(model.menuHover, _p31) ? _user$project$Types$NoMenu : _p31;
+								return _elm_lang$core$Native_Utils.eq(model.menuHover, _p11) ? _user$project$Types$NoMenu : _p11;
 						}
 					}();
 					return A2(
@@ -31484,11 +31320,11 @@ var _user$project$Main$update = F2(
 	});
 var _user$project$Main$removeNothings = F3(
 	function (name, maybeGraph, dict) {
-		var _p32 = maybeGraph;
-		if (_p32.ctor === 'Nothing') {
+		var _p12 = maybeGraph;
+		if (_p12.ctor === 'Nothing') {
 			return dict;
 		} else {
-			return A3(_elm_lang$core$Dict$insert, name, _p32._0, dict);
+			return A3(_elm_lang$core$Dict$insert, name, _p12._0, dict);
 		}
 	});
 var _user$project$Main$model = {
@@ -31501,10 +31337,10 @@ var _user$project$Main$model = {
 		_elm_lang$core$Dict$empty,
 		A2(
 			_elm_lang$core$Dict$map,
-			function (_p33) {
-				return function (_p34) {
+			function (_p13) {
+				return function (_p14) {
 					return _elm_lang$core$Result$toMaybe(
-						_user$project$Types$decodeGraph(_p34));
+						_user$project$Types$decodeGraph(_p14));
 				};
 			},
 			_user$project$Worlds$jsonExamples)),
@@ -31518,7 +31354,7 @@ var _user$project$Main$main = _elm_lang$html$Html$program(
 			_user$project$Main$update,
 			_user$project$Types$Load('Simple'),
 			_user$project$Main$model),
-		view: _user$project$Main$view,
+		view: _user$project$View$root,
 		update: _user$project$Main$update,
 		subscriptions: _user$project$Main$subscriptions
 	})();
