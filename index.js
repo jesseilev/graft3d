@@ -28873,7 +28873,7 @@ var _user$project$StyleSheet$styleSheet = _mdgriffith$style_elements$Style$style
 										{
 											offset: {ctor: '_Tuple2', _0: 10, _1: 0},
 											blur: 30,
-											size: -10,
+											size: -25,
 											color: _elm_lang$core$Color$black
 										}),
 									_1: {ctor: '[]'}
@@ -29523,10 +29523,10 @@ var _user$project$Worlds$jsonExamples = _elm_lang$core$Dict$fromList(
 			_0: A2(_user$project$Types_ops['=>'], 'Wavy Thing', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#008040\",\"opacity\":0.24,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#e6e6e6\",\"opacity\":0.22,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#008080\",\"opacity\":0.6,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":1,\"z\":0},\"scale\":{\"x\":1,\"y\":1.34,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":0.6,\"y\":1,\"z\":0.48},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":2.4,\"y\":-1,\"z\":-1.6},\"scale\":{\"x\":0.5,\"y\":1.09,\"z\":0.31},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-0.1,\"y\":-0.1,\"z\":0.4},\"scale\":{\"x\":1.14,\"y\":0.67,\"z\":1.13},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
 			_1: {
 				ctor: '::',
-				_0: A2(_user$project$Types_ops['=>'], 'Sea Shell', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#00964e\",\"opacity\":0.53,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#ff8000\",\"opacity\":0.17,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#00ff80\",\"opacity\":0.17,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.1,\"z\":0},\"scale\":{\"x\":0.68,\"y\":1.32,\"z\":0.78},\"rotation\":{\"x\":91,\"y\":301,\"z\":286}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":0.2,\"z\":0.2},\"scale\":{\"x\":0.6,\"y\":1,\"z\":0.48},\"rotation\":{\"x\":360,\"y\":360,\"z\":360}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":0.6,\"y\":0.2,\"z\":0.1},\"scale\":{\"x\":1.33,\"y\":1.48,\"z\":0.45},\"rotation\":{\"x\":255,\"y\":184,\"z\":166}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-0.1,\"y\":-0.1,\"z\":0.4},\"scale\":{\"x\":1.14,\"y\":0.67,\"z\":1.13},\"rotation\":{\"x\":0,\"y\":0,\"z\":346}}}]}'),
+				_0: A2(_user$project$Types_ops['=>'], 'Sea Shell', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#00964e\",\"opacity\":0.53,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#ff8000\",\"opacity\":0.17,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#00ff80\",\"opacity\":0.17,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.1,\"z\":0},\"scale\":{\"x\":0.68,\"y\":1.32,\"z\":0.78},\"rotation\":{\"x\":91,\"y\":301,\"z\":286}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":0.2,\"z\":0.2},\"scale\":{\"x\":0.6,\"y\":1,\"z\":0.48},\"rotation\":{\"x\":360,\"y\":360,\"z\":360}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":0.6,\"y\":0.2,\"z\":0.1},\"scale\":{\"x\":1.33,\"y\":1.48,\"z\":0.45},\"rotation\":{\"x\":255,\"y\":184,\"z\":166}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":0,\"y\":-0.1,\"z\":0.4},\"scale\":{\"x\":1.45,\"y\":0.69,\"z\":0.9},\"rotation\":{\"x\":0,\"y\":0,\"z\":346}}}]}'),
 				_1: {
 					ctor: '::',
-					_0: A2(_user$project$Types_ops['=>'], 'Gathering', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#1d1f4d\",\"opacity\":0.24,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#e6e6e6\",\"opacity\":0.22,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#d35ac4\",\"opacity\":0.6,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":1,\"z\":0},\"scale\":{\"x\":1,\"y\":1.18,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":0,\"z\":-0.5},\"scale\":{\"x\":0.6,\"y\":0.66,\"z\":0.48},\"rotation\":{\"x\":0,\"y\":0,\"z\":179}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":2.4,\"y\":-1,\"z\":-1.6},\"scale\":{\"x\":0.47,\"y\":1.09,\"z\":0.8},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":0,\"y\":0.9,\"z\":0.7},\"scale\":{\"x\":1.24,\"y\":0.67,\"z\":1.13},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
+					_0: A2(_user$project$Types_ops['=>'], 'Gathering', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#1d1f4d\",\"opacity\":0.24,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#e6e6e6\",\"opacity\":0.22,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#d35ac4\",\"opacity\":0.6,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":1,\"z\":0},\"scale\":{\"x\":1,\"y\":1.18,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":1.2,\"z\":-0.9},\"scale\":{\"x\":0.47,\"y\":0.66,\"z\":0.8},\"rotation\":{\"x\":0,\"y\":0,\"z\":179}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":2.4,\"y\":-1,\"z\":-1.6},\"scale\":{\"x\":0.47,\"y\":1.09,\"z\":0.8},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":0,\"y\":0.9,\"z\":0.7},\"scale\":{\"x\":1.24,\"y\":0.67,\"z\":1.13},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
 					_1: {
 						ctor: '::',
 						_0: A2(_user$project$Types_ops['=>'], 'Maybe Duck Tower', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#434f80\",\"opacity\":0.8,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#7d740f\",\"opacity\":0.45,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#008080\",\"opacity\":0.6,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":0.6,\"z\":-0.1},\"scale\":{\"x\":1,\"y\":1.34,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":349,\"z\":0}}},{\"from\":1,\"to\":1,\"label\":{\"translation\":{\"x\":0.4,\"y\":-0.6,\"z\":0.7},\"scale\":{\"x\":0.85,\"y\":0.6,\"z\":1.15},\"rotation\":{\"x\":0,\"y\":263,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":0.6,\"y\":1.09,\"z\":0.48},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":2.4,\"y\":-1.4,\"z\":-1.6},\"scale\":{\"x\":1.12,\"y\":0.5,\"z\":1.34},\"rotation\":{\"x\":0,\"y\":311,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-0.4,\"y\":2.8,\"z\":0.4},\"scale\":{\"x\":0.96,\"y\":1.5,\"z\":0.66},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
@@ -29542,6 +29542,17 @@ var _user$project$Main$uncurry3 = F2(
 		var _p1 = _p0;
 		return A3(func, _p1._0, _p1._1, _p1._2);
 	});
+var _user$project$Main$alphaChar = function (id) {
+	return A3(
+		_elm_community$maybe_extra$Maybe_Extra$unwrap,
+		'Z',
+		_elm_lang$core$String$fromChar,
+		A2(
+			_elm_lang$core$Array$get,
+			id,
+			_elm_lang$core$Array$fromList(
+				_elm_lang$core$String$toList('abcdefghijklmnopqrstuvwxyz'))));
+};
 var _user$project$Main$viewEntity = F3(
 	function (model, ancestors, nodeCtx) {
 		var viewChild = (_elm_lang$core$Native_Utils.cmp(
@@ -29771,7 +29782,57 @@ var _user$project$Main$viewSceneContainer = function (model) {
 			ctor: '::',
 			_0: _mdgriffith$style_elements$Element$html(
 				_user$project$Main$viewScene(model)),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: A3(
+					_mdgriffith$style_elements$Element$row,
+					_user$project$StyleSheet$None,
+					{
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$alignBottom,
+						_1: {
+							ctor: '::',
+							_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 20, 10),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$style_elements$Element_Attributes$width(
+									_mdgriffith$style_elements$Element_Attributes$percent(100)),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$style_elements$Element_Attributes$inlineStyle(
+										{
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'z-index', _1: '10'},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 'font-size', _1: '20px'},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 'font-weight', _1: '200'},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: 'font-family', _1: ' \"Courier New\", Courier, monospace'},
+														_1: {
+															ctor: '::',
+															_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
+															_1: {ctor: '[]'}
+														}
+													}
+												}
+											}
+										}),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					},
+					{
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element$text('w↑ a← s↓ d→'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
 		});
 };
 var _user$project$Main$viewNodeBadge = F4(
@@ -29830,7 +29891,7 @@ var _user$project$Main$viewNodeBadge = F4(
 					{
 						ctor: '::',
 						_0: _elm_lang$html$Html$text(
-							_elm_lang$core$Basics$toString(node.id)),
+							_user$project$Main$alphaChar(node.id)),
 						_1: {ctor: '[]'}
 					})));
 	});
@@ -30302,27 +30363,7 @@ var _user$project$Main$viewSelectionSidebar = function (model) {
 						_1: {ctor: '[]'}
 					}
 				}),
-			_1: {
-				ctor: '::',
-				_0: A3(
-					_mdgriffith$style_elements$Element$button,
-					_user$project$StyleSheet$NewButton,
-					{
-						ctor: '::',
-						_0: _mdgriffith$style_elements$Element_Events$onClick(_user$project$Types$Save),
-						_1: {
-							ctor: '::',
-							_0: _mdgriffith$style_elements$Element_Attributes$alignBottom,
-							_1: {
-								ctor: '::',
-								_0: _mdgriffith$style_elements$Element_Attributes$center,
-								_1: {ctor: '[]'}
-							}
-						}
-					},
-					_mdgriffith$style_elements$Element$text('Save')),
-				_1: {ctor: '[]'}
-			}
+			_1: {ctor: '[]'}
 		});
 };
 var _user$project$Main$viewTransformationSliders = F3(
@@ -30555,7 +30596,7 @@ var _user$project$Main$viewEdgeDetail = F2(
 											_elm_lang$core$Native_Utils.eq(model.menuHover, _user$project$Types$EditingEdgeNodes)),
 										_1: {
 											ctor: '::',
-											_0: _mdgriffith$style_elements$Element_Events$onClick(
+											_0: _mdgriffith$style_elements$Element_Events$onMouseDown(
 												A2(_user$project$Types$ChangeMenuHover, _user$project$Types$Toggle, _user$project$Types$EditingEdgeNodes)),
 											_1: {ctor: '[]'}
 										}
@@ -30737,7 +30778,7 @@ var _user$project$Main$viewEdgeDetail = F2(
 								_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 20, 6),
 								_1: {
 									ctor: '::',
-									_0: _mdgriffith$style_elements$Element_Attributes$spacing(14),
+									_0: _mdgriffith$style_elements$Element_Attributes$spacing(20),
 									_1: {ctor: '[]'}
 								}
 							},

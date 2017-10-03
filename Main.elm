@@ -12,6 +12,8 @@ import Html.Events as HtmlEvents
 import Color exposing (rgb)
 import Graph
 import IntDict
+import List.Extra as ListEx
+import Array
 import Maybe.Extra as MaybeEx
 import AnimationFrame as Ani
 import Tuple3
@@ -401,7 +403,7 @@ viewEdgeDetail model edge =
                       --, Attr.height <| Attr.px 45
                     , Attr.padding 10
                     , Attr.vary Selected (model.menuHover == EditingEdgeNodes)
-                    , Events.onClick <| ChangeMenuHover Toggle EditingEdgeNodes
+                    , Events.onMouseDown <| ChangeMenuHover Toggle EditingEdgeNodes
                     ]
                     (viewEdgeBadge model edge)
                     |> El.below
@@ -456,7 +458,7 @@ viewEdgeDetail model edge =
             , El.hairline Hairline
             , El.column None
                 [ Attr.paddingXY 20 6
-                , Attr.spacing 14
+                , Attr.spacing 20
                 ]
                 [ dropdownMenu
                 , El.hairline Hairline
@@ -693,7 +695,7 @@ viewNodeBadge model node size attrs =
                       -- , ("opacity", "0.5")
                     ]
                 ]
-                [ Html.text (toString node.id) ]
+                [ Html.text (alphaChar node.id) ]
             )
         )
 
@@ -735,7 +737,25 @@ viewSceneContainer model =
         [ Attr.width (Attr.fill)
         , Attr.height (Attr.fill)
         ]
-        [ El.html (viewScene model) ]
+        [ El.html (viewScene model)
+          --|> El.above
+          --    [
+        , El.row None
+            [ Attr.alignBottom
+            , Attr.paddingXY 20 10
+              --, Attr.center
+            , Attr.width <| Attr.percent 100
+            , Attr.inlineStyle
+                [ ( "z-index", "10" )
+                , ( "font-size", "20px" )
+                , ( "font-weight", "200" )
+                , ( "font-family", " \"Courier New\", Courier, monospace" )
+                , ( "color", "white" )
+                ]
+            ]
+            [ El.text "w↑ a← s↓ d→" ]
+          --]
+        ]
 
 
 viewScene : Model -> Html Msg
@@ -838,6 +858,14 @@ main =
         , update = update
         , subscriptions = subscriptions
         }
+
+
+alphaChar : Id -> String
+alphaChar id =
+    String.toList "abcdefghijklmnopqrstuvwxyz"
+        |> Array.fromList
+        |> Array.get id
+        |> MaybeEx.unwrap "Z" String.fromChar
 
 
 uncurry3 : (a -> b -> c -> d) -> ( a, b, c ) -> d
