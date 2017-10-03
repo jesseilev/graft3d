@@ -625,12 +625,12 @@ viewSelectionSidebar model =
                             ]
                     ]
                 ]
-            , El.button NewButton
-                [ Events.onClick Save
-                , Attr.alignBottom
-                , Attr.center
-                ]
-                (El.text "Save")
+              --, El.button NewButton
+              --    [ Events.onClick Save
+              --    , Attr.alignBottom
+              --    , Attr.center
+              --    ]
+              --    (El.text "Save")
             ]
 
 
