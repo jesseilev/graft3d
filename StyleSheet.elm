@@ -93,6 +93,8 @@ styleSheet =
             ]
         , Style.style NavLink
             [ Font.alignRight
+            , Color.text Color.lightGrey
+            , Style.cursor "pointer"
             , Style.hover
                 [ Color.background <| Color.greyscale 0.7
                 ]

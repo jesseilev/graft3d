@@ -29003,14 +29003,22 @@ var _user$project$StyleSheet$styleSheet = _mdgriffith$style_elements$Style$style
 											_0: _mdgriffith$style_elements$Style_Font$alignRight,
 											_1: {
 												ctor: '::',
-												_0: _mdgriffith$style_elements$Style$hover(
-													{
+												_0: _mdgriffith$style_elements$Style_Color$text(_elm_lang$core$Color$lightGrey),
+												_1: {
+													ctor: '::',
+													_0: _mdgriffith$style_elements$Style$cursor('pointer'),
+													_1: {
 														ctor: '::',
-														_0: _mdgriffith$style_elements$Style_Color$background(
-															_elm_lang$core$Color$greyscale(0.7)),
+														_0: _mdgriffith$style_elements$Style$hover(
+															{
+																ctor: '::',
+																_0: _mdgriffith$style_elements$Style_Color$background(
+																	_elm_lang$core$Color$greyscale(0.7)),
+																_1: {ctor: '[]'}
+															}),
 														_1: {ctor: '[]'}
-													}),
-												_1: {ctor: '[]'}
+													}
+												}
 											}
 										}),
 									_1: {
@@ -29553,6 +29561,7 @@ var _user$project$Main$alphaChar = function (id) {
 			_elm_lang$core$Array$fromList(
 				_elm_lang$core$String$toList('abcdefghijklmnopqrstuvwxyz'))));
 };
+var _user$project$Main$backgroundColor = A3(_elm_lang$core$Color$rgb, 100, 120, 160);
 var _user$project$Main$viewEntity = F3(
 	function (model, ancestors, nodeCtx) {
 		var viewChild = (_elm_lang$core$Native_Utils.cmp(
@@ -29705,7 +29714,17 @@ var _user$project$Main$viewScene = function (model) {
 		{
 			ctor: '::',
 			_0: A2(_elm_lang$html$Html_Attributes$attribute, 'embedded', 'true'),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html_Attributes$attribute,
+					'fog',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'type: linear; density: 0.05; color: ',
+						_eskimoblood$elm_color_extra$Color_Convert$colorToHex(_user$project$Main$backgroundColor))),
+				_1: {ctor: '[]'}
+			}
 		},
 		A2(
 			_elm_lang$core$Basics_ops['++'],
@@ -29714,12 +29733,7 @@ var _user$project$Main$viewScene = function (model) {
 				ctor: '::',
 				_0: A2(
 					_halfzebra$elm_aframe$AFrame_Primitives$sky,
-					{
-						ctor: '::',
-						_0: _halfzebra$elm_aframe$AFrame_Primitives_Attributes$color(
-							A3(_elm_lang$core$Color$rgb, 100, 120, 160)),
-						_1: {ctor: '[]'}
-					},
+					{ctor: '[]'},
 					{ctor: '[]'}),
 				_1: {
 					ctor: '::',
@@ -30412,7 +30426,20 @@ var _user$project$Main$viewTransformationSliders = F3(
 												_0: _elm_lang$html$Html_Attributes$value(
 													_elm_lang$core$Basics$toString(
 														currentValue(vec3Get))),
-												_1: {ctor: '[]'}
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$style(
+														{
+															ctor: '::',
+															_0: {ctor: '_Tuple2', _0: 'margin-left', _1: '6x'},
+															_1: {
+																ctor: '::',
+																_0: {ctor: '_Tuple2', _0: 'margin-right', _1: '6x'},
+																_1: {ctor: '[]'}
+															}
+														}),
+													_1: {ctor: '[]'}
+												}
 											}
 										}
 									}
@@ -30428,7 +30455,7 @@ var _user$project$Main$viewTransformationSliders = F3(
 					_user$project$StyleSheet$None,
 					{
 						ctor: '::',
-						_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 10, 4),
+						_0: _mdgriffith$style_elements$Element_Attributes$paddingLeft(10),
 						_1: {ctor: '[]'}
 					},
 					{
@@ -30450,7 +30477,11 @@ var _user$project$Main$viewTransformationSliders = F3(
 		return A3(
 			_mdgriffith$style_elements$Element$column,
 			_user$project$StyleSheet$None,
-			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$spacing(5),
+				_1: {ctor: '[]'}
+			},
 			{
 				ctor: '::',
 				_0: A3(
@@ -30722,7 +30753,7 @@ var _user$project$Main$viewEdgeDetail = F2(
 								{ctor: '[]'}),
 							_1: {
 								ctor: '::',
-								_0: _mdgriffith$style_elements$Element$text('Spawns a'),
+								_0: _mdgriffith$style_elements$Element$text('spawns a'),
 								_1: {
 									ctor: '::',
 									_0: A4(
@@ -30745,7 +30776,7 @@ var _user$project$Main$viewEdgeDetail = F2(
 					_user$project$StyleSheet$None,
 					{
 						ctor: '::',
-						_0: _mdgriffith$style_elements$Element_Attributes$spacing(4),
+						_0: _mdgriffith$style_elements$Element_Attributes$spacing(10),
 						_1: {ctor: '[]'}
 					},
 					{
@@ -31055,20 +31086,24 @@ var _user$project$Main$viewDetailSidebar = function (model) {
 	}
 };
 var _user$project$Main$navbar = function (model) {
-	var navlink = F2(
-		function (str, attrs) {
+	var navlink = F3(
+		function (text, href, attrs) {
 			return A3(
 				_mdgriffith$style_elements$Element$el,
 				_user$project$StyleSheet$NavLink,
+				attrs,
 				A2(
-					_elm_lang$core$Basics_ops['++'],
-					attrs,
-					{
-						ctor: '::',
-						_0: _mdgriffith$style_elements$Element_Attributes$padding(6),
-						_1: {ctor: '[]'}
-					}),
-				_mdgriffith$style_elements$Element$text(str));
+					_mdgriffith$style_elements$Element$link,
+					href,
+					A3(
+						_mdgriffith$style_elements$Element$el,
+						_user$project$StyleSheet$NavLink,
+						{
+							ctor: '::',
+							_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 10, 24),
+							_1: {ctor: '[]'}
+						},
+						_mdgriffith$style_elements$Element$text(text))));
 		});
 	return A3(
 		_mdgriffith$style_elements$Element$row,
@@ -31078,7 +31113,7 @@ var _user$project$Main$navbar = function (model) {
 			_0: _mdgriffith$style_elements$Element_Attributes$spread,
 			_1: {
 				ctor: '::',
-				_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 20, 20),
+				_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 20, 0),
 				_1: {
 					ctor: '::',
 					_0: _mdgriffith$style_elements$Element_Attributes$verticalCenter,
@@ -31107,7 +31142,7 @@ var _user$project$Main$navbar = function (model) {
 						_0: _mdgriffith$style_elements$Element_Attributes$padding(0),
 						_1: {
 							ctor: '::',
-							_0: _mdgriffith$style_elements$Element_Attributes$spacing(10),
+							_0: _mdgriffith$style_elements$Element_Attributes$spacing(0),
 							_1: {
 								ctor: '::',
 								_0: _mdgriffith$style_elements$Element_Attributes$verticalCenter,
@@ -31126,9 +31161,10 @@ var _user$project$Main$navbar = function (model) {
 									_0: _user$project$Main$viewExamplesMenu(model),
 									_1: {ctor: '[]'}
 								},
-								A2(
+								A3(
 									navlink,
 									'Examples',
+									'#',
 									{
 										ctor: '::',
 										_0: _mdgriffith$style_elements$Element_Events$onMouseEnter(
@@ -31142,24 +31178,19 @@ var _user$project$Main$navbar = function (model) {
 									})),
 							_1: {
 								ctor: '::',
-								_0: A2(
+								_0: A3(
 									navlink,
-									'Blog',
+									'Graft2D',
+									'https://jesseilev.github.io/graft',
 									{ctor: '[]'}),
 								_1: {
 									ctor: '::',
-									_0: A2(
+									_0: A3(
 										navlink,
 										'Github',
+										'https://github.com/jesseilev/graft3d',
 										{ctor: '[]'}),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											navlink,
-											'Graft',
-											{ctor: '[]'}),
-										_1: {ctor: '[]'}
-									}
+									_1: {ctor: '[]'}
 								}
 							}
 						}

@@ -254,27 +254,30 @@ view model =
 
 navbar model =
     let
-        navlink str attrs =
+        navlink text href attrs =
             El.el NavLink
-                (attrs ++ [ Attr.padding 6 ])
-                (El.text str)
+                (attrs)
+                (El.link href
+                    <| El.el NavLink [ Attr.paddingXY 10 24 ] (El.text text)
+                )
     in
         El.row Nav
-            [ Attr.spread, Attr.paddingXY 20 20, Attr.verticalCenter ]
+            [ Attr.spread, Attr.paddingXY 20 0, Attr.verticalCenter ]
             [ El.el Header [ Attr.vary Title True ] (El.text "Graft3D")
             , El.navigation None
-                [ Attr.padding 0, Attr.spacing 10, Attr.verticalCenter ]
+                [ Attr.padding 0, Attr.spacing 0, Attr.verticalCenter ]
                 { name = "Graft 3D"
                 , options =
                     [ navlink "Examples"
+                        "#"
                         [ Events.onMouseEnter <| ChangeMenuHover Show Examples
                         , Events.onMouseLeave <| ChangeMenuHover Hide Examples
                         ]
                         |> El.below [ viewExamplesMenu model ]
                       --[ viewExamplesMenu model ]
-                    , navlink "Blog" []
-                    , navlink "Github" []
-                    , navlink "Graft" []
+                      --, navlink "Blog" []
+                    , navlink "Graft2D" "https://jesseilev.github.io/graft" []
+                    , navlink "Github" "https://github.com/jesseilev/graft3d" []
                     ]
                 }
             ]
@@ -363,7 +366,7 @@ viewEdgeDetail model edge =
     let
         sliderTriplet label transformAttribute =
             El.column None
-                [ Attr.spacing 4 ]
+                [ Attr.spacing 10 ]
                 [ El.text label
                 , viewTransformationSliders model edge transformAttribute
                 ]
@@ -446,7 +449,7 @@ viewEdgeDetail model edge =
                             ]
                             [ El.text "Each"
                             , viewNodeBadge model from 25 []
-                            , El.text "Spawns a"
+                            , El.text "spawns a"
                             , viewNodeBadge model to 25 []
                             ]
                         )
@@ -509,19 +512,20 @@ viewTransformationSliders model edge transformAttribute =
                     , HtmlAttr.step (toString utils.step)
                     , HtmlEvents.onInput msgPartial
                     , HtmlAttr.value <| toString <| currentValue vec3Get
+                    , HtmlAttr.style [ ( "margin-left", "6x" ), ( "margin-right", "6x" ) ]
                     ]
                     []
 
         labeledSlider labelStr msgPartial vec3Get =
             El.row None
-                [ Attr.paddingXY 10 4 ]
+                [ Attr.paddingLeft 10 ]
                 [ El.text labelStr
                 , slider msgPartial vec3Get
                 , El.text <| toString <| currentValue vec3Get
                 ]
     in
         El.column None
-            []
+            [ Attr.spacing 5 ]
             [ labeledSlider "X: " (createMsg X) Vec3.xComponent
             , labeledSlider "Y: " (createMsg Y) Vec3.yComponent
             , labeledSlider "Z: " (createMsg Z) Vec3.zComponent
@@ -754,7 +758,6 @@ viewSceneContainer model =
                 ]
             ]
             [ El.text "w↑ a← s↓ d→" ]
-          --]
         ]
 
 
@@ -766,9 +769,14 @@ viewScene model =
                 |> Maybe.map (viewEntity model [])
                 |> Maybe.map (\e -> box [ scale 1 1 1 ] [ e ])
     in
-        scene [ HtmlAttr.attribute "embedded" "true" ]
+        scene
+            [ HtmlAttr.attribute "embedded" "true"
+            , HtmlAttr.attribute "fog"
+                <| "type: linear; density: 0.05; color: "
+                ++ (colorToHex backgroundColor)
+            ]
             (MaybeEx.toList rootEntityView
-                ++ [ sky [ color (Color.rgb 100 120 160) ] []
+                ++ [ sky [] []
                    , light
                         [ Light.type_ Light.Ambient
                         , position 20 100 0
@@ -858,6 +866,11 @@ main =
         , update = update
         , subscriptions = subscriptions
         }
+
+
+backgroundColor : Color.Color
+backgroundColor =
+    Color.rgb 100 120 160
 
 
 alphaChar : Id -> String
