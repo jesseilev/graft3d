@@ -23,6 +23,7 @@ type Style
     | NewButton
     | Dropdown
     | DropdownItem
+    | PropertyLabel
 
 
 type Variation
@@ -51,8 +52,6 @@ styleSheet =
             ]
         , Style.style Sidebar
             [ Color.background Color.lightGrey
-            , Border.right 0.5
-            , Color.border Color.grey
             , Shadow.box
                 { offset = ( 10, 0 )
                 , blur = 30
@@ -67,6 +66,7 @@ styleSheet =
                 [ Color.background <| Color.greyscale 0.7
                 , Style.hover [ Color.background <| Color.greyscale 0.7 ]
                 ]
+            , Style.cursor "pointer"
             ]
         , Style.style Badge
             [ Border.rounded 2
@@ -114,6 +114,13 @@ styleSheet =
                 [ Shadow.box noShadow
                 , Color.background <| Color.greyscale 0.3
                 ]
+            , Font.typeface
+                [ Font.font "Gill Sans"
+                , Font.font "Trebuchet MS"
+                , Font.font "helvetica"
+                , Font.font "sans-serif"
+                ]
+              --, Font.light
             ]
         , Style.style NewButton
             [ Border.rounded 2
@@ -142,6 +149,8 @@ styleSheet =
                 , Style.hover [ Color.background <| Color.greyscale 0.65 ]
                 ]
             ]
+        , Style.style PropertyLabel
+            [ Font.weight 400 ]
         ]
 
 

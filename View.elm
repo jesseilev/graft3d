@@ -26,7 +26,7 @@ import AFrame.Primitives.Cursor as Cursor exposing (..)
 import Maybe.Extra as MaybeEx
 import List.Extra as ListEx
 import Array
-import Color.Convert exposing (colorToHex, hexToColor)
+import Color.Convert exposing (colorToHex, hexToColor, colorToCssRgba)
 import IntDict
 import Dict
 
@@ -48,6 +48,10 @@ root model =
                 [ viewSelectionSidebar model
                 , viewDetailSidebar model
                 , viewSceneContainer model
+                  --|> El.within
+                  --    [ viewSelectionSidebar model
+                  --        |> El.onRight [ viewDetailSidebar model ]
+                  --    ]
                 ]
             ]
 
@@ -88,7 +92,7 @@ viewDetailSidebar model =
         showDetails getGraphData viewDetail =
             El.sidebar Sidebar
                 [ Attr.height <| Attr.percent 100
-                , Attr.minWidth <| Attr.px 200
+                , Attr.minWidth <| Attr.px 280
                   --, Attr.padding 20
                 ]
                 [ El.whenJust (getGraphData model.graph) viewDetail
@@ -133,7 +137,17 @@ viewNodeDetail model node =
                     , HtmlAttr.max "1"
                     , HtmlAttr.step "0.01"
                     , HtmlEvents.onInput (createMsg ChangeOpacity)
-                    , HtmlAttr.style [ ( "width", "100%" ) ]
+                    , HtmlAttr.style
+                        [ ( "width", "100%" )
+                        , ( "-webkit-appearance", "none" )
+                        , ( "height", "4px" )
+                          --, ( "width", "150px" )
+                        , ( "background"
+                          , ("linear-gradient(to right, rgba(0,0,0,0), "
+                                ++ colorToCssRgba node.label.color
+                            )
+                          )
+                        ]
                     ]
                     []
     in
@@ -141,14 +155,15 @@ viewNodeDetail model node =
             [ Attr.spacing 20, Attr.padding 20 ]
             [ El.column None
                 []
-                [ El.row None [] [ El.text "Color: " ]
+                [ El.row None [ Attr.paddingBottom 5 ] [ El.text "Color: " ]
                 , colorPicker
                 ]
             , El.column None
                 []
-                [ El.row None [] [ El.text "Opacity: " ]
+                [ El.row None [ Attr.paddingBottom 5 ] [ El.text "Opacity: " ]
                 , opacitySlider
                 ]
+            , El.hairline Hairline
             , El.button DeleteButton
                 [ Attr.height <| Attr.px 50
                 , Attr.width <| Attr.px 100
@@ -164,10 +179,17 @@ viewNodeDetail model node =
 
 viewEdgeDetail model edge =
     let
-        sliderTriplet label transformAttribute =
+        sliderTriplet label1 label2 transformAttribute =
             El.column None
                 [ Attr.spacing 10 ]
-                [ El.text label
+                [ El.row None
+                    [ Attr.spacing 5, Attr.verticalCenter ]
+                    [ El.el None
+                        []
+                        (El.text label1)
+                    , El.whenJust fromToNodes (\( _, to ) -> viewNodeBadge model to 25 [])
+                    , El.text label2
+                    ]
                 , viewTransformationSliders model edge transformAttribute
                 ]
 
@@ -197,59 +219,52 @@ viewEdgeDetail model edge =
                 ]
 
         dropdownMenu =
-            El.row None
-                [ Attr.verticalCenter ]
-                [ El.el SelectorItem
-                    [ Attr.center
-                    , Attr.verticalCenter
-                      --, Attr.width <| Attr.px 45
-                      --, Attr.height <| Attr.px 45
-                    , Attr.padding 10
-                    , Attr.vary Selected (model.menuHover == EditingEdgeNodes)
-                    , Events.onMouseDown <| ChangeMenuHover Toggle EditingEdgeNodes
-                    ]
-                    (viewEdgeBadge model edge)
-                    |> El.below
-                        [ El.el Dropdown
-                            [ Attr.inlineStyle [ ( "z-index", "10" ) ]
-                            , if model.menuHover /= EditingEdgeNodes then
-                                Attr.hidden
-                              else
-                                Attr.attribute "class" ""
-                            ]
-                            (El.row None
-                                [ Attr.width <| Attr.percent 100 ]
-                                (GraphEx.availableEdges model.graph
-                                    |> List.map
-                                        (\( from, to ) ->
-                                            El.column DropdownItem
-                                                [ Attr.paddingXY 16 8
-                                                , Events.onClick <| EdgeFromTo edge.from edge.to from to
-                                                , Attr.center
-                                                ]
-                                                [ El.el None
-                                                    [ Attr.paddingBottom 4 ]
-                                                    (El.text "Change to")
-                                                , viewEdgeBadge model (Graph.Edge from to emptyTransformation)
-                                                ]
-                                        )
-                                )
-                            )
-                        ]
+            El.el SelectorItem
+                [ Attr.vary Selected (model.menuHover == EditingEdgeNodes)
+                , Events.onMouseDown <| ChangeMenuHover Toggle EditingEdgeNodes
                 ]
+                description
+                |> El.below
+                    [ El.el Dropdown
+                        [ Attr.inlineStyle [ ( "z-index", "10" ) ]
+                        , if model.menuHover /= EditingEdgeNodes then
+                            Attr.hidden
+                          else
+                            Attr.attribute "class" ""
+                        ]
+                        (El.row None
+                            [ Attr.width <| Attr.percent 100 ]
+                            (GraphEx.availableEdges model.graph
+                                |> List.map
+                                    (\( from, to ) ->
+                                        El.column DropdownItem
+                                            [ Attr.paddingXY 16 8
+                                            , Events.onClick <| EdgeFromTo edge.from edge.to from to
+                                            , Attr.center
+                                            ]
+                                            [ El.el None
+                                                [ Attr.paddingBottom 4 ]
+                                                (El.text "Change to")
+                                            , viewEdgeBadge model (Graph.Edge from to emptyTransformation)
+                                            ]
+                                    )
+                            )
+                        )
+                    ]
 
         description =
             fromToNodes
                 |> MaybeEx.unwrap El.empty
                     (\( from, to ) ->
-                        (El.row Header
-                            [ Attr.padding 20
+                        (El.row None
+                            [ Attr.paddingXY 20 30
                             , Attr.spacing 8
+                            , Attr.alignLeft
                             , Attr.alignBottom
                             ]
                             [ El.text "Each"
                             , viewNodeBadge model from 25 []
-                            , El.text "spawns a"
+                            , El.text "spawns a new"
                             , viewNodeBadge model to 25 []
                             ]
                         )
@@ -257,19 +272,18 @@ viewEdgeDetail model edge =
     in
         El.column None
             []
-            [ description
+            [ dropdownMenu
             , El.hairline Hairline
             , El.column None
                 [ Attr.paddingXY 20 6
                 , Attr.spacing 20
+                , Attr.paddingTop 20
                 ]
-                [ dropdownMenu
+                [ sliderTriplet "Move" "along axis:" Translation
                 , El.hairline Hairline
-                , sliderTriplet "Move along axis: " Translation
+                , sliderTriplet "Resize" "along axis:" Scale
                 , El.hairline Hairline
-                , sliderTriplet "Resize along axis: " Scale
-                , El.hairline Hairline
-                , sliderTriplet "Rotate around axis: " Rotation
+                , sliderTriplet "Rotate" "around axis:" Rotation
                 , El.hairline Hairline
                 , El.button DeleteButton
                     [ Attr.height <| Attr.px 50
@@ -312,15 +326,31 @@ viewTransformationSliders model edge transformAttribute =
                     , HtmlAttr.step (toString utils.step)
                     , HtmlEvents.onInput msgPartial
                     , HtmlAttr.value <| toString <| currentValue vec3Get
-                    , HtmlAttr.style [ ( "margin-left", "6x" ), ( "margin-right", "6x" ) ]
+                    , HtmlAttr.style
+                        [ ( "margin-left", "6x" )
+                        , ( "margin-right", "6x" )
+                        , ( "-webkit-appearance", "none" )
+                        , ( "-webkit-slider-thumb", "none" )
+                          --, ( "border", "1px solid lightGrey" )
+                        , ( "height", "2px" )
+                        , ( "width", "150px" )
+                        , ( "background", "#ccc" )
+                        ]
                     ]
                     []
 
         labeledSlider labelStr msgPartial vec3Get =
             El.row None
-                [ Attr.paddingLeft 10 ]
+                [ Attr.paddingLeft 10
+                , Attr.width <| Attr.percent 100
+                  --, Attr.inlineStyle [ ( "background", "yellow" ) ]
+                ]
                 [ El.text labelStr
-                , slider msgPartial vec3Get
+                , El.column None
+                    [ Attr.verticalCenter
+                    , Attr.paddingXY 5 0
+                    ]
+                    [ (slider msgPartial vec3Get) ]
                 , El.text <| toString <| currentValue vec3Get
                 ]
     in
@@ -361,6 +391,7 @@ viewSelectionSidebar model =
               -- , Attr.paddingTop 20
             , Attr.paddingXY 6 20
             , Attr.spacing 6
+            , Attr.inlineStyle [ ( "z-index", "5" ) ]
             ]
             [ El.row None
                 [ Attr.spacing 10 ]
