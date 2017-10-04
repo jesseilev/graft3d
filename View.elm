@@ -162,10 +162,7 @@ viewNodeDetail model node =
             ]
 
 
-
--- viewNodeSelector
-
-
+viewEdgeDetail : Model -> Edge -> Element
 viewEdgeDetail model edge =
     let
         sliderTriplet label1 label2 transformAttribute =

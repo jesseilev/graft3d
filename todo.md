@@ -13,5 +13,3 @@ objects as shells made of thin sheets
 
 
 TINY
-hideUnless
-MenuHover based on ui type, not contents of menu
