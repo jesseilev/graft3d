@@ -26,6 +26,7 @@ type Style
     | Dropdown
     | DropdownItem
     | PropertyLabel
+    | WasdOverlay
 
 
 type Variation
@@ -139,6 +140,7 @@ stylesheet =
         , Style.style Dropdown
             [ Color.background <| Color.greyscale 0.75
             , Shadow.deep
+            , Style.prop "z-index" "100"
             ]
         , Style.style DropdownItem
             [ Color.text <| Color.lightGrey
@@ -153,10 +155,25 @@ stylesheet =
             ]
         , Style.style PropertyLabel
             [ Font.weight 400 ]
+        , Style.style WasdOverlay
+            [ Font.size (scaled 3)
+            , Font.weight 300
+            , Font.typeface
+                [ Font.font "Courier New"
+                , Font.font "Courier"
+                , Font.font "monospace"
+                ]
+            , Color.text Color.white
+            , Style.prop "z-index" "10"
+            ]
         ]
 
 
-slider : List ( String, String )
+type alias InlineStyles =
+    List ( String, String )
+
+
+slider : InlineStyles
 slider =
     [ "width" => "100%"
     , "-webkit-appearance" => "none"
@@ -164,16 +181,31 @@ slider =
     ]
 
 
-opacitySlider : Color -> List ( String, String )
+opacitySlider : Color -> InlineStyles
 opacitySlider color =
     [ "background"
         => ("linear-gradient(to right, rgba(0,0,0,0), " ++ colorToCssRgba color)
     ]
 
 
-colorPicker : List ( String, String )
+colorPicker : InlineStyles
 colorPicker =
     [ "width" => "100%" ]
+
+
+wasdOverlay : InlineStyles
+wasdOverlay =
+    [ "z-index" => "10"
+    , "font-size" => "20px"
+    , "font-weight" => "200"
+    , "font-family" => "\"Courier New\", Courier, monospace"
+    , "color" => "white"
+    ]
+
+
+zIndex : Int -> InlineStyles
+zIndex n =
+    [ "z-index" => toString n ]
 
 
 (=>) =

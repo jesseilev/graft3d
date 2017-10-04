@@ -28551,10 +28551,10 @@ var _user$project$Types$Edge = F2(
 var _user$project$Types$Node = function (a) {
 	return {ctor: 'Node', _0: a};
 };
-var _user$project$Types$EditingEdgeNodes = {ctor: 'EditingEdgeNodes'};
-var _user$project$Types$Edges = {ctor: 'Edges'};
-var _user$project$Types$Nodes = {ctor: 'Nodes'};
-var _user$project$Types$Examples = {ctor: 'Examples'};
+var _user$project$Types$EditEdgeMenu = {ctor: 'EditEdgeMenu'};
+var _user$project$Types$NewEdgeMenu = {ctor: 'NewEdgeMenu'};
+var _user$project$Types$NewNodeMenu = {ctor: 'NewNodeMenu'};
+var _user$project$Types$ExamplesMenu = {ctor: 'ExamplesMenu'};
 var _user$project$Types$NoMenu = {ctor: 'NoMenu'};
 var _user$project$Types$Toggle = {ctor: 'Toggle'};
 var _user$project$Types$Hide = {ctor: 'Hide'};
@@ -28952,6 +28952,37 @@ _user$project$MyStyles_ops['=>'] = F2(
 	function (v0, v1) {
 		return {ctor: '_Tuple2', _0: v0, _1: v1};
 	});
+var _user$project$MyStyles$zIndex = function (n) {
+	return {
+		ctor: '::',
+		_0: A2(
+			_user$project$MyStyles_ops['=>'],
+			'z-index',
+			_elm_lang$core$Basics$toString(n)),
+		_1: {ctor: '[]'}
+	};
+};
+var _user$project$MyStyles$wasdOverlay = {
+	ctor: '::',
+	_0: A2(_user$project$MyStyles_ops['=>'], 'z-index', '10'),
+	_1: {
+		ctor: '::',
+		_0: A2(_user$project$MyStyles_ops['=>'], 'font-size', '20px'),
+		_1: {
+			ctor: '::',
+			_0: A2(_user$project$MyStyles_ops['=>'], 'font-weight', '200'),
+			_1: {
+				ctor: '::',
+				_0: A2(_user$project$MyStyles_ops['=>'], 'font-family', '\"Courier New\", Courier, monospace'),
+				_1: {
+					ctor: '::',
+					_0: A2(_user$project$MyStyles_ops['=>'], 'color', 'white'),
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	}
+};
 var _user$project$MyStyles$colorPicker = {
 	ctor: '::',
 	_0: A2(_user$project$MyStyles_ops['=>'], 'width', '100%'),
@@ -28983,6 +29014,7 @@ var _user$project$MyStyles$slider = {
 		}
 	}
 };
+var _user$project$MyStyles$WasdOverlay = {ctor: 'WasdOverlay'};
 var _user$project$MyStyles$PropertyLabel = {ctor: 'PropertyLabel'};
 var _user$project$MyStyles$DropdownItem = {ctor: 'DropdownItem'};
 var _user$project$MyStyles$Dropdown = {ctor: 'Dropdown'};
@@ -29369,7 +29401,11 @@ var _user$project$MyStyles$stylesheet = _mdgriffith$style_elements$Style$styleSh
 															_1: {
 																ctor: '::',
 																_0: _mdgriffith$style_elements$Style_Shadow$deep,
-																_1: {ctor: '[]'}
+																_1: {
+																	ctor: '::',
+																	_0: A2(_mdgriffith$style_elements$Style$prop, 'z-index', '100'),
+																	_1: {ctor: '[]'}
+																}
 															}
 														}),
 													_1: {
@@ -29429,7 +29465,48 @@ var _user$project$MyStyles$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																	_0: _mdgriffith$style_elements$Style_Font$weight(400),
 																	_1: {ctor: '[]'}
 																}),
-															_1: {ctor: '[]'}
+															_1: {
+																ctor: '::',
+																_0: A2(
+																	_mdgriffith$style_elements$Style$style,
+																	_user$project$MyStyles$WasdOverlay,
+																	{
+																		ctor: '::',
+																		_0: _mdgriffith$style_elements$Style_Font$size(
+																			_user$project$MyStyles$scaled(3)),
+																		_1: {
+																			ctor: '::',
+																			_0: _mdgriffith$style_elements$Style_Font$weight(300),
+																			_1: {
+																				ctor: '::',
+																				_0: _mdgriffith$style_elements$Style_Font$typeface(
+																					{
+																						ctor: '::',
+																						_0: _mdgriffith$style_elements$Style_Font$font('Courier New'),
+																						_1: {
+																							ctor: '::',
+																							_0: _mdgriffith$style_elements$Style_Font$font('Courier'),
+																							_1: {
+																								ctor: '::',
+																								_0: _mdgriffith$style_elements$Style_Font$font('monospace'),
+																								_1: {ctor: '[]'}
+																							}
+																						}
+																					}),
+																				_1: {
+																					ctor: '::',
+																					_0: _mdgriffith$style_elements$Style_Color$text(_elm_lang$core$Color$white),
+																					_1: {
+																						ctor: '::',
+																						_0: A2(_mdgriffith$style_elements$Style$prop, 'z-index', '10'),
+																						_1: {ctor: '[]'}
+																					}
+																				}
+																			}
+																		}
+																	}),
+																_1: {ctor: '[]'}
+															}
 														}
 													}
 												}
@@ -29462,6 +29539,23 @@ var _user$project$View$alphaChar = function (id) {
 				_elm_lang$core$String$toList('abcdefghijklmnopqrstuvwxyz'))));
 };
 var _user$project$View$backgroundColor = A3(_elm_lang$core$Color$rgb, 100, 120, 160);
+var _user$project$View$viewSaveButton = A3(
+	_mdgriffith$style_elements$Element$button,
+	_user$project$MyStyles$NewButton,
+	{
+		ctor: '::',
+		_0: _mdgriffith$style_elements$Element_Events$onClick(_user$project$Types$Save),
+		_1: {
+			ctor: '::',
+			_0: _mdgriffith$style_elements$Element_Attributes$alignBottom,
+			_1: {
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element_Attributes$center,
+				_1: {ctor: '[]'}
+			}
+		}
+	},
+	_mdgriffith$style_elements$Element$text('Save'));
 var _user$project$View$viewEntity = F3(
 	function (model, ancestors, nodeCtx) {
 		var viewChild = (_elm_lang$core$Native_Utils.cmp(
@@ -29700,7 +29794,7 @@ var _user$project$View$viewSceneContainer = function (model) {
 				ctor: '::',
 				_0: A3(
 					_mdgriffith$style_elements$Element$row,
-					_user$project$MyStyles$None,
+					_user$project$MyStyles$WasdOverlay,
 					{
 						ctor: '::',
 						_0: _mdgriffith$style_elements$Element_Attributes$alignBottom,
@@ -29711,32 +29805,7 @@ var _user$project$View$viewSceneContainer = function (model) {
 								ctor: '::',
 								_0: _mdgriffith$style_elements$Element_Attributes$width(
 									_mdgriffith$style_elements$Element_Attributes$percent(100)),
-								_1: {
-									ctor: '::',
-									_0: _mdgriffith$style_elements$Element_Attributes$inlineStyle(
-										{
-											ctor: '::',
-											_0: {ctor: '_Tuple2', _0: 'z-index', _1: '10'},
-											_1: {
-												ctor: '::',
-												_0: {ctor: '_Tuple2', _0: 'font-size', _1: '20px'},
-												_1: {
-													ctor: '::',
-													_0: {ctor: '_Tuple2', _0: 'font-weight', _1: '200'},
-													_1: {
-														ctor: '::',
-														_0: {ctor: '_Tuple2', _0: 'font-family', _1: ' \"Courier New\", Courier, monospace'},
-														_1: {
-															ctor: '::',
-															_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
-															_1: {ctor: '[]'}
-														}
-													}
-												}
-											}
-										}),
-									_1: {ctor: '[]'}
-								}
+								_1: {ctor: '[]'}
 							}
 						}
 					},
@@ -29913,6 +29982,9 @@ var _user$project$View$viewNodeSelector = F2(
 				40,
 				{ctor: '[]'}));
 	});
+var _user$project$View$hideUnless = function (shouldShow) {
+	return shouldShow ? A2(_mdgriffith$style_elements$Element_Attributes$attribute, 'class', '') : _mdgriffith$style_elements$Element_Attributes$hidden;
+};
 var _user$project$View$viewExamplesMenu = function (model) {
 	var exampleRow = function (title) {
 		return A3(
@@ -29931,11 +30003,11 @@ var _user$project$View$viewExamplesMenu = function (model) {
 						_1: {
 							ctor: '::',
 							_0: _mdgriffith$style_elements$Element_Events$onMouseEnter(
-								A2(_user$project$Types$ChangeMenuHover, _user$project$Types$Show, _user$project$Types$Examples)),
+								A2(_user$project$Types$ChangeMenuHover, _user$project$Types$Show, _user$project$Types$ExamplesMenu)),
 							_1: {
 								ctor: '::',
 								_0: _mdgriffith$style_elements$Element_Events$onMouseLeave(
-									A2(_user$project$Types$ChangeMenuHover, _user$project$Types$Hide, _user$project$Types$Examples)),
+									A2(_user$project$Types$ChangeMenuHover, _user$project$Types$Hide, _user$project$Types$ExamplesMenu)),
 								_1: {ctor: '[]'}
 							}
 						}
@@ -29964,14 +30036,11 @@ var _user$project$View$viewExamplesMenu = function (model) {
 					_1: {
 						ctor: '::',
 						_0: _mdgriffith$style_elements$Element_Attributes$inlineStyle(
-							{
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'z-index', _1: '10'},
-								_1: {ctor: '[]'}
-							}),
+							_user$project$MyStyles$zIndex(10)),
 						_1: {
 							ctor: '::',
-							_0: (!_elm_lang$core$Native_Utils.eq(model.menuHover, _user$project$Types$Examples)) ? _mdgriffith$style_elements$Element_Attributes$hidden : A2(_mdgriffith$style_elements$Element_Attributes$attribute, 'class', ''),
+							_0: _user$project$View$hideUnless(
+								_elm_lang$core$Native_Utils.eq(model.menuHover, _user$project$Types$ExamplesMenu)),
 							_1: {ctor: '[]'}
 						}
 					}
@@ -30070,16 +30139,7 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 				_1: {
 					ctor: '::',
 					_0: _mdgriffith$style_elements$Element_Attributes$spacing(6),
-					_1: {
-						ctor: '::',
-						_0: _mdgriffith$style_elements$Element_Attributes$inlineStyle(
-							{
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'z-index', _1: '5'},
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}
+					_1: {ctor: '[]'}
 				}
 			}
 		},
@@ -30116,14 +30176,11 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 											_1: {
 												ctor: '::',
 												_0: _mdgriffith$style_elements$Element_Attributes$inlineStyle(
-													{
-														ctor: '::',
-														_0: {ctor: '_Tuple2', _0: 'z-index', _1: '10'},
-														_1: {ctor: '[]'}
-													}),
+													_user$project$MyStyles$zIndex(10)),
 												_1: {
 													ctor: '::',
-													_0: (!_elm_lang$core$Native_Utils.eq(model.menuHover, _user$project$Types$Nodes)) ? _mdgriffith$style_elements$Element_Attributes$hidden : A2(_mdgriffith$style_elements$Element_Attributes$attribute, 'class', ''),
+													_0: _user$project$View$hideUnless(
+														_elm_lang$core$Native_Utils.eq(model.menuHover, _user$project$Types$NewNodeMenu)),
 													_1: {ctor: '[]'}
 												}
 											}
@@ -30182,8 +30239,8 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 								A3(
 									newButton,
 									40,
-									_user$project$Types$Nodes,
-									A2(_user$project$Types$ChangeMenuHover, _user$project$Types$Toggle, _user$project$Types$Nodes))),
+									_user$project$Types$NewNodeMenu,
+									A2(_user$project$Types$ChangeMenuHover, _user$project$Types$Toggle, _user$project$Types$NewNodeMenu))),
 							_1: {ctor: '[]'}
 						}),
 					_1: {
@@ -30212,14 +30269,11 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 												_1: {
 													ctor: '::',
 													_0: _mdgriffith$style_elements$Element_Attributes$inlineStyle(
-														{
-															ctor: '::',
-															_0: {ctor: '_Tuple2', _0: 'z-index', _1: '10'},
-															_1: {ctor: '[]'}
-														}),
+														_user$project$MyStyles$zIndex(10)),
 													_1: {
 														ctor: '::',
-														_0: (!_elm_lang$core$Native_Utils.eq(model.menuHover, _user$project$Types$Edges)) ? _mdgriffith$style_elements$Element_Attributes$hidden : A2(_mdgriffith$style_elements$Element_Attributes$attribute, 'class', ''),
+														_0: _user$project$View$hideUnless(
+															_elm_lang$core$Native_Utils.eq(model.menuHover, _user$project$Types$NewEdgeMenu)),
 														_1: {ctor: '[]'}
 													}
 												}
@@ -30279,8 +30333,8 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 									A3(
 										newButton,
 										45,
-										_user$project$Types$Edges,
-										A2(_user$project$Types$ChangeMenuHover, _user$project$Types$Toggle, _user$project$Types$Edges))),
+										_user$project$Types$NewEdgeMenu,
+										A2(_user$project$Types$ChangeMenuHover, _user$project$Types$Toggle, _user$project$Types$NewEdgeMenu))),
 								_1: {ctor: '[]'}
 							}),
 						_1: {ctor: '[]'}
@@ -30615,14 +30669,11 @@ var _user$project$View$viewEdgeDetail = F2(
 					{
 						ctor: '::',
 						_0: _mdgriffith$style_elements$Element_Attributes$inlineStyle(
-							{
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'z-index', _1: '10'},
-								_1: {ctor: '[]'}
-							}),
+							_user$project$MyStyles$zIndex(10)),
 						_1: {
 							ctor: '::',
-							_0: (!_elm_lang$core$Native_Utils.eq(model.menuHover, _user$project$Types$EditingEdgeNodes)) ? _mdgriffith$style_elements$Element_Attributes$hidden : A2(_mdgriffith$style_elements$Element_Attributes$attribute, 'class', ''),
+							_0: _user$project$View$hideUnless(
+								_elm_lang$core$Native_Utils.eq(model.menuHover, _user$project$Types$EditEdgeMenu)),
 							_1: {ctor: '[]'}
 						}
 					},
@@ -30690,11 +30741,11 @@ var _user$project$View$viewEdgeDetail = F2(
 					_0: A2(
 						_mdgriffith$style_elements$Element_Attributes$vary,
 						_user$project$MyStyles$Selected,
-						_elm_lang$core$Native_Utils.eq(model.menuHover, _user$project$Types$EditingEdgeNodes)),
+						_elm_lang$core$Native_Utils.eq(model.menuHover, _user$project$Types$EditEdgeMenu)),
 					_1: {
 						ctor: '::',
 						_0: _mdgriffith$style_elements$Element_Events$onMouseDown(
-							A2(_user$project$Types$ChangeMenuHover, _user$project$Types$Toggle, _user$project$Types$EditingEdgeNodes)),
+							A2(_user$project$Types$ChangeMenuHover, _user$project$Types$Toggle, _user$project$Types$EditEdgeMenu)),
 						_1: {ctor: '[]'}
 					}
 				},
@@ -31141,11 +31192,11 @@ var _user$project$View$viewNavbar = function (model) {
 									{
 										ctor: '::',
 										_0: _mdgriffith$style_elements$Element_Events$onMouseEnter(
-											A2(_user$project$Types$ChangeMenuHover, _user$project$Types$Show, _user$project$Types$Examples)),
+											A2(_user$project$Types$ChangeMenuHover, _user$project$Types$Show, _user$project$Types$ExamplesMenu)),
 										_1: {
 											ctor: '::',
 											_0: _mdgriffith$style_elements$Element_Events$onMouseLeave(
-												A2(_user$project$Types$ChangeMenuHover, _user$project$Types$Hide, _user$project$Types$Examples)),
+												A2(_user$project$Types$ChangeMenuHover, _user$project$Types$Hide, _user$project$Types$ExamplesMenu)),
 											_1: {ctor: '[]'}
 										}
 									})),

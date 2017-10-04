@@ -31,8 +31,8 @@ import IntDict
 import Dict
 
 
-type alias Element variation =
-    El.Element Style variation Msg
+type alias Element =
+    El.Element Style Variation Msg
 
 
 root : Model -> Html Msg
@@ -52,7 +52,7 @@ root model =
             ]
 
 
-viewNavbar : Model -> Element Variation
+viewNavbar : Model -> Element
 viewNavbar model =
     let
         navlink text href attrs =
@@ -71,8 +71,8 @@ viewNavbar model =
                 , options =
                     [ navlink "Examples"
                         "#"
-                        [ Events.onMouseEnter <| ChangeMenuHover Show Examples
-                        , Events.onMouseLeave <| ChangeMenuHover Hide Examples
+                        [ Events.onMouseEnter <| ChangeMenuHover Show ExamplesMenu
+                        , Events.onMouseLeave <| ChangeMenuHover Hide ExamplesMenu
                         ]
                         |> El.below [ viewExamplesMenu model ]
                     , navlink "Graft2D" "https://jesseilev.github.io/graft" []
@@ -82,6 +82,7 @@ viewNavbar model =
             ]
 
 
+viewDetailSidebar : Model -> Element
 viewDetailSidebar model =
     let
         showDetails getGraphData viewDetailContent =
@@ -105,7 +106,7 @@ viewDetailSidebar model =
                 showDetails (GraphEx.getEdge from to) (viewEdgeDetail model)
 
 
-viewNodeDetail : Model -> Node -> Element v
+viewNodeDetail : Model -> Node -> Element
 viewNodeDetail model node =
     let
         colorPicker =
@@ -193,7 +194,7 @@ viewEdgeDetail model edge =
             Html.option [ HtmlAttr.value <| toString node.id ]
                 [ El.toHtml MyStyles.stylesheet <| viewNodeBadge model node 20 [] ]
 
-        dropdown : String -> Id -> (Id -> Msg) -> Element v
+        dropdown : String -> Id -> (Id -> Msg) -> Element
         dropdown labelStr selectedVal msgConstructor =
             El.row None
                 []
@@ -208,17 +209,14 @@ viewEdgeDetail model edge =
 
         dropdownMenu =
             El.el SelectorItem
-                [ Attr.vary Selected (model.menuHover == EditingEdgeNodes)
-                , Events.onMouseDown <| ChangeMenuHover Toggle EditingEdgeNodes
+                [ Attr.vary Selected (model.menuHover == EditEdgeMenu)
+                , Events.onMouseDown <| ChangeMenuHover Toggle EditEdgeMenu
                 ]
                 description
                 |> El.below
                     [ El.el Dropdown
-                        [ Attr.inlineStyle [ ( "z-index", "10" ) ]
-                        , if model.menuHover /= EditingEdgeNodes then
-                            Attr.hidden
-                          else
-                            Attr.attribute "class" ""
+                        [ Attr.inlineStyle <| MyStyles.zIndex 10
+                        , hideUnless (model.menuHover == EditEdgeMenu)
                         ]
                         (El.row None
                             [ Attr.width <| Attr.percent 100 ]
@@ -304,7 +302,7 @@ viewTransformationSliders model edge transformAttribute =
         currentValue vec3Get =
             utils.edgeLens.get edge |> vec3Get
 
-        slider : (String -> Msg) -> (Vector3d -> Float) -> Element v
+        slider : (String -> Msg) -> (Vector3d -> Float) -> Element
         slider msgPartial vec3Get =
             El.html
                 <| Html.input
@@ -379,23 +377,18 @@ viewSelectionSidebar model =
               -- , Attr.paddingTop 20
             , Attr.paddingXY 6 20
             , Attr.spacing 6
-            , Attr.inlineStyle [ ( "z-index", "5" ) ]
             ]
             [ El.row None
                 [ Attr.spacing 10 ]
                 [ viewBadgeSelectors model
                     Graph.nodes
                     viewNodeSelector
-                    [ (newButton 40 Nodes <| ChangeMenuHover Toggle Nodes)
+                    [ (newButton 40 NewNodeMenu <| ChangeMenuHover Toggle NewNodeMenu)
                         |> El.below
                             [ El.el Dropdown
                                 [ Attr.height <| Attr.px 200
-                                  --, Attr.alignRight
-                                , Attr.inlineStyle [ ( "z-index", "10" ) ]
-                                , if model.menuHover /= Nodes then
-                                    Attr.hidden
-                                  else
-                                    Attr.attribute "class" ""
+                                , Attr.inlineStyle <| MyStyles.zIndex 10
+                                , hideUnless (model.menuHover == NewNodeMenu)
                                 ]
                                 (El.row None
                                     [ Attr.width <| Attr.percent 100 ]
@@ -419,16 +412,13 @@ viewSelectionSidebar model =
                 , viewBadgeSelectors model
                     (List.reverse << Graph.edges)
                     viewEdgeSelector
-                    [ (newButton 45 Edges <| ChangeMenuHover Toggle Edges)
+                    [ (newButton 45 NewEdgeMenu <| ChangeMenuHover Toggle NewEdgeMenu)
                         |> El.below
                             [ El.el Dropdown
                                 [ Attr.height <| Attr.px 200
                                   --, Attr.alignRight
-                                , Attr.inlineStyle [ ( "z-index", "10" ) ]
-                                , if model.menuHover /= Edges then
-                                    Attr.hidden
-                                  else
-                                    Attr.attribute "class" ""
+                                , Attr.inlineStyle <| MyStyles.zIndex 10
+                                , hideUnless (model.menuHover == NewEdgeMenu)
                                 ]
                                 (El.row None
                                     [ Attr.width <| Attr.percent 100 ]
@@ -450,12 +440,7 @@ viewSelectionSidebar model =
                             ]
                     ]
                 ]
-              --, El.button NewButton
-              --    [ Events.onClick Save
-              --    , Attr.alignBottom
-              --    , Attr.center
-              --    ]
-              --    (El.text "Save")
+              --viewSaveButton
             ]
 
 
@@ -466,26 +451,30 @@ viewExamplesMenu model =
                 [ Attr.padding 10
                 , Attr.alignLeft
                 , Events.onClick (Load title)
-                , Events.onMouseEnter <| ChangeMenuHover Show Examples
-                , Events.onMouseLeave <| ChangeMenuHover Hide Examples
+                , Events.onMouseEnter <| ChangeMenuHover Show ExamplesMenu
+                , Events.onMouseLeave <| ChangeMenuHover Hide ExamplesMenu
                 ]
                 [ El.text title ]
     in
         El.el Dropdown
             [ Attr.width <| Attr.px 200
-              --, Attr.height <| Attr.px 400
             , Attr.alignRight
             , Attr.vary NavMenu True
-            , Attr.inlineStyle [ ( "z-index", "10" ) ]
-            , if model.menuHover /= Examples then
-                Attr.hidden
-              else
-                Attr.attribute "class" ""
+            , Attr.inlineStyle <| MyStyles.zIndex 10
+            , hideUnless (model.menuHover == ExamplesMenu)
             ]
             (El.column None
                 [ Attr.width <| Attr.percent 100 ]
                 (List.map exampleRow <| Dict.keys model.examples)
             )
+
+
+hideUnless : Bool -> El.Attribute Variation Msg
+hideUnless shouldShow =
+    if shouldShow then
+        Attr.attribute "class" ""
+    else
+        Attr.hidden
 
 
 
@@ -523,7 +512,7 @@ viewNodeBadge model node size attrs =
         )
 
 
-viewEdgeSelector : Model -> Types.Edge -> Element Variation
+viewEdgeSelector : Model -> Types.Edge -> Element
 viewEdgeSelector model edge =
     El.row SelectorItem
         [ Attr.padding 10
@@ -554,27 +543,18 @@ viewEdgeBadge model edge =
                 El.empty
 
 
-viewSceneContainer : Model -> Element v
+viewSceneContainer : Model -> Element
 viewSceneContainer model =
     El.row None
         [ Attr.width (Attr.fill)
         , Attr.height (Attr.fill)
         ]
         [ El.html (viewScene model)
-          --|> El.above
-          --    [
-        , El.row None
+        , El.row WasdOverlay
             [ Attr.alignBottom
             , Attr.paddingXY 20 10
               --, Attr.center
             , Attr.width <| Attr.percent 100
-            , Attr.inlineStyle
-                [ ( "z-index", "10" )
-                , ( "font-size", "20px" )
-                , ( "font-weight", "200" )
-                , ( "font-family", " \"Courier New\", Courier, monospace" )
-                , ( "color", "white" )
-                ]
             ]
             [ El.text "w↑ a← s↓ d→" ]
         ]
@@ -676,6 +656,16 @@ viewEntity model ancestors nodeCtx =
             (List.map viewChild children
              -- ++ [ lamp 0.5, lamp -0.5 ]
             )
+
+
+viewSaveButton : Element
+viewSaveButton =
+    El.button NewButton
+        [ Events.onClick Save
+        , Attr.alignBottom
+        , Attr.center
+        ]
+        (El.text "Save")
 
 
 backgroundColor : Color.Color

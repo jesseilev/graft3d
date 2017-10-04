@@ -90,10 +90,10 @@ type Editable
 
 type MenuHover
     = NoMenu
-    | Examples
-    | Nodes
-    | Edges
-    | EditingEdgeNodes
+    | ExamplesMenu
+    | NewNodeMenu
+    | NewEdgeMenu
+    | EditEdgeMenu
 
 
 type MenuSetter
