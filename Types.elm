@@ -76,7 +76,7 @@ type alias Animated a =
 type alias Model =
     { time : Time
     , graph : Graph
-    , examples : Dict String Graph
+    , examples : List ( String, Graph )
     , rootId : Id
     , editing : Maybe Editable
     , menuHover : MenuHover
@@ -153,7 +153,7 @@ transformUtils attribute =
             TransformUtils edgeLensScale 0 2 0.01
 
         Rotation ->
-            TransformUtils edgeLensRotation 0 360 1
+            TransformUtils edgeLensRotation -180 180 1
 
 
 vec3Set_ tupleMap new_ =

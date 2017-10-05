@@ -55,6 +55,8 @@ stylesheet =
             ]
         , Style.style Sidebar
             [ Color.background Color.lightGrey
+            , Border.right 0.5
+            , Color.border <| Color.greyscale 0.2
             , Shadow.box
                 { offset = ( 10, 0 )
                 , blur = 30
@@ -83,10 +85,6 @@ stylesheet =
             [ Font.size (scaled 3)
             , Style.variation Title
                 [ Font.size (scaled 10) ]
-              --, Font.weight 4
-              --, Color.text <| Color.greyscale 0.8
-              --, Shadow.deep
-              --, Color.background <| Color.greyscale 0.25
             ]
         , Style.style Nav
             [ Font.alignRight
@@ -177,7 +175,7 @@ slider : InlineStyles
 slider =
     [ "width" => "100%"
     , "-webkit-appearance" => "none"
-    , "height" => "4px"
+    , "height" => "2px"
     ]
 
 

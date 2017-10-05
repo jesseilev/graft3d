@@ -157,6 +157,7 @@ viewNodeDetail model node =
                 [ Attr.height <| Attr.px 50
                 , Attr.width <| Attr.px 100
                 , Events.onClick <| Delete (Node node.id)
+                , hideUnless (node.id /= model.rootId)
                 ]
                 (El.text "Delete")
             ]
@@ -437,13 +438,13 @@ viewSelectionSidebar model =
                             ]
                     ]
                 ]
-              --, viewSaveButton
+            , viewSaveButton
             ]
 
 
 viewExamplesMenu model =
     let
-        exampleRow title =
+        exampleRow ( title, _ ) =
             El.row DropdownItem
                 [ Attr.padding 10
                 , Attr.alignLeft
@@ -462,14 +463,14 @@ viewExamplesMenu model =
             ]
             (El.column None
                 [ Attr.width <| Attr.percent 100 ]
-                (List.map exampleRow <| Dict.keys model.examples)
+                (List.map exampleRow model.examples)
             )
 
 
 hideUnless : Bool -> El.Attribute Variation Msg
 hideUnless shouldShow =
     if shouldShow then
-        Attr.attribute "class" ""
+        Attr.attribute "id" ""
     else
         Attr.hidden
 

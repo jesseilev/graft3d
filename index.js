@@ -27897,194 +27897,6 @@ var _opensolid$geometry$OpenSolid_Vector3d$orthonormalize = function (_p41) {
 		_opensolid$geometry$OpenSolid_Vector3d$direction(_p42._0));
 };
 
-var _user$project$Graph_Extra$isolatedNodeContext = function (node) {
-	return {node: node, incoming: _elm_community$intdict$IntDict$empty, outgoing: _elm_community$intdict$IntDict$empty};
-};
-var _user$project$Graph_Extra$insertNode = F2(
-	function (node, graph) {
-		return A2(
-			_elm_community$graph$Graph$insert,
-			_user$project$Graph_Extra$isolatedNodeContext(node),
-			graph);
-	});
-var _user$project$Graph_Extra$updateEdges = F2(
-	function (updater, graph) {
-		return A2(
-			_elm_community$graph$Graph$fromNodesAndEdges,
-			_elm_community$graph$Graph$nodes(graph),
-			updater(
-				_elm_community$graph$Graph$edges(graph)));
-	});
-var _user$project$Graph_Extra$removeEdge = F2(
-	function (from, to) {
-		return _user$project$Graph_Extra$updateEdges(
-			_elm_lang$core$List$filter(
-				function (e) {
-					return (!_elm_lang$core$Native_Utils.eq(e.from, from)) || (!_elm_lang$core$Native_Utils.eq(e.to, to));
-				}));
-	});
-var _user$project$Graph_Extra$updateNodes = F2(
-	function (updater, graph) {
-		return A2(
-			_elm_community$graph$Graph$fromNodesAndEdges,
-			updater(
-				_elm_community$graph$Graph$nodes(graph)),
-			_elm_community$graph$Graph$edges(graph));
-	});
-var _user$project$Graph_Extra$updateNode = F2(
-	function (id, updater) {
-		return _user$project$Graph_Extra$updateNodes(
-			_elm_lang$core$List$map(
-				function (n) {
-					return _elm_lang$core$Native_Utils.eq(n.id, id) ? updater(n) : n;
-				}));
-	});
-var _user$project$Graph_Extra$edgeEqualsFromTo = F3(
-	function (from, to, edge) {
-		return _elm_lang$core$Native_Utils.eq(edge.from, from) && _elm_lang$core$Native_Utils.eq(edge.to, to);
-	});
-var _user$project$Graph_Extra$edgeEquals = function (edge) {
-	return A2(_user$project$Graph_Extra$edgeEqualsFromTo, edge.from, edge.to);
-};
-var _user$project$Graph_Extra$insertEdge = F2(
-	function (newEdge, graph) {
-		var alreadyExists = A2(
-			_elm_lang$core$Debug$log,
-			'edge already exists?',
-			_elm_community$maybe_extra$Maybe_Extra$isJust(
-				A2(
-					_elm_community$list_extra$List_Extra$find,
-					_user$project$Graph_Extra$edgeEquals(newEdge),
-					_elm_community$graph$Graph$edges(graph))));
-		var newEdges = alreadyExists ? {ctor: '[]'} : {
-			ctor: '::',
-			_0: newEdge,
-			_1: {ctor: '[]'}
-		};
-		return A2(
-			_elm_community$graph$Graph$fromNodesAndEdges,
-			_elm_community$graph$Graph$nodes(graph),
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				_elm_community$graph$Graph$edges(graph),
-				newEdges));
-	});
-var _user$project$Graph_Extra$updateEdgeFrom = F2(
-	function (newFrom, edge) {
-		return function (_p0) {
-			return A2(
-				_user$project$Graph_Extra$insertEdge,
-				_elm_lang$core$Native_Utils.update(
-					edge,
-					{from: newFrom}),
-				A3(_user$project$Graph_Extra$removeEdge, edge.from, edge.to, _p0));
-		};
-	});
-var _user$project$Graph_Extra$updateEdgeTo = F2(
-	function (newTo, edge) {
-		return function (_p1) {
-			return A2(
-				_user$project$Graph_Extra$insertEdge,
-				_elm_lang$core$Native_Utils.update(
-					edge,
-					{to: newTo}),
-				A3(_user$project$Graph_Extra$removeEdge, edge.from, edge.to, _p1));
-		};
-	});
-var _user$project$Graph_Extra$updateEdgeFromTo = F3(
-	function (newFrom, newTo, edge) {
-		return function (_p2) {
-			return A2(
-				_user$project$Graph_Extra$insertEdge,
-				_elm_lang$core$Native_Utils.update(
-					edge,
-					{from: newFrom, to: newTo}),
-				A3(_user$project$Graph_Extra$removeEdge, edge.from, edge.to, _p2));
-		};
-	});
-var _user$project$Graph_Extra$updateEdge = F3(
-	function (from, to, updater) {
-		return _user$project$Graph_Extra$updateEdges(
-			_elm_lang$core$List$map(
-				function (e) {
-					return A3(_user$project$Graph_Extra$edgeEqualsFromTo, from, to, e) ? updater(e) : e;
-				}));
-	});
-var _user$project$Graph_Extra$neighborCount = F2(
-	function (graph, node) {
-		var adjCount = function (_p3) {
-			return _elm_lang$core$List$length(
-				_elm_community$intdict$IntDict$keys(_p3));
-		};
-		return A2(
-			_elm_lang$core$Debug$log,
-			'neighborcount',
-			A2(
-				_elm_lang$core$Maybe$withDefault,
-				0,
-				A2(
-					_elm_lang$core$Maybe$map,
-					function (_p4) {
-						var _p5 = _p4;
-						return adjCount(_p5.incoming) + adjCount(_p5.outgoing);
-					},
-					A2(_elm_community$graph$Graph$get, node.id, graph))));
-	});
-var _user$project$Graph_Extra$getNode = function (nodeId) {
-	return function (_p6) {
-		return A2(
-			_elm_lang$core$Maybe$map,
-			function (_) {
-				return _.node;
-			},
-			A2(_elm_community$graph$Graph$get, nodeId, _p6));
-	};
-};
-var _user$project$Graph_Extra$getEdgesTo = function (id) {
-	return function (_p7) {
-		return A2(
-			_elm_lang$core$List$filter,
-			function (_p8) {
-				return A2(
-					F2(
-						function (x, y) {
-							return _elm_lang$core$Native_Utils.eq(x, y);
-						}),
-					id,
-					function (_) {
-						return _.to;
-					}(_p8));
-			},
-			_elm_community$graph$Graph$edges(_p7));
-	};
-};
-var _user$project$Graph_Extra$getEdge = F2(
-	function (from, to) {
-		return function (_p9) {
-			return A2(
-				_elm_community$list_extra$List_Extra$find,
-				A2(_user$project$Graph_Extra$edgeEqualsFromTo, from, to),
-				_elm_community$graph$Graph$edges(_p9));
-		};
-	});
-var _user$project$Graph_Extra$availableEdges = function (graph) {
-	return A2(
-		_elm_lang$core$List$filter,
-		function (pair) {
-			return _elm_lang$core$Native_Utils.eq(
-				A3(_elm_lang$core$Basics$uncurry, _user$project$Graph_Extra$getEdge, pair, graph),
-				_elm_lang$core$Maybe$Nothing);
-		},
-		A3(
-			_elm_community$list_extra$List_Extra$lift2,
-			F2(
-				function (v0, v1) {
-					return {ctor: '_Tuple2', _0: v0, _1: v1};
-				}),
-			_elm_community$graph$Graph$nodeIds(graph),
-			_elm_community$graph$Graph$nodeIds(graph)));
-};
-
 var _user$project$Types$hexToColorSafe = function (_p0) {
 	return A2(
 		_elm_lang$core$Maybe$withDefault,
@@ -28492,7 +28304,7 @@ var _user$project$Types$transformUtils = function (attribute) {
 		case 'Scale':
 			return A4(_user$project$Types$TransformUtils, _user$project$Types$edgeLensScale, 0, 2, 1.0e-2);
 		default:
-			return A4(_user$project$Types$TransformUtils, _user$project$Types$edgeLensRotation, 0, 360, 1);
+			return A4(_user$project$Types$TransformUtils, _user$project$Types$edgeLensRotation, -180, 180, 1);
 	}
 };
 var _user$project$Types$AlmostGraph = F2(
@@ -28612,12 +28424,12 @@ var _user$project$Types$Z = {ctor: 'Z'};
 var _user$project$Types$Y = {ctor: 'Y'};
 var _user$project$Types$X = {ctor: 'X'};
 
-var _user$project$Worlds$percentOfDuration = F3(
+var _user$project$Examples$percentOfDuration = F3(
 	function (duration, ease, time) {
 		return ease(
 			A2(_user$project$Types_ops['%%'], time, duration) / duration);
 	});
-var _user$project$Worlds$graph0 = A2(
+var _user$project$Examples$graph0 = A2(
 	_elm_community$graph$Graph$fromNodesAndEdges,
 	{
 		ctor: '::',
@@ -28682,7 +28494,7 @@ var _user$project$Worlds$graph0 = A2(
 				isAnimating: true,
 				animate: F2(
 					function (time, trans) {
-						var percent = A3(_user$project$Worlds$percentOfDuration, 12000, _elm_community$easing_functions$Ease$inOutCubic, time);
+						var percent = A3(_user$project$Examples$percentOfDuration, 12000, _elm_community$easing_functions$Ease$inOutCubic, time);
 						var newScaleComps = A2(
 							_Fresheyeball$elm_tuple_extra$Tuple3$mapFirst,
 							function (_p0) {
@@ -28726,7 +28538,7 @@ var _user$project$Worlds$graph0 = A2(
 					isAnimating: true,
 					animate: F2(
 						function (time, trans) {
-							var percent = A3(_user$project$Worlds$percentOfDuration, 1000, _elm_community$easing_functions$Ease$inOutExpo, time);
+							var percent = A3(_user$project$Examples$percentOfDuration, 1000, _elm_community$easing_functions$Ease$inOutExpo, time);
 							var angle = percent * 360;
 							var newScaleComps = A2(
 								_Fresheyeball$elm_tuple_extra$Tuple3$mapSecond,
@@ -28791,7 +28603,7 @@ var _user$project$Worlds$graph0 = A2(
 							isAnimating: false,
 							animate: F2(
 								function (time, trans) {
-									var percent = A3(_user$project$Worlds$percentOfDuration, 16000, _elm_community$easing_functions$Ease$inOutCubic, time);
+									var percent = A3(_user$project$Examples$percentOfDuration, 16000, _elm_community$easing_functions$Ease$inOutCubic, time);
 									var angle = percent * 360;
 									var newRotationComps = A2(
 										_Fresheyeball$elm_tuple_extra$Tuple3$mapSecond,
@@ -28857,7 +28669,7 @@ var _user$project$Worlds$graph0 = A2(
 			}
 		}
 	});
-var _user$project$Worlds$graph1 = A2(
+var _user$project$Examples$graph1 = A2(
 	_elm_community$graph$Graph$fromNodesAndEdges,
 	{
 		ctor: '::',
@@ -28915,32 +28727,245 @@ var _user$project$Worlds$graph1 = A2(
 			_1: {ctor: '[]'}
 		}
 	});
-var _user$project$Worlds$jsonExamples = _elm_lang$core$Dict$fromList(
-	{
+var _user$project$Examples$json = {
+	ctor: '::',
+	_0: A2(_user$project$Types_ops['=>'], 'Simple', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#ffbc00\",\"opacity\":0.69,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#f52064\",\"opacity\":0.55,\"shape\":\"Box\"}}],\"edges\":[{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":-1,\"y\":-1.4,\"z\":1.2},\"scale\":{\"x\":0.46,\"y\":0.61,\"z\":0.44},\"rotation\":{\"x\":0,\"y\":30,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":0.4,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":1.21,\"y\":0.94,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
+	_1: {
 		ctor: '::',
-		_0: A2(_user$project$Types_ops['=>'], 'Simple', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#005ab4\",\"opacity\":0.82,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#009664\",\"opacity\":0.55,\"shape\":\"Box\"}}],\"edges\":[{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.5,\"z\":1},\"scale\":{\"x\":0.6,\"y\":1,\"z\":0.2},\"rotation\":{\"x\":0,\"y\":30,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-1.5,\"y\":0.1,\"z\":-0.2},\"scale\":{\"x\":1.14,\"y\":0.94,\"z\":1.9},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
+		_0: A2(_user$project$Types_ops['=>'], 'Wavy Thing', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#008040\",\"opacity\":0.24,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#e6e6e6\",\"opacity\":0.22,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#008080\",\"opacity\":0.6,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":1,\"z\":0},\"scale\":{\"x\":1,\"y\":1.34,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":0.6,\"y\":1,\"z\":0.48},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":2.4,\"y\":-1,\"z\":-1.6},\"scale\":{\"x\":0.5,\"y\":1.09,\"z\":0.31},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-0.1,\"y\":-0.1,\"z\":0.4},\"scale\":{\"x\":1.14,\"y\":0.67,\"z\":1.13},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
 		_1: {
 			ctor: '::',
-			_0: A2(_user$project$Types_ops['=>'], 'Wavy Thing', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#008040\",\"opacity\":0.24,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#e6e6e6\",\"opacity\":0.22,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#008080\",\"opacity\":0.6,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":1,\"z\":0},\"scale\":{\"x\":1,\"y\":1.34,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":0.6,\"y\":1,\"z\":0.48},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":2.4,\"y\":-1,\"z\":-1.6},\"scale\":{\"x\":0.5,\"y\":1.09,\"z\":0.31},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-0.1,\"y\":-0.1,\"z\":0.4},\"scale\":{\"x\":1.14,\"y\":0.67,\"z\":1.13},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
+			_0: A2(_user$project$Types_ops['=>'], 'Sea Shell', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#00964e\",\"opacity\":0.53,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#ff8000\",\"opacity\":0.17,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#00ff80\",\"opacity\":0.17,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.1,\"z\":0},\"scale\":{\"x\":0.68,\"y\":1.32,\"z\":0.78},\"rotation\":{\"x\":91,\"y\":301,\"z\":286}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":0.2,\"z\":0.2},\"scale\":{\"x\":0.6,\"y\":1,\"z\":0.48},\"rotation\":{\"x\":360,\"y\":360,\"z\":360}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":0.6,\"y\":0.2,\"z\":0.1},\"scale\":{\"x\":1.33,\"y\":1.48,\"z\":0.45},\"rotation\":{\"x\":255,\"y\":184,\"z\":166}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":0,\"y\":-0.1,\"z\":0.4},\"scale\":{\"x\":1.45,\"y\":0.69,\"z\":0.9},\"rotation\":{\"x\":0,\"y\":0,\"z\":346}}}]}'),
 			_1: {
 				ctor: '::',
-				_0: A2(_user$project$Types_ops['=>'], 'Sea Shell', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#00964e\",\"opacity\":0.53,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#ff8000\",\"opacity\":0.17,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#00ff80\",\"opacity\":0.17,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.1,\"z\":0},\"scale\":{\"x\":0.68,\"y\":1.32,\"z\":0.78},\"rotation\":{\"x\":91,\"y\":301,\"z\":286}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":0.2,\"z\":0.2},\"scale\":{\"x\":0.6,\"y\":1,\"z\":0.48},\"rotation\":{\"x\":360,\"y\":360,\"z\":360}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":0.6,\"y\":0.2,\"z\":0.1},\"scale\":{\"x\":1.33,\"y\":1.48,\"z\":0.45},\"rotation\":{\"x\":255,\"y\":184,\"z\":166}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":0,\"y\":-0.1,\"z\":0.4},\"scale\":{\"x\":1.45,\"y\":0.69,\"z\":0.9},\"rotation\":{\"x\":0,\"y\":0,\"z\":346}}}]}'),
+				_0: A2(_user$project$Types_ops['=>'], 'Gathering', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#1d1f4d\",\"opacity\":0.24,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#e6e6e6\",\"opacity\":0.22,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#d35ac4\",\"opacity\":0.6,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":1,\"z\":0},\"scale\":{\"x\":1,\"y\":1.18,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":1.2,\"z\":-0.9},\"scale\":{\"x\":0.47,\"y\":0.66,\"z\":0.8},\"rotation\":{\"x\":0,\"y\":0,\"z\":179}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":2.4,\"y\":-1,\"z\":-1.6},\"scale\":{\"x\":0.47,\"y\":1.09,\"z\":0.8},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":0,\"y\":0.9,\"z\":0.7},\"scale\":{\"x\":1.24,\"y\":0.67,\"z\":1.13},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
 				_1: {
 					ctor: '::',
-					_0: A2(_user$project$Types_ops['=>'], 'Gathering', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#1d1f4d\",\"opacity\":0.24,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#e6e6e6\",\"opacity\":0.22,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#d35ac4\",\"opacity\":0.6,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":1,\"z\":0},\"scale\":{\"x\":1,\"y\":1.18,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":1.2,\"z\":-0.9},\"scale\":{\"x\":0.47,\"y\":0.66,\"z\":0.8},\"rotation\":{\"x\":0,\"y\":0,\"z\":179}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":2.4,\"y\":-1,\"z\":-1.6},\"scale\":{\"x\":0.47,\"y\":1.09,\"z\":0.8},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":0,\"y\":0.9,\"z\":0.7},\"scale\":{\"x\":1.24,\"y\":0.67,\"z\":1.13},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
+					_0: A2(_user$project$Types_ops['=>'], 'Maybe Duck Tower', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#434f80\",\"opacity\":0.8,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#7d740f\",\"opacity\":0.45,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#008080\",\"opacity\":0.6,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":0.6,\"z\":-0.1},\"scale\":{\"x\":1,\"y\":1.34,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":349,\"z\":0}}},{\"from\":1,\"to\":1,\"label\":{\"translation\":{\"x\":0.4,\"y\":-0.6,\"z\":0.7},\"scale\":{\"x\":0.85,\"y\":0.6,\"z\":1.15},\"rotation\":{\"x\":0,\"y\":263,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":0.6,\"y\":1.09,\"z\":0.48},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":2.4,\"y\":-1.4,\"z\":-1.6},\"scale\":{\"x\":1.12,\"y\":0.5,\"z\":1.34},\"rotation\":{\"x\":0,\"y\":311,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-0.4,\"y\":2.8,\"z\":0.4},\"scale\":{\"x\":0.96,\"y\":1.5,\"z\":0.66},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
 					_1: {
 						ctor: '::',
-						_0: A2(_user$project$Types_ops['=>'], 'Maybe Duck Tower', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#434f80\",\"opacity\":0.8,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#7d740f\",\"opacity\":0.45,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#008080\",\"opacity\":0.6,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":0.6,\"z\":-0.1},\"scale\":{\"x\":1,\"y\":1.34,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":349,\"z\":0}}},{\"from\":1,\"to\":1,\"label\":{\"translation\":{\"x\":0.4,\"y\":-0.6,\"z\":0.7},\"scale\":{\"x\":0.85,\"y\":0.6,\"z\":1.15},\"rotation\":{\"x\":0,\"y\":263,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":0.6,\"y\":1.09,\"z\":0.48},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":2.4,\"y\":-1.4,\"z\":-1.6},\"scale\":{\"x\":1.12,\"y\":0.5,\"z\":1.34},\"rotation\":{\"x\":0,\"y\":311,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-0.4,\"y\":2.8,\"z\":0.4},\"scale\":{\"x\":0.96,\"y\":1.5,\"z\":0.66},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
-						_1: {
-							ctor: '::',
-							_0: A2(_user$project$Types_ops['=>'], 'Smarties', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#00a8c1\",\"opacity\":0.22,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#cfb164\",\"opacity\":0.2,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#aa3bd9\",\"opacity\":0.16,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":2,\"label\":{\"translation\":{\"x\":-0.5,\"y\":-1.1,\"z\":0},\"scale\":{\"x\":0.61,\"y\":0.65,\"z\":0.64},\"rotation\":{\"x\":360,\"y\":69,\"z\":59}}},{\"from\":2,\"to\":1,\"label\":{\"translation\":{\"x\":0,\"y\":0,\"z\":0},\"scale\":{\"x\":0.43,\"y\":0.43,\"z\":0.33},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":0.86,\"y\":0.86,\"z\":0.82},\"rotation\":{\"x\":0,\"y\":61,\"z\":0}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":-1,\"y\":-0.2,\"z\":1.3},\"scale\":{\"x\":0.94,\"y\":1,\"z\":1},\"rotation\":{\"x\":283,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-0.2,\"y\":0.6,\"z\":0.1},\"scale\":{\"x\":0.61,\"y\":0.68,\"z\":0.7},\"rotation\":{\"x\":0,\"y\":61,\"z\":0}}}]}'),
-							_1: {ctor: '[]'}
-						}
+						_0: A2(_user$project$Types_ops['=>'], 'Smarties', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#00a8c1\",\"opacity\":0.22,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#cfb164\",\"opacity\":0.2,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#aa3bd9\",\"opacity\":0.16,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":2,\"label\":{\"translation\":{\"x\":-0.5,\"y\":-1.1,\"z\":0},\"scale\":{\"x\":0.61,\"y\":0.65,\"z\":0.64},\"rotation\":{\"x\":360,\"y\":69,\"z\":59}}},{\"from\":2,\"to\":1,\"label\":{\"translation\":{\"x\":0,\"y\":0,\"z\":0},\"scale\":{\"x\":0.43,\"y\":0.43,\"z\":0.33},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":0.86,\"y\":0.86,\"z\":0.82},\"rotation\":{\"x\":0,\"y\":61,\"z\":0}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":-1,\"y\":-0.2,\"z\":1.3},\"scale\":{\"x\":0.94,\"y\":1,\"z\":1},\"rotation\":{\"x\":283,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-0.2,\"y\":0.6,\"z\":0.1},\"scale\":{\"x\":0.61,\"y\":0.68,\"z\":0.7},\"rotation\":{\"x\":0,\"y\":61,\"z\":0}}}]}'),
+						_1: {ctor: '[]'}
 					}
 				}
 			}
 		}
+	}
+};
+var _user$project$Examples$removeNothings = F2(
+	function (_p5, graphs) {
+		var _p6 = _p5;
+		var _p7 = _p6._1;
+		if (_p7.ctor === 'Nothing') {
+			return graphs;
+		} else {
+			return {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: _p6._0, _1: _p7._0},
+				_1: graphs
+			};
+		}
 	});
+var _user$project$Examples$loadJson = A3(
+	_elm_lang$core$List$foldr,
+	_user$project$Examples$removeNothings,
+	{ctor: '[]'},
+	A2(
+		_elm_lang$core$List$map,
+		_elm_lang$core$Tuple$mapSecond(
+			function (_p8) {
+				return _elm_lang$core$Result$toMaybe(
+					_user$project$Types$decodeGraph(_p8));
+			}),
+		_user$project$Examples$json));
+
+var _user$project$Graph_Extra$isolatedNodeContext = function (node) {
+	return {node: node, incoming: _elm_community$intdict$IntDict$empty, outgoing: _elm_community$intdict$IntDict$empty};
+};
+var _user$project$Graph_Extra$insertNode = F2(
+	function (node, graph) {
+		return A2(
+			_elm_community$graph$Graph$insert,
+			_user$project$Graph_Extra$isolatedNodeContext(node),
+			graph);
+	});
+var _user$project$Graph_Extra$updateEdges = F2(
+	function (updater, graph) {
+		return A2(
+			_elm_community$graph$Graph$fromNodesAndEdges,
+			_elm_community$graph$Graph$nodes(graph),
+			updater(
+				_elm_community$graph$Graph$edges(graph)));
+	});
+var _user$project$Graph_Extra$removeEdge = F2(
+	function (from, to) {
+		return _user$project$Graph_Extra$updateEdges(
+			_elm_lang$core$List$filter(
+				function (e) {
+					return (!_elm_lang$core$Native_Utils.eq(e.from, from)) || (!_elm_lang$core$Native_Utils.eq(e.to, to));
+				}));
+	});
+var _user$project$Graph_Extra$updateNodes = F2(
+	function (updater, graph) {
+		return A2(
+			_elm_community$graph$Graph$fromNodesAndEdges,
+			updater(
+				_elm_community$graph$Graph$nodes(graph)),
+			_elm_community$graph$Graph$edges(graph));
+	});
+var _user$project$Graph_Extra$updateNode = F2(
+	function (id, updater) {
+		return _user$project$Graph_Extra$updateNodes(
+			_elm_lang$core$List$map(
+				function (n) {
+					return _elm_lang$core$Native_Utils.eq(n.id, id) ? updater(n) : n;
+				}));
+	});
+var _user$project$Graph_Extra$edgeEqualsFromTo = F3(
+	function (from, to, edge) {
+		return _elm_lang$core$Native_Utils.eq(edge.from, from) && _elm_lang$core$Native_Utils.eq(edge.to, to);
+	});
+var _user$project$Graph_Extra$edgeEquals = function (edge) {
+	return A2(_user$project$Graph_Extra$edgeEqualsFromTo, edge.from, edge.to);
+};
+var _user$project$Graph_Extra$insertEdge = F2(
+	function (newEdge, graph) {
+		var alreadyExists = A2(
+			_elm_lang$core$Debug$log,
+			'edge already exists?',
+			_elm_community$maybe_extra$Maybe_Extra$isJust(
+				A2(
+					_elm_community$list_extra$List_Extra$find,
+					_user$project$Graph_Extra$edgeEquals(newEdge),
+					_elm_community$graph$Graph$edges(graph))));
+		var newEdges = alreadyExists ? {ctor: '[]'} : {
+			ctor: '::',
+			_0: newEdge,
+			_1: {ctor: '[]'}
+		};
+		return A2(
+			_elm_community$graph$Graph$fromNodesAndEdges,
+			_elm_community$graph$Graph$nodes(graph),
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_community$graph$Graph$edges(graph),
+				newEdges));
+	});
+var _user$project$Graph_Extra$updateEdgeFrom = F2(
+	function (newFrom, edge) {
+		return function (_p0) {
+			return A2(
+				_user$project$Graph_Extra$insertEdge,
+				_elm_lang$core$Native_Utils.update(
+					edge,
+					{from: newFrom}),
+				A3(_user$project$Graph_Extra$removeEdge, edge.from, edge.to, _p0));
+		};
+	});
+var _user$project$Graph_Extra$updateEdgeTo = F2(
+	function (newTo, edge) {
+		return function (_p1) {
+			return A2(
+				_user$project$Graph_Extra$insertEdge,
+				_elm_lang$core$Native_Utils.update(
+					edge,
+					{to: newTo}),
+				A3(_user$project$Graph_Extra$removeEdge, edge.from, edge.to, _p1));
+		};
+	});
+var _user$project$Graph_Extra$updateEdgeFromTo = F3(
+	function (newFrom, newTo, edge) {
+		return function (_p2) {
+			return A2(
+				_user$project$Graph_Extra$insertEdge,
+				_elm_lang$core$Native_Utils.update(
+					edge,
+					{from: newFrom, to: newTo}),
+				A3(_user$project$Graph_Extra$removeEdge, edge.from, edge.to, _p2));
+		};
+	});
+var _user$project$Graph_Extra$updateEdge = F3(
+	function (from, to, updater) {
+		return _user$project$Graph_Extra$updateEdges(
+			_elm_lang$core$List$map(
+				function (e) {
+					return A3(_user$project$Graph_Extra$edgeEqualsFromTo, from, to, e) ? updater(e) : e;
+				}));
+	});
+var _user$project$Graph_Extra$neighborCount = F2(
+	function (graph, node) {
+		var adjCount = function (_p3) {
+			return _elm_lang$core$List$length(
+				_elm_community$intdict$IntDict$keys(_p3));
+		};
+		return A2(
+			_elm_lang$core$Debug$log,
+			'neighborcount',
+			A2(
+				_elm_lang$core$Maybe$withDefault,
+				0,
+				A2(
+					_elm_lang$core$Maybe$map,
+					function (_p4) {
+						var _p5 = _p4;
+						return adjCount(_p5.incoming) + adjCount(_p5.outgoing);
+					},
+					A2(_elm_community$graph$Graph$get, node.id, graph))));
+	});
+var _user$project$Graph_Extra$getNode = function (nodeId) {
+	return function (_p6) {
+		return A2(
+			_elm_lang$core$Maybe$map,
+			function (_) {
+				return _.node;
+			},
+			A2(_elm_community$graph$Graph$get, nodeId, _p6));
+	};
+};
+var _user$project$Graph_Extra$getEdgesTo = function (id) {
+	return function (_p7) {
+		return A2(
+			_elm_lang$core$List$filter,
+			function (_p8) {
+				return A2(
+					F2(
+						function (x, y) {
+							return _elm_lang$core$Native_Utils.eq(x, y);
+						}),
+					id,
+					function (_) {
+						return _.to;
+					}(_p8));
+			},
+			_elm_community$graph$Graph$edges(_p7));
+	};
+};
+var _user$project$Graph_Extra$getEdge = F2(
+	function (from, to) {
+		return function (_p9) {
+			return A2(
+				_elm_community$list_extra$List_Extra$find,
+				A2(_user$project$Graph_Extra$edgeEqualsFromTo, from, to),
+				_elm_community$graph$Graph$edges(_p9));
+		};
+	});
+var _user$project$Graph_Extra$availableEdges = function (graph) {
+	return A2(
+		_elm_lang$core$List$filter,
+		function (pair) {
+			return _elm_lang$core$Native_Utils.eq(
+				A3(_elm_lang$core$Basics$uncurry, _user$project$Graph_Extra$getEdge, pair, graph),
+				_elm_lang$core$Maybe$Nothing);
+		},
+		A3(
+			_elm_community$list_extra$List_Extra$lift2,
+			F2(
+				function (v0, v1) {
+					return {ctor: '_Tuple2', _0: v0, _1: v1};
+				}),
+			_elm_community$graph$Graph$nodeIds(graph),
+			_elm_community$graph$Graph$nodeIds(graph)));
+};
 
 var _user$project$MyStyles$noShadow = {
 	offset: {ctor: '_Tuple2', _0: 0, _1: 0},
@@ -29013,7 +29038,7 @@ var _user$project$MyStyles$slider = {
 		_0: A2(_user$project$MyStyles_ops['=>'], '-webkit-appearance', 'none'),
 		_1: {
 			ctor: '::',
-			_0: A2(_user$project$MyStyles_ops['=>'], 'height', '4px'),
+			_0: A2(_user$project$MyStyles_ops['=>'], 'height', '2px'),
 			_1: {ctor: '[]'}
 		}
 	}
@@ -29097,14 +29122,23 @@ var _user$project$MyStyles$stylesheet = _mdgriffith$style_elements$Style$styleSh
 						_0: _mdgriffith$style_elements$Style_Color$background(_elm_lang$core$Color$lightGrey),
 						_1: {
 							ctor: '::',
-							_0: _mdgriffith$style_elements$Style_Shadow$box(
-								{
-									offset: {ctor: '_Tuple2', _0: 10, _1: 0},
-									blur: 30,
-									size: -25,
-									color: _elm_lang$core$Color$black
-								}),
-							_1: {ctor: '[]'}
+							_0: _mdgriffith$style_elements$Style_Border$right(0.5),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$style_elements$Style_Color$border(
+									_elm_lang$core$Color$greyscale(0.2)),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$style_elements$Style_Shadow$box(
+										{
+											offset: {ctor: '_Tuple2', _0: 10, _1: 0},
+											blur: 30,
+											size: -25,
+											color: _elm_lang$core$Color$black
+										}),
+									_1: {ctor: '[]'}
+								}
+							}
 						}
 					}),
 				_1: {
@@ -29991,10 +30025,12 @@ var _user$project$View$viewNodeSelector = F2(
 				{ctor: '[]'}));
 	});
 var _user$project$View$hideUnless = function (shouldShow) {
-	return shouldShow ? A2(_mdgriffith$style_elements$Element_Attributes$attribute, 'class', '') : _mdgriffith$style_elements$Element_Attributes$hidden;
+	return shouldShow ? A2(_mdgriffith$style_elements$Element_Attributes$attribute, 'id', '') : _mdgriffith$style_elements$Element_Attributes$hidden;
 };
 var _user$project$View$viewExamplesMenu = function (model) {
-	var exampleRow = function (title) {
+	var exampleRow = function (_p4) {
+		var _p5 = _p4;
+		var _p6 = _p5._0;
 		return A3(
 			_mdgriffith$style_elements$Element$row,
 			_user$project$MyStyles$DropdownItem,
@@ -30007,7 +30043,7 @@ var _user$project$View$viewExamplesMenu = function (model) {
 					_1: {
 						ctor: '::',
 						_0: _mdgriffith$style_elements$Element_Events$onClick(
-							_user$project$Types$Load(title)),
+							_user$project$Types$Load(_p6)),
 						_1: {
 							ctor: '::',
 							_0: _mdgriffith$style_elements$Element_Events$onMouseEnter(
@@ -30024,7 +30060,7 @@ var _user$project$View$viewExamplesMenu = function (model) {
 			},
 			{
 				ctor: '::',
-				_0: _mdgriffith$style_elements$Element$text(title),
+				_0: _mdgriffith$style_elements$Element$text(_p6),
 				_1: {ctor: '[]'}
 			});
 	};
@@ -30064,17 +30100,14 @@ var _user$project$View$viewExamplesMenu = function (model) {
 					_mdgriffith$style_elements$Element_Attributes$percent(100)),
 				_1: {ctor: '[]'}
 			},
-			A2(
-				_elm_lang$core$List$map,
-				exampleRow,
-				_elm_lang$core$Dict$keys(model.examples))));
+			A2(_elm_lang$core$List$map, exampleRow, model.examples)));
 };
 var _user$project$View$viewSelectionSidebar = function (model) {
-	var _p4 = A2(
+	var _p7 = A2(
 		_elm_lang$core$Maybe$withDefault,
 		{ctor: '_Tuple2', _0: 0, _1: 0},
 		_elm_community$graph$Graph$nodeIdRange(model.graph));
-	var maxId = _p4._1;
+	var maxId = _p7._1;
 	var newButton = F3(
 		function (size, menuType, msg) {
 			return A3(
@@ -30256,9 +30289,9 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 						_0: A4(
 							viewBadgeSelectors,
 							model,
-							function (_p5) {
+							function (_p8) {
 								return _elm_lang$core$List$reverse(
-									_elm_community$graph$Graph$edges(_p5));
+									_elm_community$graph$Graph$edges(_p8));
 							},
 							_user$project$View$viewEdgeSelector,
 							{
@@ -30297,10 +30330,10 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 												},
 												A2(
 													_elm_lang$core$List$map,
-													function (_p6) {
-														var _p7 = _p6;
-														var _p9 = _p7._1;
-														var _p8 = _p7._0;
+													function (_p9) {
+														var _p10 = _p9;
+														var _p12 = _p10._1;
+														var _p11 = _p10._0;
 														return A3(
 															_mdgriffith$style_elements$Element$column,
 															_user$project$MyStyles$DropdownItem,
@@ -30310,7 +30343,7 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 																_1: {
 																	ctor: '::',
 																	_0: _mdgriffith$style_elements$Element_Events$onClick(
-																		A2(_user$project$Types$NewEdge, _p8, _p9)),
+																		A2(_user$project$Types$NewEdge, _p11, _p12)),
 																	_1: {ctor: '[]'}
 																}
 															},
@@ -30330,7 +30363,7 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 																	_0: A2(
 																		_user$project$View$viewEdgeBadge,
 																		model,
-																		A3(_elm_community$graph$Graph$Edge, _p8, _p9, _user$project$Types$emptyTransformation)),
+																		A3(_elm_community$graph$Graph$Edge, _p11, _p12, _user$project$Types$emptyTransformation)),
 																	_1: {ctor: '[]'}
 																}
 															});
@@ -30348,20 +30381,24 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 						_1: {ctor: '[]'}
 					}
 				}),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: _user$project$View$viewSaveButton,
+				_1: {ctor: '[]'}
+			}
 		});
 };
 var _user$project$View$viewTransformationSliders = F3(
 	function (model, edge, transformAttribute) {
 		var createMsg = function (xyorz) {
-			return function (_p10) {
+			return function (_p13) {
 				return A2(
 					_elm_lang$core$Result$withDefault,
 					_user$project$Types$NoOp,
 					A2(
 						_elm_lang$core$Result$map,
 						A4(_user$project$Types$ChangeTransformation, transformAttribute, xyorz, edge.from, edge.to),
-						_elm_lang$core$String$toFloat(_p10)));
+						_elm_lang$core$String$toFloat(_p13)));
 			};
 		};
 		var utils = _user$project$Types$transformUtils(transformAttribute);
@@ -30601,14 +30638,14 @@ var _user$project$View$viewEdgeDetail = F2(
 					});
 			});
 		var fromToNodes = function () {
-			var _p11 = {
+			var _p14 = {
 				ctor: '_Tuple2',
 				_0: A2(_elm_community$graph$Graph$get, edge.from, model.graph),
 				_1: A2(_elm_community$graph$Graph$get, edge.to, model.graph)
 			};
-			if (((_p11.ctor === '_Tuple2') && (_p11._0.ctor === 'Just')) && (_p11._1.ctor === 'Just')) {
+			if (((_p14.ctor === '_Tuple2') && (_p14._0.ctor === 'Just')) && (_p14._1.ctor === 'Just')) {
 				return _elm_lang$core$Maybe$Just(
-					{ctor: '_Tuple2', _0: _p11._0._0.node, _1: _p11._1._0.node});
+					{ctor: '_Tuple2', _0: _p14._0._0.node, _1: _p14._1._0.node});
 			} else {
 				return _elm_lang$core$Maybe$Nothing;
 			}
@@ -30616,8 +30653,8 @@ var _user$project$View$viewEdgeDetail = F2(
 		var description = A3(
 			_elm_community$maybe_extra$Maybe_Extra$unwrap,
 			_mdgriffith$style_elements$Element$empty,
-			function (_p12) {
-				var _p13 = _p12;
+			function (_p15) {
+				var _p16 = _p15;
 				return A3(
 					_mdgriffith$style_elements$Element$row,
 					_user$project$MyStyles$None,
@@ -30646,7 +30683,7 @@ var _user$project$View$viewEdgeDetail = F2(
 							_0: A4(
 								_user$project$View$viewNodeBadge,
 								model,
-								_p13._0,
+								_p16._0,
 								25,
 								{ctor: '[]'}),
 							_1: {
@@ -30657,7 +30694,7 @@ var _user$project$View$viewEdgeDetail = F2(
 									_0: A4(
 										_user$project$View$viewNodeBadge,
 										model,
-										_p13._1,
+										_p16._1,
 										25,
 										{ctor: '[]'}),
 									_1: {ctor: '[]'}
@@ -30696,10 +30733,10 @@ var _user$project$View$viewEdgeDetail = F2(
 						},
 						A2(
 							_elm_lang$core$List$map,
-							function (_p14) {
-								var _p15 = _p14;
-								var _p17 = _p15._1;
-								var _p16 = _p15._0;
+							function (_p17) {
+								var _p18 = _p17;
+								var _p20 = _p18._1;
+								var _p19 = _p18._0;
 								return A3(
 									_mdgriffith$style_elements$Element$column,
 									_user$project$MyStyles$DropdownItem,
@@ -30709,7 +30746,7 @@ var _user$project$View$viewEdgeDetail = F2(
 										_1: {
 											ctor: '::',
 											_0: _mdgriffith$style_elements$Element_Events$onClick(
-												A4(_user$project$Types$EdgeFromTo, edge.from, edge.to, _p16, _p17)),
+												A4(_user$project$Types$EdgeFromTo, edge.from, edge.to, _p19, _p20)),
 											_1: {
 												ctor: '::',
 												_0: _mdgriffith$style_elements$Element_Attributes$center,
@@ -30733,7 +30770,7 @@ var _user$project$View$viewEdgeDetail = F2(
 											_0: A2(
 												_user$project$View$viewEdgeBadge,
 												model,
-												A3(_elm_community$graph$Graph$Edge, _p16, _p17, _user$project$Types$emptyTransformation)),
+												A3(_elm_community$graph$Graph$Edge, _p19, _p20, _user$project$Types$emptyTransformation)),
 											_1: {ctor: '[]'}
 										}
 									});
@@ -30794,12 +30831,12 @@ var _user$project$View$viewEdgeDetail = F2(
 									_0: A2(
 										_mdgriffith$style_elements$Element$whenJust,
 										fromToNodes,
-										function (_p18) {
-											var _p19 = _p18;
+										function (_p21) {
+											var _p22 = _p21;
 											return A4(
 												_user$project$View$viewNodeBadge,
 												model,
-												_p19._1,
+												_p22._1,
 												25,
 												{ctor: '[]'});
 										}),
@@ -30902,14 +30939,14 @@ var _user$project$View$viewEdgeDetail = F2(
 var _user$project$View$viewNodeDetail = F2(
 	function (model, node) {
 		var createMsg = function (msgConstructor) {
-			return function (_p20) {
+			return function (_p23) {
 				return A2(
 					_elm_lang$core$Result$withDefault,
 					_user$project$Types$NoOp,
 					A2(
 						_elm_lang$core$Result$map,
 						msgConstructor(node.id),
-						_elm_lang$core$String$toFloat(_p20)));
+						_elm_lang$core$String$toFloat(_p23)));
 			};
 		};
 		var opacitySlider = _mdgriffith$style_elements$Element$html(
@@ -31061,7 +31098,12 @@ var _user$project$View$viewNodeDetail = F2(
 											_0: _mdgriffith$style_elements$Element_Events$onClick(
 												_user$project$Types$Delete(
 													_user$project$Types$Node(node.id))),
-											_1: {ctor: '[]'}
+											_1: {
+												ctor: '::',
+												_0: _user$project$View$hideUnless(
+													!_elm_lang$core$Native_Utils.eq(node.id, model.rootId)),
+												_1: {ctor: '[]'}
+											}
 										}
 									}
 								},
@@ -31100,19 +31142,19 @@ var _user$project$View$viewDetailSidebar = function (model) {
 						});
 				});
 		});
-	var _p21 = model.editing;
-	if (_p21.ctor === 'Nothing') {
+	var _p24 = model.editing;
+	if (_p24.ctor === 'Nothing') {
 		return _mdgriffith$style_elements$Element$empty;
 	} else {
-		if (_p21._0.ctor === 'Node') {
+		if (_p24._0.ctor === 'Node') {
 			return A2(
 				showDetails,
-				_user$project$Graph_Extra$getNode(_p21._0._0),
+				_user$project$Graph_Extra$getNode(_p24._0._0),
 				_user$project$View$viewNodeDetail(model));
 		} else {
 			return A2(
 				showDetails,
-				A2(_user$project$Graph_Extra$getEdge, _p21._0._0, _p21._0._1),
+				A2(_user$project$Graph_Extra$getEdge, _p24._0._0, _p24._0._1),
 				_user$project$View$viewEdgeDetail(model));
 		}
 	}
@@ -31481,7 +31523,10 @@ var _user$project$Main$update = F2(
 					var newGraph = A2(
 						_elm_lang$core$Maybe$withDefault,
 						model.graph,
-						A2(_elm_lang$core$Dict$get, _p2._0, model.examples));
+						A2(
+							_elm_lang$core$Dict$get,
+							_p2._0,
+							_elm_lang$core$Dict$fromList(model.examples)));
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
@@ -31515,32 +31560,11 @@ var _user$project$Main$update = F2(
 			}
 		}
 	});
-var _user$project$Main$removeNothings = F3(
-	function (name, maybeGraph, dict) {
-		var _p12 = maybeGraph;
-		if (_p12.ctor === 'Nothing') {
-			return dict;
-		} else {
-			return A3(_elm_lang$core$Dict$insert, name, _p12._0, dict);
-		}
-	});
 var _user$project$Main$model = {
 	time: 0,
 	rootId: 0,
-	graph: _user$project$Worlds$graph1,
-	examples: A3(
-		_elm_lang$core$Dict$foldr,
-		_user$project$Main$removeNothings,
-		_elm_lang$core$Dict$empty,
-		A2(
-			_elm_lang$core$Dict$map,
-			function (_p13) {
-				return function (_p14) {
-					return _elm_lang$core$Result$toMaybe(
-						_user$project$Types$decodeGraph(_p14));
-				};
-			},
-			_user$project$Worlds$jsonExamples)),
+	graph: _user$project$Examples$graph1,
+	examples: _user$project$Examples$loadJson,
 	editing: _elm_lang$core$Maybe$Just(
 		A2(_user$project$Types$Edge, 0, 1)),
 	menuHover: _user$project$Types$NoMenu
@@ -31553,7 +31577,9 @@ var _user$project$Main$main = _elm_lang$html$Html$program(
 			_user$project$Main$model),
 		view: _user$project$View$root,
 		update: _user$project$Main$update,
-		subscriptions: _user$project$Main$subscriptions
+		subscriptions: function (_p12) {
+			return _elm_lang$core$Platform_Sub$none;
+		}
 	})();
 
 var Elm = {};

@@ -1,11 +1,7 @@
 module Main exposing (..)
 
 import Types exposing (..)
-
-
---import StyleSheet exposing (styleSheet, Style(..), Variation(..))
-
-import Worlds
+import Examples
 import Time
 import Dict exposing (Dict)
 import Graph.Extra as GraphEx
@@ -24,28 +20,20 @@ model : Model
 model =
     { time = 0
     , rootId = 0
-    , graph =
-        Worlds.graph1
-        --decodeGraph Worlds.json1
-        --    |> Debug.log "decoded graph attempt"
-        --    |> Result.withDefault Worlds.graph0
-    , examples =
-        Worlds.jsonExamples
-            |> Dict.map (\_ -> (decodeGraph >> Result.toMaybe))
-            |> Dict.foldr removeNothings Dict.empty
+    , graph = Examples.graph1
+    , examples = Examples.loadJson
     , editing = Just (Edge 0 1)
     , menuHover = NoMenu
     }
 
 
-removeNothings : String -> Maybe Graph -> Dict String Graph -> Dict String Graph
-removeNothings name maybeGraph dict =
-    case maybeGraph of
-        Nothing ->
-            dict
-
-        Just graph ->
-            Dict.insert name graph dict
+main =
+    Html.program
+        { init = update (Load "Simple") model
+        , view = View.root
+        , update = update
+        , subscriptions = \_ -> Sub.none
+        }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -157,7 +145,8 @@ update msg model =
         Load title ->
             let
                 newGraph =
-                    Dict.get title model.examples
+                    Dict.fromList model.examples
+                        |> Dict.get title
                         |> Maybe.withDefault model.graph
             in
                 { model | graph = newGraph } ! []
@@ -206,14 +195,4 @@ toggleAnimation id graph =
 
 
 subscriptions model =
-    -- Ani.diffs TimeUpdate
     Sub.none
-
-
-main =
-    Html.program
-        { init = update (Load "Simple") model
-        , view = View.root
-        , update = update
-        , subscriptions = subscriptions
-        }
