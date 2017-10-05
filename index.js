@@ -28931,7 +28931,11 @@ var _user$project$Worlds$jsonExamples = _elm_lang$core$Dict$fromList(
 					_1: {
 						ctor: '::',
 						_0: A2(_user$project$Types_ops['=>'], 'Maybe Duck Tower', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#434f80\",\"opacity\":0.8,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#7d740f\",\"opacity\":0.45,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#008080\",\"opacity\":0.6,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":0.6,\"z\":-0.1},\"scale\":{\"x\":1,\"y\":1.34,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":349,\"z\":0}}},{\"from\":1,\"to\":1,\"label\":{\"translation\":{\"x\":0.4,\"y\":-0.6,\"z\":0.7},\"scale\":{\"x\":0.85,\"y\":0.6,\"z\":1.15},\"rotation\":{\"x\":0,\"y\":263,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":0.6,\"y\":1.09,\"z\":0.48},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":2.4,\"y\":-1.4,\"z\":-1.6},\"scale\":{\"x\":1.12,\"y\":0.5,\"z\":1.34},\"rotation\":{\"x\":0,\"y\":311,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-0.4,\"y\":2.8,\"z\":0.4},\"scale\":{\"x\":0.96,\"y\":1.5,\"z\":0.66},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
-						_1: {ctor: '[]'}
+						_1: {
+							ctor: '::',
+							_0: A2(_user$project$Types_ops['=>'], 'Smarties', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#00a8c1\",\"opacity\":0.22,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#cfb164\",\"opacity\":0.2,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#aa3bd9\",\"opacity\":0.16,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":2,\"label\":{\"translation\":{\"x\":-0.5,\"y\":-1.1,\"z\":0},\"scale\":{\"x\":0.61,\"y\":0.65,\"z\":0.64},\"rotation\":{\"x\":360,\"y\":69,\"z\":59}}},{\"from\":2,\"to\":1,\"label\":{\"translation\":{\"x\":0,\"y\":0,\"z\":0},\"scale\":{\"x\":0.43,\"y\":0.43,\"z\":0.33},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":0.86,\"y\":0.86,\"z\":0.82},\"rotation\":{\"x\":0,\"y\":61,\"z\":0}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":-1,\"y\":-0.2,\"z\":1.3},\"scale\":{\"x\":0.94,\"y\":1,\"z\":1},\"rotation\":{\"x\":283,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-0.2,\"y\":0.6,\"z\":0.1},\"scale\":{\"x\":0.61,\"y\":0.68,\"z\":0.7},\"rotation\":{\"x\":0,\"y\":61,\"z\":0}}}]}'),
+							_1: {ctor: '[]'}
+						}
 					}
 				}
 			}
@@ -29655,18 +29659,22 @@ var _user$project$View$viewEntity = F3(
 									_0: _halfzebra$elm_aframe$AFrame_Primitives_Attributes$shader('flat'),
 									_1: {
 										ctor: '::',
-										_0: _halfzebra$elm_aframe$AFrame_Primitives_Attributes$height(1),
+										_0: _halfzebra$elm_aframe$AFrame_Primitives_Attributes$transparent(true),
 										_1: {
 											ctor: '::',
-											_0: _halfzebra$elm_aframe$AFrame_Primitives_Attributes$width(1),
+											_0: _halfzebra$elm_aframe$AFrame_Primitives_Attributes$height(1),
 											_1: {
 												ctor: '::',
-												_0: _halfzebra$elm_aframe$AFrame_Primitives_Attributes$depth(1),
+												_0: _halfzebra$elm_aframe$AFrame_Primitives_Attributes$width(1),
 												_1: {
 													ctor: '::',
-													_0: _elm_lang$html$Html_Events$onClick(
-														_user$project$Types$Click(nodeCtx.node.id)),
-													_1: {ctor: '[]'}
+													_0: _halfzebra$elm_aframe$AFrame_Primitives_Attributes$depth(1),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Events$onClick(
+															_user$project$Types$Click(nodeCtx.node.id)),
+														_1: {ctor: '[]'}
+													}
 												}
 											}
 										}

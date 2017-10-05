@@ -19,7 +19,7 @@ import Style.Color as Color
 import AFrame.Primitives.Attributes as AfAttr exposing (rotation, position, scale, radius, color, width, height, depth, opacity)
 import Style.Border as Border
 import AFrame exposing (scene, entity)
-import AFrame.Primitives exposing (sphere, box, cylinder, plane, sky)
+import AFrame.Primitives as Primitives exposing (sphere, box, cylinder, plane, sky)
 import AFrame.Primitives.Camera exposing (camera)
 import AFrame.Primitives.Light as Light exposing (light)
 import AFrame.Primitives.Cursor as Cursor exposing (..)
@@ -437,7 +437,7 @@ viewSelectionSidebar model =
                             ]
                     ]
                 ]
-              --viewSaveButton
+              --, viewSaveButton
             ]
 
 
@@ -636,7 +636,7 @@ viewEntity model ancestors nodeCtx =
                 ]
                 []
     in
-        sphere
+        Primitives.sphere
             [ uncurry3 position (Vec3.components t.translation)
             , uncurry3 scale (Vec3.components t.scale)
             , uncurry3 rotation (Vec3.components t.rotation)
@@ -645,6 +645,8 @@ viewEntity model ancestors nodeCtx =
               -- , AfAttr.metalness 1
               -- , AfAttr.roughness 1
             , AfAttr.shader "flat"
+            , AfAttr.transparent True
+              --, HtmlAttr.attribute "material" "emissive: #fff"
             , height 1
             , width 1
             , depth 1
