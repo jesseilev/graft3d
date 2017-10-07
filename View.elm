@@ -37,19 +37,30 @@ type alias Element =
 
 root : Model -> Html Msg
 root model =
-    El.viewport MyStyles.stylesheet
-        <| El.column Main
-            [ Attr.height Attr.fill ]
-            [ viewNavbar model
-            , El.row None
-                [ Attr.width Attr.fill
-                , Attr.height Attr.fill
-                ]
+    let
+        reverseIfPhone =
+            if model.device.phone then
+                List.reverse
+            else
+                identity
+
+        childViews =
+            reverseIfPhone
                 [ viewSelectionSidebar model
                 , viewDetailSidebar model
                 , viewSceneContainer model
                 ]
-            ]
+    in
+        El.viewport MyStyles.stylesheet
+            <| El.column Main
+                [ Attr.height Attr.fill ]
+                [ viewNavbar model |> El.when (model.device.phone == False)
+                , El.row None
+                    [ Attr.width Attr.fill
+                    , Attr.height Attr.fill
+                    ]
+                    childViews
+                ]
 
 
 viewNavbar : Model -> Element
@@ -384,8 +395,7 @@ viewSelectionSidebar model =
                     [ (newButton 40 NewNodeMenu <| ChangeMenuHover Toggle NewNodeMenu)
                         |> El.below
                             [ El.el Dropdown
-                                [ Attr.height <| Attr.px 200
-                                , Attr.inlineStyle <| MyStyles.zIndex 10
+                                [ Attr.inlineStyle <| MyStyles.zIndex 10
                                 , hideUnless (model.menuHover == NewNodeMenu)
                                 ]
                                 (El.row None
@@ -413,9 +423,8 @@ viewSelectionSidebar model =
                     [ (newButton 45 NewEdgeMenu <| ChangeMenuHover Toggle NewEdgeMenu)
                         |> El.below
                             [ El.el Dropdown
-                                [ Attr.height <| Attr.px 200
+                                [ Attr.inlineStyle <| MyStyles.zIndex 10
                                   --, Attr.alignRight
-                                , Attr.inlineStyle <| MyStyles.zIndex 10
                                 , hideUnless (model.menuHover == NewEdgeMenu)
                                 ]
                                 (El.row None
@@ -438,7 +447,7 @@ viewSelectionSidebar model =
                             ]
                     ]
                 ]
-            , viewSaveButton
+              --, viewSaveButton
             ]
 
 
@@ -543,19 +552,33 @@ viewEdgeBadge model edge =
 
 viewSceneContainer : Model -> Element
 viewSceneContainer model =
-    El.row None
-        [ Attr.width (Attr.fill)
-        , Attr.height (Attr.fill)
-        ]
-        [ El.html (viewScene model)
-        , El.row WasdOverlay
-            [ Attr.alignBottom
-            , Attr.paddingXY 20 10
-              --, Attr.center
-            , Attr.width <| Attr.percent 100
+    let
+        sceneContents =
+            [ El.html (viewScene model)
+            , El.when (model.device.phone == False)
+                <| El.row WasdOverlay
+                    [ Attr.alignBottom
+                    , Attr.paddingXY 20 10
+                      --, Attr.center
+                    , Attr.width <| Attr.percent 100
+                    ]
+                    [ El.text "w↑ a← s↓ d→"
+                    ]
             ]
-            [ El.text "w↑ a← s↓ d→" ]
-        ]
+    in
+        El.row None
+            [ Attr.width (Attr.fill)
+            , Attr.height (Attr.fill)
+            ]
+            (sceneContents |> unless (model.webGLSupport == False) [ viewNoWebGLNotification ])
+
+
+unless : Bool -> a -> a -> a
+unless exception backup default =
+    if exception then
+        backup
+    else
+        default
 
 
 viewScene : Model -> Html Msg
@@ -567,10 +590,17 @@ viewScene model =
                 |> Maybe.map (\e -> box [ scale 1 1 1 ] [ e ])
     in
         scene
-            [ HtmlAttr.attribute "embedded" "true"
+            [ HtmlAttr.attribute "embedded"
+                <| if model.device.phone then
+                    "false"
+                   else
+                    "true"
             , HtmlAttr.attribute "fog"
                 <| "type: linear; density: 0.05; color: "
                 ++ (colorToHex backgroundColor)
+            , HtmlAttr.style [ "cursor" => "all-scroll" ]
+            , AfAttr.vrModeUi False
+              -- (model.device.phone)
             ]
             (MaybeEx.toList rootEntityView
                 ++ [ sky [] []
@@ -656,6 +686,35 @@ viewEntity model ancestors nodeCtx =
             (List.map viewChild children
              -- ++ [ lamp 0.5, lamp -0.5 ]
             )
+
+
+viewNoWebGLNotification : Element
+viewNoWebGLNotification =
+    let
+        hrefHowToInstall =
+            "https://superuser.com/questions/836832/how-can-i-enable-webgl-in-my-browser"
+    in
+        El.column None
+            [ Attr.padding 20
+            , Attr.width <| Attr.percent 100
+              --, Attr.height <| Attr.px 400
+            , Attr.verticalCenter
+            , Attr.center
+            , Attr.spacing 10
+              --, Attr.inlineStyle <| [ "background" => "yellow" ] ++ MyStyles.zIndex 9
+            ]
+            [ El.el Header
+                [ Attr.center ]
+                (El.text "Uh Oh! No WebGL")
+            , El.paragraph None
+                [ Attr.center ]
+                [ El.text "It looks like you don't have"
+                , El.el None
+                    [ Attr.inlineStyle [ "color" => "blue" ] ]
+                    (El.link hrefHowToInstall (El.text " WebGL installed "))
+                , El.text "on your browser."
+                ]
+            ]
 
 
 viewSaveButton : Element

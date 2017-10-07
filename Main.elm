@@ -14,25 +14,39 @@ import Maybe.Extra as MaybeEx
 import Monocle.Lens as Lens
 import View
 import Color.Convert exposing (colorToHex, hexToColor)
+import Window
+import Element as El
+import Task
+import Update.Extra.Infix exposing ((:>))
+import OpenSolid.Geometry.Types exposing (..)
 
 
-model : Model
-model =
-    { time = 0
-    , rootId = 0
-    , graph = Examples.graph1
-    , examples = Examples.loadJson
-    , editing = Just (Edge 0 1)
-    , menuHover = NoMenu
-    }
+type alias Flags =
+    { webGLSupport : Bool }
+
+
+init : Flags -> ( Model, Cmd Msg )
+init flags =
+    ( { time = 0
+      , rootId = 0
+      , graph = Examples.graph1
+      , examples = Examples.loadJson
+      , editing = Just (Edge 0 1)
+      , menuHover = NoMenu
+      , device = El.classifyDevice (Window.Size 0 0) |> Debug.log "init size"
+      , webGLSupport = flags.webGLSupport
+      }
+    , Task.perform WindowResize Window.size
+    )
+        :> update (Load "Simple")
 
 
 main =
-    Html.program
-        { init = update (Load "Simple") model
+    Html.programWithFlags
+        { init = init
         , view = View.root
         , update = update
-        , subscriptions = \_ -> Sub.none
+        , subscriptions = subscriptions
         }
 
 
@@ -66,7 +80,7 @@ update msg model =
         NewNode from ->
             let
                 entity =
-                    { color = Color.greyscale 0.5, opacity = 0.5, shape = Box }
+                    { color = Color.greyscale 0.75, opacity = 0.75, shape = Box }
 
                 nextId =
                     Graph.nodeIdRange model.graph
@@ -84,7 +98,13 @@ update msg model =
         NewEdge from to ->
             let
                 transformation =
-                    { data = emptyTransformation, isAnimating = False, animate = \_ -> identity }
+                    { data =
+                        { emptyTransformation
+                            | translation = Vector3d ( -0.5, 0, 0 )
+                        }
+                    , isAnimating = False
+                    , animate = \_ -> identity
+                    }
 
                 edge =
                     { from = from, to = to, label = transformation }
@@ -169,6 +189,10 @@ update msg model =
             in
                 { model | menuHover = answer } ! []
 
+        WindowResize size ->
+            { model | device = El.classifyDevice size |> Debug.log "resize" }
+                ! []
+
         _ ->
             model ! []
 
@@ -195,4 +219,4 @@ toggleAnimation id graph =
 
 
 subscriptions model =
-    Sub.none
+    Window.resizes WindowResize

@@ -9,10 +9,12 @@ import Time exposing (Time)
 import AFrame.Primitives exposing (sphere, box, cylinder, plane, sky)
 import Monocle.Lens as Lens exposing (Lens)
 import Tuple3
+import Element as El
 import Element.Input as Input
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
 import Color.Convert exposing (colorToHex, hexToColor)
+import Window
 
 
 -- ALIASES
@@ -80,6 +82,8 @@ type alias Model =
     , rootId : Id
     , editing : Maybe Editable
     , menuHover : MenuHover
+    , device : El.Device
+    , webGLSupport : Bool
     }
 
 
@@ -126,6 +130,7 @@ type
     | Save
     | Load String
     | ChangeMenuHover MenuSetter MenuHover
+    | WindowResize Window.Size
     | NoOp
 
 

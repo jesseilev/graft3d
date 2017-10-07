@@ -8,7 +8,32 @@
 </head>
 <body>
 <script>
-    Elm.Main.embed(document.body);
+	
+	// determine whether the user's browser supports WebGL
+	function detectWebGLSupport () {
+    // Create canvas element. The canvas is not added to the
+    // document itself, so it is never displayed in the
+    // browser window.
+    var canvas = document.createElement("canvas");
+
+    // Get WebGLRenderingContext from canvas element.
+    var gl = canvas.getContext("webgl")
+      || canvas.getContext("experimental-webgl");
+      
+    // Report the result.
+    return (gl && gl instanceof WebGLRenderingContext) ? true : false;
+  }
+
+	// Run everything inside window load event handler, to make sure
+	// DOM is fully loaded and styled before trying to manipulate it.
+	window.addEventListener("load", function() {
+	  Elm.Main.embed(document.body, {
+	  	webGLSupport : detectWebGLSupport()
+	  });
+	}, false);
+
+  
+
 </script>
 </body>
 </html>
