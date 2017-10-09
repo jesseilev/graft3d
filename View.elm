@@ -103,14 +103,11 @@ viewDetailSidebar : Model -> Element
 viewDetailSidebar model =
     let
         showDetails getGraphData viewDetailContent =
-            El.whenJust (getGraphData model.graph)
-                <| (\detailData ->
-                        El.sidebar Sidebar
-                            [ Attr.height <| Attr.percent 100
-                            , Attr.minWidth <| Attr.px 280
-                            ]
-                            [ viewDetailContent detailData ]
-                   )
+            El.sidebar Sidebar
+                [ Attr.height <| Attr.percent 100
+                , Attr.minWidth <| Attr.px 280
+                ]
+                [ El.whenJust (getGraphData model.graph) viewDetailContent ]
     in
         case model.editing of
             Nothing ->

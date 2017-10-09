@@ -31586,29 +31586,27 @@ var _user$project$View$viewNodeDetail = F2(
 var _user$project$View$viewDetailSidebar = function (model) {
 	var showDetails = F2(
 		function (getGraphData, viewDetailContent) {
-			return A2(
-				_mdgriffith$style_elements$Element$whenJust,
-				getGraphData(model.graph),
-				function (detailData) {
-					return A3(
-						_mdgriffith$style_elements$Element$sidebar,
-						_user$project$MyStyles$Sidebar,
-						{
-							ctor: '::',
-							_0: _mdgriffith$style_elements$Element_Attributes$height(
-								_mdgriffith$style_elements$Element_Attributes$percent(100)),
-							_1: {
-								ctor: '::',
-								_0: _mdgriffith$style_elements$Element_Attributes$minWidth(
-									_mdgriffith$style_elements$Element_Attributes$px(280)),
-								_1: {ctor: '[]'}
-							}
-						},
-						{
-							ctor: '::',
-							_0: viewDetailContent(detailData),
-							_1: {ctor: '[]'}
-						});
+			return A3(
+				_mdgriffith$style_elements$Element$sidebar,
+				_user$project$MyStyles$Sidebar,
+				{
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Attributes$height(
+						_mdgriffith$style_elements$Element_Attributes$percent(100)),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$minWidth(
+							_mdgriffith$style_elements$Element_Attributes$px(280)),
+						_1: {ctor: '[]'}
+					}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_mdgriffith$style_elements$Element$whenJust,
+						getGraphData(model.graph),
+						viewDetailContent),
+					_1: {ctor: '[]'}
 				});
 		});
 	var _p24 = model.editing;
