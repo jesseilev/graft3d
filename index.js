@@ -31767,7 +31767,12 @@ var _user$project$View$root = function (model) {
 			{
 				ctor: '::',
 				_0: _mdgriffith$style_elements$Element_Attributes$height(_mdgriffith$style_elements$Element_Attributes$fill),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Events$onClick(
+						(!_elm_lang$core$Native_Utils.eq(model.menuHover, _user$project$Types$NoMenu)) ? A2(_user$project$Types$ChangeMenuHover, _user$project$Types$Hide, _user$project$Types$NoMenu) : _user$project$Types$NoOp),
+					_1: {ctor: '[]'}
+				}
 			},
 			{
 				ctor: '::',

@@ -53,7 +53,13 @@ root model =
     in
         El.viewport MyStyles.stylesheet
             <| El.column Main
-                [ Attr.height Attr.fill ]
+                [ Attr.height Attr.fill
+                , Events.onClick
+                    <| if model.menuHover /= NoMenu then
+                        ChangeMenuHover Hide NoMenu
+                       else
+                        NoOp
+                ]
                 [ viewNavbar model |> El.when (model.device.phone == False)
                 , El.row None
                     [ Attr.width Attr.fill

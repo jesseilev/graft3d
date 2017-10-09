@@ -4,7 +4,6 @@ change root
 choose shape
 initial values bug
 "change to" dropdown bug
-click away from dropdowns
 more noticeable WASD
 detail sidebar should never close
 mobile
