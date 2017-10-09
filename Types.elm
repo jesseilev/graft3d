@@ -98,12 +98,13 @@ type MenuHover
     | NewNodeMenu
     | NewEdgeMenu
     | EditEdgeMenu
+    | WasdHelp
 
 
 type MenuSetter
-    = Show
+    = Show MenuHover
     | Hide
-    | Toggle
+    | Toggle MenuHover
 
 
 
@@ -129,7 +130,7 @@ type
       -- META
     | Save
     | Load String
-    | ChangeMenuHover MenuSetter MenuHover
+    | ChangeMenuHover MenuSetter
     | WindowResize Window.Size
     | NoOp
 

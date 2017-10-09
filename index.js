@@ -28730,22 +28730,26 @@ var _user$project$Types$Edge = F2(
 var _user$project$Types$Node = function (a) {
 	return {ctor: 'Node', _0: a};
 };
+var _user$project$Types$WasdHelp = {ctor: 'WasdHelp'};
 var _user$project$Types$EditEdgeMenu = {ctor: 'EditEdgeMenu'};
 var _user$project$Types$NewEdgeMenu = {ctor: 'NewEdgeMenu'};
 var _user$project$Types$NewNodeMenu = {ctor: 'NewNodeMenu'};
 var _user$project$Types$ExamplesMenu = {ctor: 'ExamplesMenu'};
 var _user$project$Types$NoMenu = {ctor: 'NoMenu'};
-var _user$project$Types$Toggle = {ctor: 'Toggle'};
+var _user$project$Types$Toggle = function (a) {
+	return {ctor: 'Toggle', _0: a};
+};
 var _user$project$Types$Hide = {ctor: 'Hide'};
-var _user$project$Types$Show = {ctor: 'Show'};
+var _user$project$Types$Show = function (a) {
+	return {ctor: 'Show', _0: a};
+};
 var _user$project$Types$NoOp = {ctor: 'NoOp'};
 var _user$project$Types$WindowResize = function (a) {
 	return {ctor: 'WindowResize', _0: a};
 };
-var _user$project$Types$ChangeMenuHover = F2(
-	function (a, b) {
-		return {ctor: 'ChangeMenuHover', _0: a, _1: b};
-	});
+var _user$project$Types$ChangeMenuHover = function (a) {
+	return {ctor: 'ChangeMenuHover', _0: a};
+};
 var _user$project$Types$Load = function (a) {
 	return {ctor: 'Load', _0: a};
 };
@@ -30223,8 +30227,15 @@ var _user$project$View$viewScene = function (model) {
 						}),
 					_1: {
 						ctor: '::',
-						_0: _halfzebra$elm_aframe$AFrame_Primitives_Attributes$vrModeUi(false),
-						_1: {ctor: '[]'}
+						_0: _elm_lang$html$Html_Events$onMouseDown(
+							_user$project$Types$ChangeMenuHover(
+								_user$project$Types$Show(_user$project$Types$WasdHelp))),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onMouseUp(
+								_user$project$Types$ChangeMenuHover(_user$project$Types$Hide)),
+							_1: {ctor: '[]'}
+						}
 					}
 				}
 			}
@@ -30295,7 +30306,7 @@ var _user$project$View$viewSceneContainer = function (model) {
 			ctor: '::',
 			_0: A2(
 				_mdgriffith$style_elements$Element$when,
-				_elm_lang$core$Native_Utils.eq(model.device.phone, false),
+				_elm_lang$core$Native_Utils.eq(model.device.phone, false) && _elm_lang$core$Native_Utils.eq(model.menuHover, _user$project$Types$WasdHelp),
 				A3(
 					_mdgriffith$style_elements$Element$row,
 					_user$project$MyStyles$WasdOverlay,
@@ -30315,7 +30326,7 @@ var _user$project$View$viewSceneContainer = function (model) {
 					},
 					{
 						ctor: '::',
-						_0: _mdgriffith$style_elements$Element$text('w↑ a← s↓ d→'),
+						_0: _mdgriffith$style_elements$Element$text('USE w↑ a← s↓ d→ TO MOVE'),
 						_1: {ctor: '[]'}
 					})),
 			_1: {ctor: '[]'}
@@ -30530,11 +30541,12 @@ var _user$project$View$viewExamplesMenu = function (model) {
 						_1: {
 							ctor: '::',
 							_0: _mdgriffith$style_elements$Element_Events$onMouseEnter(
-								A2(_user$project$Types$ChangeMenuHover, _user$project$Types$Show, _user$project$Types$ExamplesMenu)),
+								_user$project$Types$ChangeMenuHover(
+									_user$project$Types$Show(_user$project$Types$ExamplesMenu))),
 							_1: {
 								ctor: '::',
 								_0: _mdgriffith$style_elements$Element_Events$onMouseLeave(
-									A2(_user$project$Types$ChangeMenuHover, _user$project$Types$Hide, _user$project$Types$ExamplesMenu)),
+									_user$project$Types$ChangeMenuHover(_user$project$Types$Hide)),
 								_1: {ctor: '[]'}
 							}
 						}
@@ -30759,7 +30771,8 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 									newButton,
 									40,
 									_user$project$Types$NewNodeMenu,
-									A2(_user$project$Types$ChangeMenuHover, _user$project$Types$Toggle, _user$project$Types$NewNodeMenu))),
+									_user$project$Types$ChangeMenuHover(
+										_user$project$Types$Toggle(_user$project$Types$NewNodeMenu)))),
 							_1: {ctor: '[]'}
 						}),
 					_1: {
@@ -30848,7 +30861,8 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 										newButton,
 										45,
 										_user$project$Types$NewEdgeMenu,
-										A2(_user$project$Types$ChangeMenuHover, _user$project$Types$Toggle, _user$project$Types$NewEdgeMenu))),
+										_user$project$Types$ChangeMenuHover(
+											_user$project$Types$Toggle(_user$project$Types$NewEdgeMenu)))),
 								_1: {ctor: '[]'}
 							}),
 						_1: {ctor: '[]'}
@@ -31259,7 +31273,8 @@ var _user$project$View$viewEdgeDetail = F2(
 					_1: {
 						ctor: '::',
 						_0: _mdgriffith$style_elements$Element_Events$onMouseDown(
-							A2(_user$project$Types$ChangeMenuHover, _user$project$Types$Toggle, _user$project$Types$EditEdgeMenu)),
+							_user$project$Types$ChangeMenuHover(
+								_user$project$Types$Toggle(_user$project$Types$EditEdgeMenu))),
 						_1: {ctor: '[]'}
 					}
 				},
@@ -31709,11 +31724,12 @@ var _user$project$View$viewNavbar = function (model) {
 									{
 										ctor: '::',
 										_0: _mdgriffith$style_elements$Element_Events$onMouseEnter(
-											A2(_user$project$Types$ChangeMenuHover, _user$project$Types$Show, _user$project$Types$ExamplesMenu)),
+											_user$project$Types$ChangeMenuHover(
+												_user$project$Types$Show(_user$project$Types$ExamplesMenu))),
 										_1: {
 											ctor: '::',
 											_0: _mdgriffith$style_elements$Element_Events$onMouseLeave(
-												A2(_user$project$Types$ChangeMenuHover, _user$project$Types$Hide, _user$project$Types$ExamplesMenu)),
+												_user$project$Types$ChangeMenuHover(_user$project$Types$Hide)),
 											_1: {ctor: '[]'}
 										}
 									})),
@@ -31768,7 +31784,7 @@ var _user$project$View$root = function (model) {
 				_1: {
 					ctor: '::',
 					_0: _mdgriffith$style_elements$Element_Events$onClick(
-						(!_elm_lang$core$Native_Utils.eq(model.menuHover, _user$project$Types$NoMenu)) ? A2(_user$project$Types$ChangeMenuHover, _user$project$Types$Hide, _user$project$Types$NoMenu) : _user$project$Types$NoOp),
+						(!_elm_lang$core$Native_Utils.eq(model.menuHover, _user$project$Types$NoMenu)) ? _user$project$Types$ChangeMenuHover(_user$project$Types$Hide) : _user$project$Types$NoOp),
 					_1: {ctor: '[]'}
 				}
 			},
@@ -32017,15 +32033,15 @@ var _user$project$Main$update = F2(
 							{graph: newGraph}),
 						{ctor: '[]'});
 				case 'ChangeMenuHover':
-					var _p11 = _p2._1;
 					var answer = function () {
 						var _p10 = _p2._0;
 						switch (_p10.ctor) {
 							case 'Show':
-								return _p11;
+								return _p10._0;
 							case 'Hide':
 								return _user$project$Types$NoMenu;
 							default:
+								var _p11 = _p10._0;
 								return _elm_lang$core$Native_Utils.eq(model.menuHover, _p11) ? _user$project$Types$NoMenu : _p11;
 						}
 					}();

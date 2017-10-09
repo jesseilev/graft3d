@@ -171,17 +171,17 @@ update msg model =
             in
                 { model | graph = newGraph } ! []
 
-        ChangeMenuHover setter menuHover ->
+        ChangeMenuHover setter ->
             let
                 answer =
                     case setter of
-                        Show ->
+                        Show menuHover ->
                             menuHover
 
                         Hide ->
                             NoMenu
 
-                        Toggle ->
+                        Toggle menuHover ->
                             if model.menuHover == menuHover then
                                 NoMenu
                             else

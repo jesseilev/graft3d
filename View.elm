@@ -56,7 +56,7 @@ root model =
                 [ Attr.height Attr.fill
                 , Events.onClick
                     <| if model.menuHover /= NoMenu then
-                        ChangeMenuHover Hide NoMenu
+                        ChangeMenuHover Hide
                        else
                         NoOp
                 ]
@@ -88,8 +88,8 @@ viewNavbar model =
                 , options =
                     [ navlink "Examples"
                         "#"
-                        [ Events.onMouseEnter <| ChangeMenuHover Show ExamplesMenu
-                        , Events.onMouseLeave <| ChangeMenuHover Hide ExamplesMenu
+                        [ Events.onMouseEnter <| ChangeMenuHover (Show ExamplesMenu)
+                        , Events.onMouseLeave <| ChangeMenuHover Hide
                         ]
                         |> El.below [ viewExamplesMenu model ]
                     , navlink "Graft2D" "https://jesseilev.github.io/graft" []
@@ -222,7 +222,7 @@ viewEdgeDetail model edge =
         dropdownMenu =
             El.el SelectorItem
                 [ Attr.vary Selected (model.menuHover == EditEdgeMenu)
-                , Events.onMouseDown <| ChangeMenuHover Toggle EditEdgeMenu
+                , Events.onMouseDown <| ChangeMenuHover (Toggle EditEdgeMenu)
                 ]
                 description
                 |> El.below
@@ -395,7 +395,7 @@ viewSelectionSidebar model =
                 [ viewBadgeSelectors model
                     Graph.nodes
                     viewNodeSelector
-                    [ (newButton 40 NewNodeMenu <| ChangeMenuHover Toggle NewNodeMenu)
+                    [ (newButton 40 NewNodeMenu <| ChangeMenuHover (Toggle NewNodeMenu))
                         |> El.below
                             [ El.el Dropdown
                                 [ Attr.inlineStyle <| MyStyles.zIndex 10
@@ -423,7 +423,7 @@ viewSelectionSidebar model =
                 , viewBadgeSelectors model
                     (List.reverse << Graph.edges)
                     viewEdgeSelector
-                    [ (newButton 45 NewEdgeMenu <| ChangeMenuHover Toggle NewEdgeMenu)
+                    [ (newButton 45 NewEdgeMenu <| ChangeMenuHover (Toggle NewEdgeMenu))
                         |> El.below
                             [ El.el Dropdown
                                 [ Attr.inlineStyle <| MyStyles.zIndex 10
@@ -461,8 +461,8 @@ viewExamplesMenu model =
                 [ Attr.padding 10
                 , Attr.alignLeft
                 , Events.onClick (Load title)
-                , Events.onMouseEnter <| ChangeMenuHover Show ExamplesMenu
-                , Events.onMouseLeave <| ChangeMenuHover Hide ExamplesMenu
+                , Events.onMouseEnter <| ChangeMenuHover (Show ExamplesMenu)
+                , Events.onMouseLeave <| ChangeMenuHover Hide
                 ]
                 [ El.text title ]
     in
@@ -558,14 +558,14 @@ viewSceneContainer model =
     let
         sceneContents =
             [ El.html (viewScene model)
-            , El.when (model.device.phone == False)
+            , El.when (model.device.phone == False && model.menuHover == WasdHelp)
                 <| El.row WasdOverlay
                     [ Attr.alignBottom
                     , Attr.paddingXY 20 10
                       --, Attr.center
                     , Attr.width <| Attr.percent 100
                     ]
-                    [ El.text "w↑ a← s↓ d→"
+                    [ El.text "USE w↑ a← s↓ d→ TO MOVE"
                     ]
             ]
     in
@@ -602,8 +602,8 @@ viewScene model =
                 <| "type: linear; density: 0.05; color: "
                 ++ (colorToHex backgroundColor)
             , HtmlAttr.style [ "cursor" => "all-scroll" ]
-            , AfAttr.vrModeUi False
-              -- (model.device.phone)
+            , HtmlEvents.onMouseDown <| ChangeMenuHover (Show WasdHelp)
+            , HtmlEvents.onMouseUp <| ChangeMenuHover Hide
             ]
             (MaybeEx.toList rootEntityView
                 ++ [ sky [] []
