@@ -28681,18 +28681,26 @@ var _user$project$Types$AlmostGraph = F2(
 var _user$project$Types$Cylinder = {ctor: 'Cylinder'};
 var _user$project$Types$Sphere = {ctor: 'Sphere'};
 var _user$project$Types$Box = {ctor: 'Box'};
+var _user$project$Types$shapeFromString = function (str) {
+	var _p9 = str;
+	switch (_p9) {
+		case 'Box':
+			return _user$project$Types$Box;
+		case 'Sphere':
+			return _user$project$Types$Sphere;
+		case 'Cylinder':
+			return _user$project$Types$Cylinder;
+		default:
+			return _user$project$Types$Box;
+	}
+};
 var _user$project$Types$entityDecoder = A4(
 	_elm_lang$core$Json_Decode$map3,
 	_user$project$Types$Entity,
 	A2(
 		_elm_lang$core$Json_Decode$field,
 		'shape',
-		A2(
-			_elm_lang$core$Json_Decode$map,
-			function (_p9) {
-				return _user$project$Types$Box;
-			},
-			_elm_lang$core$Json_Decode$string)),
+		A2(_elm_lang$core$Json_Decode$map, _user$project$Types$shapeFromString, _elm_lang$core$Json_Decode$string)),
 	A2(
 		_elm_lang$core$Json_Decode$field,
 		'color',
@@ -29103,22 +29111,22 @@ var _user$project$Examples$graph1 = A2(
 	});
 var _user$project$Examples$json = {
 	ctor: '::',
-	_0: A2(_user$project$Types_ops['=>'], 'Simple', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#ffbc00\",\"opacity\":0.69,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#f52064\",\"opacity\":0.55,\"shape\":\"Box\"}}],\"edges\":[{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":-1,\"y\":-1.4,\"z\":1.2},\"scale\":{\"x\":0.46,\"y\":0.61,\"z\":0.44},\"rotation\":{\"x\":0,\"y\":30,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":0.4,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":1.21,\"y\":0.94,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
+	_0: A2(_user$project$Types_ops['=>'], 'Simple', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#ffbc00\",\"opacity\":0.69,\"shape\":\"Sphere\"}},{\"id\":1,\"label\":{\"color\":\"#f52064\",\"opacity\":0.55,\"shape\":\"Sphere\"}}],\"edges\":[{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":-1,\"y\":-1.4,\"z\":1.2},\"scale\":{\"x\":0.46,\"y\":0.61,\"z\":0.44},\"rotation\":{\"x\":0,\"y\":30,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":0.4,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":1.21,\"y\":0.94,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
 	_1: {
 		ctor: '::',
-		_0: A2(_user$project$Types_ops['=>'], 'Wavy Thing', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#008040\",\"opacity\":0.24,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#e6e6e6\",\"opacity\":0.22,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#008080\",\"opacity\":0.6,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":1,\"z\":0},\"scale\":{\"x\":1,\"y\":1.34,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":0.6,\"y\":1,\"z\":0.48},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":2.4,\"y\":-1,\"z\":-1.6},\"scale\":{\"x\":0.5,\"y\":1.09,\"z\":0.31},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-0.1,\"y\":-0.1,\"z\":0.4},\"scale\":{\"x\":1.14,\"y\":0.67,\"z\":1.13},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
+		_0: A2(_user$project$Types_ops['=>'], 'Wavy Thing', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#008040\",\"opacity\":0.24,\"shape\":\"Sphere\"}},{\"id\":1,\"label\":{\"color\":\"#e6e6e6\",\"opacity\":0.22,\"shape\":\"Sphere\"}},{\"id\":2,\"label\":{\"color\":\"#008080\",\"opacity\":0.6,\"shape\":\"Sphere\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":1,\"z\":0},\"scale\":{\"x\":1,\"y\":1.34,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":0.6,\"y\":1,\"z\":0.48},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":2.4,\"y\":-1,\"z\":-1.6},\"scale\":{\"x\":0.5,\"y\":1.09,\"z\":0.31},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-0.1,\"y\":-0.1,\"z\":0.4},\"scale\":{\"x\":1.14,\"y\":0.67,\"z\":1.13},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
 		_1: {
 			ctor: '::',
-			_0: A2(_user$project$Types_ops['=>'], 'Sea Shell', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#00964e\",\"opacity\":0.53,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#ff8000\",\"opacity\":0.17,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#00ff80\",\"opacity\":0.17,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.1,\"z\":0},\"scale\":{\"x\":0.68,\"y\":1.32,\"z\":0.78},\"rotation\":{\"x\":91,\"y\":301,\"z\":286}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":0.2,\"z\":0.2},\"scale\":{\"x\":0.6,\"y\":1,\"z\":0.48},\"rotation\":{\"x\":360,\"y\":360,\"z\":360}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":0.6,\"y\":0.2,\"z\":0.1},\"scale\":{\"x\":1.33,\"y\":1.48,\"z\":0.45},\"rotation\":{\"x\":255,\"y\":184,\"z\":166}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":0,\"y\":-0.1,\"z\":0.4},\"scale\":{\"x\":1.45,\"y\":0.69,\"z\":0.9},\"rotation\":{\"x\":0,\"y\":0,\"z\":346}}}]}'),
+			_0: A2(_user$project$Types_ops['=>'], 'Sea Shell', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#00964e\",\"opacity\":0.53,\"shape\":\"Sphere\"}},{\"id\":1,\"label\":{\"color\":\"#ff8000\",\"opacity\":0.17,\"shape\":\"Sphere\"}},{\"id\":2,\"label\":{\"color\":\"#00ff80\",\"opacity\":0.17,\"shape\":\"Sphere\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.1,\"z\":0},\"scale\":{\"x\":0.68,\"y\":1.32,\"z\":0.78},\"rotation\":{\"x\":91,\"y\":301,\"z\":286}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":0.2,\"z\":0.2},\"scale\":{\"x\":0.6,\"y\":1,\"z\":0.48},\"rotation\":{\"x\":360,\"y\":360,\"z\":360}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":0.6,\"y\":0.2,\"z\":0.1},\"scale\":{\"x\":1.33,\"y\":1.48,\"z\":0.45},\"rotation\":{\"x\":255,\"y\":184,\"z\":166}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":0,\"y\":-0.1,\"z\":0.4},\"scale\":{\"x\":1.45,\"y\":0.69,\"z\":0.9},\"rotation\":{\"x\":0,\"y\":0,\"z\":346}}}]}'),
 			_1: {
 				ctor: '::',
-				_0: A2(_user$project$Types_ops['=>'], 'Gathering', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#1d1f4d\",\"opacity\":0.24,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#e6e6e6\",\"opacity\":0.22,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#d35ac4\",\"opacity\":0.6,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":1,\"z\":0},\"scale\":{\"x\":1,\"y\":1.18,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":1.2,\"z\":-0.9},\"scale\":{\"x\":0.47,\"y\":0.66,\"z\":0.8},\"rotation\":{\"x\":0,\"y\":0,\"z\":179}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":2.4,\"y\":-1,\"z\":-1.6},\"scale\":{\"x\":0.47,\"y\":1.09,\"z\":0.8},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":0,\"y\":0.9,\"z\":0.7},\"scale\":{\"x\":1.24,\"y\":0.67,\"z\":1.13},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
+				_0: A2(_user$project$Types_ops['=>'], 'Gathering', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#1d1f4d\",\"opacity\":0.24,\"shape\":\"Sphere\"}},{\"id\":1,\"label\":{\"color\":\"#e6e6e6\",\"opacity\":0.22,\"shape\":\"Sphere\"}},{\"id\":2,\"label\":{\"color\":\"#d35ac4\",\"opacity\":0.6,\"shape\":\"Sphere\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":1,\"z\":0},\"scale\":{\"x\":1,\"y\":1.18,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":1.2,\"z\":-0.9},\"scale\":{\"x\":0.47,\"y\":0.66,\"z\":0.8},\"rotation\":{\"x\":0,\"y\":0,\"z\":179}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":2.4,\"y\":-1,\"z\":-1.6},\"scale\":{\"x\":0.47,\"y\":1.09,\"z\":0.8},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":0,\"y\":0.9,\"z\":0.7},\"scale\":{\"x\":1.24,\"y\":0.67,\"z\":1.13},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
 				_1: {
 					ctor: '::',
-					_0: A2(_user$project$Types_ops['=>'], 'Maybe Duck Tower', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#434f80\",\"opacity\":0.8,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#7d740f\",\"opacity\":0.45,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#008080\",\"opacity\":0.6,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":0.6,\"z\":-0.1},\"scale\":{\"x\":1,\"y\":1.34,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":349,\"z\":0}}},{\"from\":1,\"to\":1,\"label\":{\"translation\":{\"x\":0.4,\"y\":-0.6,\"z\":0.7},\"scale\":{\"x\":0.85,\"y\":0.6,\"z\":1.15},\"rotation\":{\"x\":0,\"y\":263,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":0.6,\"y\":1.09,\"z\":0.48},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":2.4,\"y\":-1.4,\"z\":-1.6},\"scale\":{\"x\":1.12,\"y\":0.5,\"z\":1.34},\"rotation\":{\"x\":0,\"y\":311,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-0.4,\"y\":2.8,\"z\":0.4},\"scale\":{\"x\":0.96,\"y\":1.5,\"z\":0.66},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
+					_0: A2(_user$project$Types_ops['=>'], 'Maybe Duck Tower', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#434f80\",\"opacity\":0.8,\"shape\":\"Sphere\"}},{\"id\":1,\"label\":{\"color\":\"#7d740f\",\"opacity\":0.45,\"shape\":\"Sphere\"}},{\"id\":2,\"label\":{\"color\":\"#008080\",\"opacity\":0.6,\"shape\":\"Sphere\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":0.6,\"z\":-0.1},\"scale\":{\"x\":1,\"y\":1.34,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":349,\"z\":0}}},{\"from\":1,\"to\":1,\"label\":{\"translation\":{\"x\":0.4,\"y\":-0.6,\"z\":0.7},\"scale\":{\"x\":0.85,\"y\":0.6,\"z\":1.15},\"rotation\":{\"x\":0,\"y\":263,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":0.6,\"y\":1.09,\"z\":0.48},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":2.4,\"y\":-1.4,\"z\":-1.6},\"scale\":{\"x\":1.12,\"y\":0.5,\"z\":1.34},\"rotation\":{\"x\":0,\"y\":311,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-0.4,\"y\":2.8,\"z\":0.4},\"scale\":{\"x\":0.96,\"y\":1.5,\"z\":0.66},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
 					_1: {
 						ctor: '::',
-						_0: A2(_user$project$Types_ops['=>'], 'Smarties', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#00a8c1\",\"opacity\":0.22,\"shape\":\"Box\"}},{\"id\":1,\"label\":{\"color\":\"#cfb164\",\"opacity\":0.2,\"shape\":\"Box\"}},{\"id\":2,\"label\":{\"color\":\"#aa3bd9\",\"opacity\":0.16,\"shape\":\"Box\"}}],\"edges\":[{\"from\":2,\"to\":2,\"label\":{\"translation\":{\"x\":-0.5,\"y\":-1.1,\"z\":0},\"scale\":{\"x\":0.61,\"y\":0.65,\"z\":0.64},\"rotation\":{\"x\":360,\"y\":69,\"z\":59}}},{\"from\":2,\"to\":1,\"label\":{\"translation\":{\"x\":0,\"y\":0,\"z\":0},\"scale\":{\"x\":0.43,\"y\":0.43,\"z\":0.33},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":0.86,\"y\":0.86,\"z\":0.82},\"rotation\":{\"x\":0,\"y\":61,\"z\":0}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":-1,\"y\":-0.2,\"z\":1.3},\"scale\":{\"x\":0.94,\"y\":1,\"z\":1},\"rotation\":{\"x\":283,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-0.2,\"y\":0.6,\"z\":0.1},\"scale\":{\"x\":0.61,\"y\":0.68,\"z\":0.7},\"rotation\":{\"x\":0,\"y\":61,\"z\":0}}}]}'),
+						_0: A2(_user$project$Types_ops['=>'], 'Smarties', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#00a8c1\",\"opacity\":0.22,\"shape\":\"Sphere\"}},{\"id\":1,\"label\":{\"color\":\"#cfb164\",\"opacity\":0.2,\"shape\":\"Sphere\"}},{\"id\":2,\"label\":{\"color\":\"#aa3bd9\",\"opacity\":0.16,\"shape\":\"Sphere\"}}],\"edges\":[{\"from\":2,\"to\":2,\"label\":{\"translation\":{\"x\":-0.5,\"y\":-1.1,\"z\":0},\"scale\":{\"x\":0.61,\"y\":0.65,\"z\":0.64},\"rotation\":{\"x\":360,\"y\":69,\"z\":59}}},{\"from\":2,\"to\":1,\"label\":{\"translation\":{\"x\":0,\"y\":0,\"z\":0},\"scale\":{\"x\":0.43,\"y\":0.43,\"z\":0.33},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":0.86,\"y\":0.86,\"z\":0.82},\"rotation\":{\"x\":0,\"y\":61,\"z\":0}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":-1,\"y\":-0.2,\"z\":1.3},\"scale\":{\"x\":0.94,\"y\":1,\"z\":1},\"rotation\":{\"x\":283,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-0.2,\"y\":0.6,\"z\":0.1},\"scale\":{\"x\":0.61,\"y\":0.68,\"z\":0.7},\"rotation\":{\"x\":0,\"y\":61,\"z\":0}}}]}'),
 						_1: {ctor: '[]'}
 					}
 				}
@@ -29950,6 +29958,17 @@ var _user$project$View$alphaChar = function (id) {
 			_elm_lang$core$Array$fromList(
 				_elm_lang$core$String$toList('abcdefghijklmnopqrstuvwxyz'))));
 };
+var _user$project$View$getShapePrimitive = function (shape) {
+	var _p2 = shape;
+	switch (_p2.ctor) {
+		case 'Box':
+			return _halfzebra$elm_aframe$AFrame_Primitives$box;
+		case 'Sphere':
+			return _halfzebra$elm_aframe$AFrame_Primitives$sphere;
+		default:
+			return _halfzebra$elm_aframe$AFrame_Primitives$cylinder;
+	}
+};
 var _user$project$View$backgroundColor = A3(_elm_lang$core$Color$rgb, 100, 120, 160);
 var _user$project$View$viewSaveButton = A3(
 	_mdgriffith$style_elements$Element$button,
@@ -29969,7 +29988,7 @@ var _user$project$View$viewSaveButton = A3(
 	},
 	_mdgriffith$style_elements$Element$text('Save'));
 var _user$project$View$viewNoWebGLNotification = function () {
-	var hrefHowToInstall = 'https://superuser.com/questions/836832/how-can-i-enable-webgl-in-my-browser';
+	var hrefHowToEnableWebgl = 'https://superuser.com/questions/836832/how-can-i-enable-webgl-in-my-browser';
 	return A3(
 		_mdgriffith$style_elements$Element$column,
 		_user$project$MyStyles$None,
@@ -30036,8 +30055,8 @@ var _user$project$View$viewNoWebGLNotification = function () {
 								},
 								A2(
 									_mdgriffith$style_elements$Element$link,
-									hrefHowToInstall,
-									_mdgriffith$style_elements$Element$text(' WebGL installed '))),
+									hrefHowToEnableWebgl,
+									_mdgriffith$style_elements$Element$text(' WebGL enabled '))),
 							_1: {
 								ctor: '::',
 								_0: _mdgriffith$style_elements$Element$text('on your browser.'),
@@ -30056,7 +30075,7 @@ var _user$project$View$viewEntity = F3(
 			10) < 0) ? A2(
 			_user$project$View$viewEntity,
 			model,
-			{ctor: '::', _0: nodeCtx.node.id, _1: ancestors}) : function (_p2) {
+			{ctor: '::', _0: nodeCtx.node.id, _1: ancestors}) : function (_p3) {
 			return A2(
 				_halfzebra$elm_aframe$AFrame_Primitives$box,
 				{
@@ -30117,8 +30136,9 @@ var _user$project$View$viewEntity = F3(
 				},
 				{ctor: '[]'});
 		};
-		return A2(
-			_halfzebra$elm_aframe$AFrame_Primitives$sphere,
+		return A3(
+			_user$project$View$getShapePrimitive,
+			nodeCtx.node.label.shape,
 			{
 				ctor: '::',
 				_0: A2(
@@ -30417,12 +30437,12 @@ var _user$project$View$viewNodeBadge = F4(
 var _user$project$View$viewEdgeBadge = F2(
 	function (model, edge) {
 		var getNode = A2(_elm_lang$core$Basics$flip, _user$project$Graph_Extra$getNode, model.graph);
-		var _p3 = {
+		var _p4 = {
 			ctor: '_Tuple2',
 			_0: getNode(edge.from),
 			_1: getNode(edge.to)
 		};
-		if (((_p3.ctor === '_Tuple2') && (_p3._0.ctor === 'Just')) && (_p3._1.ctor === 'Just')) {
+		if (((_p4.ctor === '_Tuple2') && (_p4._0.ctor === 'Just')) && (_p4._1.ctor === 'Just')) {
 			return A2(
 				_mdgriffith$style_elements$Element$within,
 				{
@@ -30430,7 +30450,7 @@ var _user$project$View$viewEdgeBadge = F2(
 					_0: A4(
 						_user$project$View$viewNodeBadge,
 						model,
-						_p3._1._0,
+						_p4._1._0,
 						25,
 						{
 							ctor: '::',
@@ -30446,7 +30466,7 @@ var _user$project$View$viewEdgeBadge = F2(
 				A4(
 					_user$project$View$viewNodeBadge,
 					model,
-					_p3._0._0,
+					_p4._0._0,
 					45,
 					{ctor: '[]'}));
 		} else {
@@ -30522,9 +30542,9 @@ var _user$project$View$hideUnless = function (shouldShow) {
 	return shouldShow ? A2(_mdgriffith$style_elements$Element_Attributes$attribute, 'id', '') : _mdgriffith$style_elements$Element_Attributes$hidden;
 };
 var _user$project$View$viewExamplesMenu = function (model) {
-	var exampleRow = function (_p4) {
-		var _p5 = _p4;
-		var _p6 = _p5._0;
+	var exampleRow = function (_p5) {
+		var _p6 = _p5;
+		var _p7 = _p6._0;
 		return A3(
 			_mdgriffith$style_elements$Element$row,
 			_user$project$MyStyles$DropdownItem,
@@ -30537,7 +30557,7 @@ var _user$project$View$viewExamplesMenu = function (model) {
 					_1: {
 						ctor: '::',
 						_0: _mdgriffith$style_elements$Element_Events$onClick(
-							_user$project$Types$Load(_p6)),
+							_user$project$Types$Load(_p7)),
 						_1: {
 							ctor: '::',
 							_0: _mdgriffith$style_elements$Element_Events$onMouseEnter(
@@ -30555,7 +30575,7 @@ var _user$project$View$viewExamplesMenu = function (model) {
 			},
 			{
 				ctor: '::',
-				_0: _mdgriffith$style_elements$Element$text(_p6),
+				_0: _mdgriffith$style_elements$Element$text(_p7),
 				_1: {ctor: '[]'}
 			});
 	};
@@ -30598,11 +30618,11 @@ var _user$project$View$viewExamplesMenu = function (model) {
 			A2(_elm_lang$core$List$map, exampleRow, model.examples)));
 };
 var _user$project$View$viewSelectionSidebar = function (model) {
-	var _p7 = A2(
+	var _p8 = A2(
 		_elm_lang$core$Maybe$withDefault,
 		{ctor: '_Tuple2', _0: 0, _1: 0},
 		_elm_community$graph$Graph$nodeIdRange(model.graph));
-	var maxId = _p7._1;
+	var maxId = _p8._1;
 	var newButton = F3(
 		function (size, menuType, msg) {
 			return A3(
@@ -30780,9 +30800,9 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 						_0: A4(
 							viewBadgeSelectors,
 							model,
-							function (_p8) {
+							function (_p9) {
 								return _elm_lang$core$List$reverse(
-									_elm_community$graph$Graph$edges(_p8));
+									_elm_community$graph$Graph$edges(_p9));
 							},
 							_user$project$View$viewEdgeSelector,
 							{
@@ -30816,10 +30836,10 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 												},
 												A2(
 													_elm_lang$core$List$map,
-													function (_p9) {
-														var _p10 = _p9;
-														var _p12 = _p10._1;
-														var _p11 = _p10._0;
+													function (_p10) {
+														var _p11 = _p10;
+														var _p13 = _p11._1;
+														var _p12 = _p11._0;
 														return A3(
 															_mdgriffith$style_elements$Element$column,
 															_user$project$MyStyles$DropdownItem,
@@ -30829,7 +30849,7 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 																_1: {
 																	ctor: '::',
 																	_0: _mdgriffith$style_elements$Element_Events$onClick(
-																		A2(_user$project$Types$NewEdge, _p11, _p12)),
+																		A2(_user$project$Types$NewEdge, _p12, _p13)),
 																	_1: {ctor: '[]'}
 																}
 															},
@@ -30849,7 +30869,7 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 																	_0: A2(
 																		_user$project$View$viewEdgeBadge,
 																		model,
-																		A3(_elm_community$graph$Graph$Edge, _p11, _p12, _user$project$Types$emptyTransformation)),
+																		A3(_elm_community$graph$Graph$Edge, _p12, _p13, _user$project$Types$emptyTransformation)),
 																	_1: {ctor: '[]'}
 																}
 															});
@@ -30874,14 +30894,14 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 var _user$project$View$viewTransformationSliders = F3(
 	function (model, edge, transformAttribute) {
 		var createMsg = function (xyorz) {
-			return function (_p13) {
+			return function (_p14) {
 				return A2(
 					_elm_lang$core$Result$withDefault,
 					_user$project$Types$NoOp,
 					A2(
 						_elm_lang$core$Result$map,
 						A4(_user$project$Types$ChangeTransformation, transformAttribute, xyorz, edge.from, edge.to),
-						_elm_lang$core$String$toFloat(_p13)));
+						_elm_lang$core$String$toFloat(_p14)));
 			};
 		};
 		var utils = _user$project$Types$transformUtils(transformAttribute);
@@ -31121,14 +31141,14 @@ var _user$project$View$viewEdgeDetail = F2(
 					});
 			});
 		var fromToNodes = function () {
-			var _p14 = {
+			var _p15 = {
 				ctor: '_Tuple2',
 				_0: A2(_elm_community$graph$Graph$get, edge.from, model.graph),
 				_1: A2(_elm_community$graph$Graph$get, edge.to, model.graph)
 			};
-			if (((_p14.ctor === '_Tuple2') && (_p14._0.ctor === 'Just')) && (_p14._1.ctor === 'Just')) {
+			if (((_p15.ctor === '_Tuple2') && (_p15._0.ctor === 'Just')) && (_p15._1.ctor === 'Just')) {
 				return _elm_lang$core$Maybe$Just(
-					{ctor: '_Tuple2', _0: _p14._0._0.node, _1: _p14._1._0.node});
+					{ctor: '_Tuple2', _0: _p15._0._0.node, _1: _p15._1._0.node});
 			} else {
 				return _elm_lang$core$Maybe$Nothing;
 			}
@@ -31136,8 +31156,8 @@ var _user$project$View$viewEdgeDetail = F2(
 		var description = A3(
 			_elm_community$maybe_extra$Maybe_Extra$unwrap,
 			_mdgriffith$style_elements$Element$empty,
-			function (_p15) {
-				var _p16 = _p15;
+			function (_p16) {
+				var _p17 = _p16;
 				return A3(
 					_mdgriffith$style_elements$Element$row,
 					_user$project$MyStyles$None,
@@ -31166,7 +31186,7 @@ var _user$project$View$viewEdgeDetail = F2(
 							_0: A4(
 								_user$project$View$viewNodeBadge,
 								model,
-								_p16._0,
+								_p17._0,
 								25,
 								{ctor: '[]'}),
 							_1: {
@@ -31177,7 +31197,7 @@ var _user$project$View$viewEdgeDetail = F2(
 									_0: A4(
 										_user$project$View$viewNodeBadge,
 										model,
-										_p16._1,
+										_p17._1,
 										25,
 										{ctor: '[]'}),
 									_1: {ctor: '[]'}
@@ -31216,10 +31236,10 @@ var _user$project$View$viewEdgeDetail = F2(
 						},
 						A2(
 							_elm_lang$core$List$map,
-							function (_p17) {
-								var _p18 = _p17;
-								var _p20 = _p18._1;
-								var _p19 = _p18._0;
+							function (_p18) {
+								var _p19 = _p18;
+								var _p21 = _p19._1;
+								var _p20 = _p19._0;
 								return A3(
 									_mdgriffith$style_elements$Element$column,
 									_user$project$MyStyles$DropdownItem,
@@ -31229,7 +31249,7 @@ var _user$project$View$viewEdgeDetail = F2(
 										_1: {
 											ctor: '::',
 											_0: _mdgriffith$style_elements$Element_Events$onClick(
-												A4(_user$project$Types$EdgeFromTo, edge.from, edge.to, _p19, _p20)),
+												A4(_user$project$Types$EdgeFromTo, edge.from, edge.to, _p20, _p21)),
 											_1: {
 												ctor: '::',
 												_0: _mdgriffith$style_elements$Element_Attributes$center,
@@ -31253,7 +31273,7 @@ var _user$project$View$viewEdgeDetail = F2(
 											_0: A2(
 												_user$project$View$viewEdgeBadge,
 												model,
-												A3(_elm_community$graph$Graph$Edge, _p19, _p20, _user$project$Types$emptyTransformation)),
+												A3(_elm_community$graph$Graph$Edge, _p20, _p21, _user$project$Types$emptyTransformation)),
 											_1: {ctor: '[]'}
 										}
 									});
@@ -31315,12 +31335,12 @@ var _user$project$View$viewEdgeDetail = F2(
 									_0: A2(
 										_mdgriffith$style_elements$Element$whenJust,
 										fromToNodes,
-										function (_p21) {
-											var _p22 = _p21;
+										function (_p22) {
+											var _p23 = _p22;
 											return A4(
 												_user$project$View$viewNodeBadge,
 												model,
-												_p22._1,
+												_p23._1,
 												25,
 												{ctor: '[]'});
 										}),
@@ -31423,14 +31443,14 @@ var _user$project$View$viewEdgeDetail = F2(
 var _user$project$View$viewNodeDetail = F2(
 	function (model, node) {
 		var createMsg = function (msgConstructor) {
-			return function (_p23) {
+			return function (_p24) {
 				return A2(
 					_elm_lang$core$Result$withDefault,
 					_user$project$Types$NoOp,
 					A2(
 						_elm_lang$core$Result$map,
 						msgConstructor(node.id),
-						_elm_lang$core$String$toFloat(_p23)));
+						_elm_lang$core$String$toFloat(_p24)));
 			};
 		};
 		var opacitySlider = _mdgriffith$style_elements$Element$html(
@@ -31624,19 +31644,19 @@ var _user$project$View$viewDetailSidebar = function (model) {
 					_1: {ctor: '[]'}
 				});
 		});
-	var _p24 = model.editing;
-	if (_p24.ctor === 'Nothing') {
+	var _p25 = model.editing;
+	if (_p25.ctor === 'Nothing') {
 		return _mdgriffith$style_elements$Element$empty;
 	} else {
-		if (_p24._0.ctor === 'Node') {
+		if (_p25._0.ctor === 'Node') {
 			return A2(
 				showDetails,
-				_user$project$Graph_Extra$getNode(_p24._0._0),
+				_user$project$Graph_Extra$getNode(_p25._0._0),
 				_user$project$View$viewNodeDetail(model));
 		} else {
 			return A2(
 				showDetails,
-				A2(_user$project$Graph_Extra$getEdge, _p24._0._0, _p24._0._1),
+				A2(_user$project$Graph_Extra$getEdge, _p25._0._0, _p25._0._1),
 				_user$project$View$viewEdgeDetail(model));
 		}
 	}

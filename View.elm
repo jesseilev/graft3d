@@ -166,6 +166,11 @@ viewNodeDetail model node =
                 [ El.row None [ Attr.paddingBottom 5 ] [ El.text "Opacity: " ]
                 , opacitySlider
                 ]
+              --, El.column None
+              --    []
+              --    [ El.row None [ Attr.paddingBottom 5 ] [ El.text "Shape: " ]
+              --    , shapePicker
+              --    ]
             , El.hairline Hairline
             , El.button DeleteButton
                 [ Attr.height <| Attr.px 50
@@ -670,7 +675,7 @@ viewEntity model ancestors nodeCtx =
                 ]
                 []
     in
-        Primitives.sphere
+        getShapePrimitive nodeCtx.node.label.shape
             [ uncurry3 position (Vec3.components t.translation)
             , uncurry3 scale (Vec3.components t.scale)
             , uncurry3 rotation (Vec3.components t.rotation)
@@ -694,7 +699,7 @@ viewEntity model ancestors nodeCtx =
 viewNoWebGLNotification : Element
 viewNoWebGLNotification =
     let
-        hrefHowToInstall =
+        hrefHowToEnableWebgl =
             "https://superuser.com/questions/836832/how-can-i-enable-webgl-in-my-browser"
     in
         El.column None
@@ -714,7 +719,7 @@ viewNoWebGLNotification =
                 [ El.text "It looks like you don't have"
                 , El.el None
                     [ Attr.inlineStyle [ "color" => "blue" ] ]
-                    (El.link hrefHowToInstall (El.text " WebGL installed "))
+                    (El.link hrefHowToEnableWebgl (El.text " WebGL enabled "))
                 , El.text "on your browser."
                 ]
             ]
@@ -733,6 +738,18 @@ viewSaveButton =
 backgroundColor : Color.Color
 backgroundColor =
     Color.rgb 100 120 160
+
+
+getShapePrimitive shape =
+    case shape of
+        Box ->
+            Primitives.box
+
+        Sphere ->
+            Primitives.sphere
+
+        Cylinder ->
+            Primitives.cylinder
 
 
 alphaChar : Id -> String

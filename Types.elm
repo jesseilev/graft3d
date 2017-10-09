@@ -403,7 +403,7 @@ nodeDecoder =
 entityDecoder : Decoder Entity
 entityDecoder =
     Decode.map3 Entity
-        (Decode.field "shape" <| Decode.map (\_ -> Box) Decode.string)
+        (Decode.field "shape" <| Decode.map shapeFromString Decode.string)
         (Decode.field "color" <| Decode.map hexToColorSafe Decode.string)
         (Decode.field "opacity" <| Decode.float)
 
@@ -434,6 +434,21 @@ decodeVec3 =
 
 hexToColorSafe =
     hexToColor >> Maybe.withDefault Color.black
+
+
+shapeFromString str =
+    case str of
+        "Box" ->
+            Box
+
+        "Sphere" ->
+            Sphere
+
+        "Cylinder" ->
+            Cylinder
+
+        _ ->
+            Box
 
 
 fakeTransformation =
