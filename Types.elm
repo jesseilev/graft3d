@@ -81,7 +81,7 @@ type alias Model =
     , examples : List ( String, Graph )
     , rootId : Id
     , editing : Maybe Editable
-    , menuHover : MenuHover
+    , focusedUi : UiElement
     , device : El.Device
     , webGLSupport : Bool
     }
@@ -92,19 +92,20 @@ type Editable
     | Edge Id Id
 
 
-type MenuHover
-    = NoMenu
+type UiElement
+    = NoElem
     | ExamplesMenu
     | NewNodeMenu
     | NewEdgeMenu
     | EditEdgeMenu
+    | EditNodeShapeMenu
     | WasdHelp
 
 
-type MenuSetter
-    = Show MenuHover
+type UiAppearence
+    = Show UiElement
     | Hide
-    | Toggle MenuHover
+    | Toggle UiElement
 
 
 
@@ -125,12 +126,13 @@ type
     | NewEdge Id Id
     | ChangeColor Id String
     | ChangeOpacity Id Float
+    | ChangeShape Id Shape
     | ChangeTransformation TransformAttribute XYorZ Id Id Float
     | EdgeFromTo Id Id Id Id
       -- META
     | Save
     | Load String
-    | ChangeMenuHover MenuSetter
+    | ShowOrHideUi UiAppearence
     | WindowResize Window.Size
     | NoOp
 
@@ -403,8 +405,12 @@ nodeDecoder =
 entityDecoder : Decoder Entity
 entityDecoder =
     Decode.map3 Entity
-        (Decode.field "shape" <| Decode.map shapeFromString Decode.string)
-        (Decode.field "color" <| Decode.map hexToColorSafe Decode.string)
+        (Decode.field "shape"
+            <| Decode.map (shapeFromString >> Result.withDefault Box) Decode.string
+        )
+        (Decode.field "color"
+            <| Decode.map (hexToColor >> Maybe.withDefault Color.black) Decode.string
+        )
         (Decode.field "opacity" <| Decode.float)
 
 
@@ -432,23 +438,20 @@ decodeVec3 =
         (Decode.field "z" Decode.float)
 
 
-hexToColorSafe =
-    hexToColor >> Maybe.withDefault Color.black
-
-
+shapeFromString : String -> Result String Shape
 shapeFromString str =
     case str of
         "Box" ->
-            Box
+            Ok Box
 
         "Sphere" ->
-            Sphere
+            Ok Sphere
 
         "Cylinder" ->
-            Cylinder
+            Ok Cylinder
 
         _ ->
-            Box
+            Err ("I don't recognize this shape name: " ++ str)
 
 
 fakeTransformation =

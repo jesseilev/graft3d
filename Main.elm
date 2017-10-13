@@ -32,7 +32,7 @@ init flags =
       , graph = Examples.graph1
       , examples = Examples.loadJson
       , editing = Just (Edge 0 1)
-      , menuHover = NoMenu
+      , focusedUi = NoElem
       , device = El.classifyDevice (Window.Size 0 0) |> Debug.log "init size"
       , webGLSupport = flags.webGLSupport
       }
@@ -112,25 +112,22 @@ update msg model =
                 { model
                     | graph = GraphEx.insertEdge edge model.graph
                     , editing = Just (Edge from to)
-                    , menuHover = NoMenu
+                    , focusedUi = NoElem
                 }
                     ! []
 
-        ChangeColor nodeId hex ->
+        ChangeColor id hex ->
             let
-                nodeUpdater =
-                    hexToColor hex
-                        |> Maybe.map (nodeLensColor.set)
-                        |> Maybe.withDefault identity
+                setNewColor =
+                    MaybeEx.unwrap identity nodeLensColor.set (hexToColor hex)
             in
-                { model | graph = GraphEx.updateNode nodeId nodeUpdater model.graph } ! []
+                updateNode model id setNewColor ! []
 
         ChangeOpacity id newOpac ->
-            let
-                nodeUpdater =
-                    nodeLensOpacity.set newOpac
-            in
-                { model | graph = GraphEx.updateNode id nodeUpdater model.graph } ! []
+            updateNode model id (nodeLensOpacity.set newOpac) ! []
+
+        ChangeShape id newShape ->
+            updateNode model id (nodeLensShape.set newShape) ! []
 
         ChangeTransformation transformAttr xyorz from to newVal ->
             let
@@ -171,23 +168,23 @@ update msg model =
             in
                 { model | graph = newGraph } ! []
 
-        ChangeMenuHover setter ->
+        ShowOrHideUi uiAppearence ->
             let
                 answer =
-                    case setter of
-                        Show menuHover ->
-                            menuHover
+                    case uiAppearence of
+                        Show uiElement ->
+                            uiElement
 
                         Hide ->
-                            NoMenu
+                            NoElem
 
-                        Toggle menuHover ->
-                            if model.menuHover == menuHover then
-                                NoMenu
+                        Toggle uiElement ->
+                            if model.focusedUi == uiElement then
+                                NoElem
                             else
-                                menuHover
+                                uiElement
             in
-                { model | menuHover = answer } ! []
+                { model | focusedUi = answer } ! [] |> Debug.log "model after ui toggle"
 
         WindowResize size ->
             { model | device = El.classifyDevice size |> Debug.log "resize" }
@@ -195,6 +192,10 @@ update msg model =
 
         _ ->
             model ! []
+
+
+updateNode model id updaterFunc =
+    { model | graph = GraphEx.updateNode id updaterFunc model.graph }
 
 
 toggleAnimation : Id -> Graph -> Graph

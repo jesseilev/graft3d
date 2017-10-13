@@ -191,6 +191,13 @@ colorPicker =
     [ "width" => "100%" ]
 
 
+shapePicker : InlineStyles
+shapePicker =
+    [ "padding" => "20px"
+    , "background" => "yellow"
+    ]
+
+
 wasdOverlay : InlineStyles
 wasdOverlay =
     [ "z-index" => "10"

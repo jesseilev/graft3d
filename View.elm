@@ -55,8 +55,8 @@ root model =
             <| El.column Main
                 [ Attr.height Attr.fill
                 , Events.onClick
-                    <| if model.menuHover /= NoMenu then
-                        ChangeMenuHover Hide
+                    <| if model.focusedUi /= NoElem then
+                        ShowOrHideUi Hide
                        else
                         NoOp
                 ]
@@ -88,8 +88,8 @@ viewNavbar model =
                 , options =
                     [ navlink "Examples"
                         "#"
-                        [ Events.onMouseEnter <| ChangeMenuHover (Show ExamplesMenu)
-                        , Events.onMouseLeave <| ChangeMenuHover Hide
+                        [ Events.onMouseEnter <| ShowOrHideUi (Show ExamplesMenu)
+                        , Events.onMouseLeave <| ShowOrHideUi Hide
                         ]
                         |> El.below [ viewExamplesMenu model ]
                     , navlink "Graft2D" "https://jesseilev.github.io/graft" []
@@ -133,9 +133,28 @@ viewNodeDetail model node =
                     ]
                     []
 
-        createMsg : (Id -> Float -> Msg) -> String -> Msg
-        createMsg msgConstructor =
-            String.toFloat
+        --    dropdown
+        --        { viewHead = El.text <| "Shape: " ++ node.label.shape
+        --        , viewItem = \shape -> El.text <| toString shape
+        --        , items = [ Box, Sphere, Cylinder ]
+        --        , msg = ChangeShape node.id
+        --        }
+        shapePicker =
+            dropdown model
+                { viewHead =
+                    El.el SelectorItem
+                        [ Attr.padding 20 ]
+                        (El.text <| "Shape: " ++ toString node.label.shape)
+                , uiElement = EditNodeShapeMenu
+                , items = [ Box, Sphere, Cylinder ]
+                , viewItem =
+                    \shape -> El.text <| toString shape
+                , onClick = ChangeShape node.id
+                }
+
+        createMsg : (String -> Result err a) -> (Id -> a -> Msg) -> String -> Msg
+        createMsg convertString msgConstructor =
+            convertString
                 >> Result.map (msgConstructor node.id)
                 >> Result.withDefault NoOp
 
@@ -147,30 +166,25 @@ viewNodeDetail model node =
                     , HtmlAttr.min "0"
                     , HtmlAttr.max "1"
                     , HtmlAttr.step "0.01"
-                    , HtmlEvents.onInput (createMsg ChangeOpacity)
+                    , HtmlEvents.onInput (createMsg String.toFloat ChangeOpacity)
                     , HtmlAttr.style
                         <| MyStyles.slider
                         ++ (MyStyles.opacitySlider node.label.color)
                     ]
                     []
+
+        inputWithLabel str input =
+            El.column None
+                []
+                [ El.row None [ Attr.paddingBottom 5 ] [ El.text str ]
+                , input
+                ]
     in
         El.column None
             [ Attr.spacing 20, Attr.padding 20 ]
-            [ El.column None
-                []
-                [ El.row None [ Attr.paddingBottom 5 ] [ El.text "Color: " ]
-                , colorPicker
-                ]
-            , El.column None
-                []
-                [ El.row None [ Attr.paddingBottom 5 ] [ El.text "Opacity: " ]
-                , opacitySlider
-                ]
-              --, El.column None
-              --    []
-              --    [ El.row None [ Attr.paddingBottom 5 ] [ El.text "Shape: " ]
-              --    , shapePicker
-              --    ]
+            [ inputWithLabel "Color:" colorPicker
+            , inputWithLabel "Opacity:" opacitySlider
+            , shapePicker
             , El.hairline Hairline
             , El.button DeleteButton
                 [ Attr.height <| Attr.px 50
@@ -211,49 +225,26 @@ viewEdgeDetail model edge =
             Html.option [ HtmlAttr.value <| toString node.id ]
                 [ El.toHtml MyStyles.stylesheet <| viewNodeBadge model node 20 [] ]
 
-        dropdown : String -> Id -> (Id -> Msg) -> Element
-        dropdown labelStr selectedVal msgConstructor =
-            El.row None
-                []
-                [ El.el None [ Attr.paddingRight 4, Attr.verticalCenter ] (El.text labelStr)
-                , El.html
-                    <| Html.select
-                        [ HtmlAttr.value <| toString selectedVal
-                        , HtmlEvents.onInput (msgConstructor |> msgFromString String.toInt)
+        headerWithDropdown =
+            dropdown model
+                { viewHead =
+                    El.el SelectorItem
+                        [ Attr.vary Selected (model.focusedUi == EditEdgeMenu)
+                        , Events.onMouseDown <| ShowOrHideUi (Toggle EditEdgeMenu)
                         ]
-                        (List.map dropdownChoice (Graph.nodes model.graph))
-                ]
-
-        dropdownMenu =
-            El.el SelectorItem
-                [ Attr.vary Selected (model.menuHover == EditEdgeMenu)
-                , Events.onMouseDown <| ChangeMenuHover (Toggle EditEdgeMenu)
-                ]
-                description
-                |> El.below
-                    [ El.el Dropdown
-                        [ Attr.inlineStyle <| MyStyles.zIndex 10
-                        , hideUnless (model.menuHover == EditEdgeMenu)
-                        ]
-                        (El.row None
-                            [ Attr.width <| Attr.percent 100 ]
-                            (GraphEx.availableEdges model.graph
-                                |> List.map
-                                    (\( from, to ) ->
-                                        El.column DropdownItem
-                                            [ Attr.paddingXY 16 8
-                                            , Events.onClick <| EdgeFromTo edge.from edge.to from to
-                                            , Attr.center
-                                            ]
-                                            [ El.el None
-                                                [ Attr.paddingBottom 4 ]
-                                                (El.text "Change to")
-                                            , viewEdgeBadge model (Graph.Edge from to emptyTransformation)
-                                            ]
-                                    )
-                            )
-                        )
-                    ]
+                        description
+                , uiElement = EditEdgeMenu
+                , items = GraphEx.availableEdges model.graph
+                , viewItem =
+                    \( from, to ) ->
+                        El.column DropdownItem
+                            [ Attr.center ]
+                            [ El.el None [ Attr.paddingBottom 4 ] (El.text "Change to")
+                            , viewEdgeBadge model (Graph.Edge from to emptyTransformation)
+                            ]
+                , onClick =
+                    \( from, to ) -> EdgeFromTo edge.from edge.to from to
+                }
 
         description =
             fromToNodes
@@ -275,7 +266,7 @@ viewEdgeDetail model edge =
     in
         El.column None
             []
-            [ dropdownMenu
+            [ headerWithDropdown
             , El.hairline Hairline
             , El.column None
                 [ Attr.paddingXY 20 6
@@ -375,7 +366,7 @@ viewSelectionSidebar model =
         newButton size menuType msg =
             El.el SelectorItem
                 [ Attr.padding 10
-                , Attr.vary Selected (model.menuHover == menuType)
+                , Attr.vary Selected (model.focusedUi == menuType)
                 ]
                 (El.button NewButton
                     [ Events.onClick msg
@@ -400,62 +391,74 @@ viewSelectionSidebar model =
                 [ viewBadgeSelectors model
                     Graph.nodes
                     viewNodeSelector
-                    [ (newButton 40 NewNodeMenu <| ChangeMenuHover (Toggle NewNodeMenu))
-                        |> El.below
-                            [ El.el Dropdown
-                                [ Attr.inlineStyle <| MyStyles.zIndex 10
-                                , hideUnless (model.menuHover == NewNodeMenu)
-                                ]
-                                (El.row None
-                                    [ Attr.width <| Attr.percent 100 ]
-                                    (Graph.nodes model.graph
-                                        |> List.map
-                                            (\n ->
-                                                El.column DropdownItem
-                                                    [ Attr.paddingXY 16 8
-                                                    , Events.onClick <| NewNode n.id
-                                                    ]
-                                                    [ El.el None
-                                                        [ Attr.paddingBottom 4 ]
-                                                        (El.text "from")
-                                                    , viewNodeBadge model n 30 []
-                                                    ]
-                                            )
-                                    )
-                                )
-                            ]
+                    [ dropdown model
+                        { viewHead =
+                            newButton 40 NewNodeMenu <| ShowOrHideUi (Toggle NewNodeMenu)
+                        , uiElement = NewNodeMenu
+                        , items = Graph.nodes model.graph
+                        , viewItem =
+                            \n ->
+                                El.column None
+                                    [ Attr.paddingBottom 4 ]
+                                    [ El.el None [ Attr.paddingBottom 4 ] (El.text "from")
+                                    , viewNodeBadge model n 30 []
+                                    ]
+                        , onClick = \n -> NewNode n.id
+                        }
                     ]
                 , viewBadgeSelectors model
                     (List.reverse << Graph.edges)
                     viewEdgeSelector
-                    [ (newButton 45 NewEdgeMenu <| ChangeMenuHover (Toggle NewEdgeMenu))
-                        |> El.below
-                            [ El.el Dropdown
-                                [ Attr.inlineStyle <| MyStyles.zIndex 10
-                                  --, Attr.alignRight
-                                , hideUnless (model.menuHover == NewEdgeMenu)
-                                ]
-                                (El.row None
-                                    [ Attr.width <| Attr.percent 100 ]
-                                    (GraphEx.availableEdges model.graph
-                                        |> List.map
-                                            (\( from, to ) ->
-                                                El.column DropdownItem
-                                                    [ Attr.paddingXY 16 8
-                                                    , Events.onClick <| NewEdge from to
-                                                    ]
-                                                    [ El.el None
-                                                        [ Attr.paddingBottom 4 ]
-                                                        (El.text "")
-                                                    , viewEdgeBadge model (Graph.Edge from to emptyTransformation)
-                                                    ]
-                                            )
-                                    )
-                                )
-                            ]
+                    [ dropdown model
+                        { viewHead =
+                            newButton 45 NewEdgeMenu <| ShowOrHideUi (Toggle NewEdgeMenu)
+                        , uiElement = NewEdgeMenu
+                        , items = GraphEx.availableEdges model.graph
+                        , viewItem =
+                            \( from, to ) ->
+                                viewEdgeBadge model (Graph.Edge from to emptyTransformation)
+                        , onClick = \( from, to ) -> NewEdge from to
+                        }
                     ]
                 ]
               --, viewSaveButton
+            ]
+
+
+type alias DropdownConfig a =
+    { viewHead : Element
+    , uiElement : UiElement
+    , items : List a
+    , viewItem : a -> Element
+    , onClick : a -> Msg
+    }
+
+
+dropdown : Model -> DropdownConfig a -> Element
+dropdown model config =
+    El.el None
+        [ Events.onMouseEnter <| ShowOrHideUi (Show config.uiElement)
+        , Events.onMouseLeave <| ShowOrHideUi Hide
+        ]
+        config.viewHead
+        |> El.below
+            [ El.el Dropdown
+                [ Attr.inlineStyle <| MyStyles.zIndex 10
+                , hideUnless <| model.focusedUi == config.uiElement
+                ]
+                (El.row None
+                    [ Attr.width <| Attr.percent 100 ]
+                    (List.map
+                        (\item ->
+                            El.el DropdownItem
+                                [ Attr.paddingXY 16 8
+                                , Events.onClick <| config.onClick item
+                                ]
+                                (config.viewItem item)
+                        )
+                        config.items
+                    )
+                )
             ]
 
 
@@ -466,8 +469,8 @@ viewExamplesMenu model =
                 [ Attr.padding 10
                 , Attr.alignLeft
                 , Events.onClick (Load title)
-                , Events.onMouseEnter <| ChangeMenuHover (Show ExamplesMenu)
-                , Events.onMouseLeave <| ChangeMenuHover Hide
+                , Events.onMouseEnter <| ShowOrHideUi (Show ExamplesMenu)
+                , Events.onMouseLeave <| ShowOrHideUi Hide
                 ]
                 [ El.text title ]
     in
@@ -476,7 +479,7 @@ viewExamplesMenu model =
             , Attr.alignRight
             , Attr.vary NavMenu True
             , Attr.inlineStyle <| MyStyles.zIndex 10
-            , hideUnless (model.menuHover == ExamplesMenu)
+            , hideUnless (model.focusedUi == ExamplesMenu)
             ]
             (El.column None
                 [ Attr.width <| Attr.percent 100 ]
@@ -563,7 +566,7 @@ viewSceneContainer model =
     let
         sceneContents =
             [ El.html (viewScene model)
-            , El.when (model.device.phone == False && model.menuHover == WasdHelp)
+            , El.when (model.device.phone == False && model.focusedUi == WasdHelp)
                 <| El.row WasdOverlay
                     [ Attr.alignBottom
                     , Attr.paddingXY 20 10
@@ -607,8 +610,8 @@ viewScene model =
                 <| "type: linear; density: 0.05; color: "
                 ++ (colorToHex backgroundColor)
             , HtmlAttr.style [ "cursor" => "all-scroll" ]
-            , HtmlEvents.onMouseDown <| ChangeMenuHover (Show WasdHelp)
-            , HtmlEvents.onMouseUp <| ChangeMenuHover Hide
+            , HtmlEvents.onMouseDown <| ShowOrHideUi (Show WasdHelp)
+            , HtmlEvents.onMouseUp <| ShowOrHideUi Hide
             ]
             (MaybeEx.toList rootEntityView
                 ++ [ sky [] []

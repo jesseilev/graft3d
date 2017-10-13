@@ -28264,12 +28264,6 @@ var _opensolid$geometry$OpenSolid_Vector3d$orthonormalize = function (_p41) {
 		_opensolid$geometry$OpenSolid_Vector3d$direction(_p42._0));
 };
 
-var _user$project$Types$hexToColorSafe = function (_p0) {
-	return A2(
-		_elm_lang$core$Maybe$withDefault,
-		_elm_lang$core$Color$black,
-		_eskimoblood$elm_color_extra$Color_Convert$hexToColor(_p0));
-};
 var _user$project$Types$decodeVec3 = A4(
 	_elm_lang$core$Json_Decode$map3,
 	F3(
@@ -28331,10 +28325,10 @@ var _user$project$Types$encodeNode = function (node) {
 		});
 };
 var _user$project$Types$encodeVec3 = function (vec) {
-	var _p1 = _opensolid$geometry$OpenSolid_Vector3d$components(vec);
-	var x = _p1._0;
-	var y = _p1._1;
-	var z = _p1._2;
+	var _p0 = _opensolid$geometry$OpenSolid_Vector3d$components(vec);
+	var x = _p0._0;
+	var y = _p0._1;
+	var z = _p0._2;
 	return _elm_lang$core$Json_Encode$object(
 		{
 			ctor: '::',
@@ -28435,11 +28429,11 @@ var _user$project$Types$encodeGraph = function (graph) {
 			}
 		});
 };
-var _user$project$Types$graphToJson = function (_p2) {
+var _user$project$Types$graphToJson = function (_p1) {
 	return A2(
 		_elm_lang$core$Json_Encode$encode,
 		0,
-		_user$project$Types$encodeGraph(_p2));
+		_user$project$Types$encodeGraph(_p1));
 };
 var _user$project$Types$modelLensGraph = A2(
 	_arturopala$elm_monocle$Monocle_Lens$Lens,
@@ -28580,7 +28574,7 @@ var _user$project$Types$emptyTransformation = {
 var _user$project$Types$fakeTransformation = {
 	data: _user$project$Types$emptyTransformation,
 	isAnimating: false,
-	animate: function (_p3) {
+	animate: function (_p2) {
 		return _elm_lang$core$Basics$identity;
 	}
 };
@@ -28588,7 +28582,7 @@ var _user$project$Types$noAnimation = function (data) {
 	return {
 		data: data,
 		isAnimating: false,
-		animate: function (_p4) {
+		animate: function (_p3) {
 			return _elm_lang$core$Basics$identity;
 		}
 	};
@@ -28604,22 +28598,22 @@ _user$project$Types_ops['%%'] = F2(
 	});
 var _user$project$Types$vec3Set_ = F2(
 	function (tupleMap, new_) {
-		return function (_p5) {
+		return function (_p4) {
 			return _opensolid$geometry$OpenSolid_Geometry_Types$Vector3d(
 				A2(
 					tupleMap,
-					function (_p6) {
+					function (_p5) {
 						return new_;
 					},
-					_opensolid$geometry$OpenSolid_Vector3d$components(_p5)));
+					_opensolid$geometry$OpenSolid_Vector3d$components(_p4)));
 		};
 	});
 var _user$project$Types$vec3SetX = _user$project$Types$vec3Set_(_Fresheyeball$elm_tuple_extra$Tuple3$mapFirst);
 var _user$project$Types$vec3SetY = _user$project$Types$vec3Set_(_Fresheyeball$elm_tuple_extra$Tuple3$mapSecond);
 var _user$project$Types$vec3SetZ = _user$project$Types$vec3Set_(_Fresheyeball$elm_tuple_extra$Tuple3$mapThird);
 var _user$project$Types$vec3Set = function (xyorz) {
-	var _p7 = xyorz;
-	switch (_p7.ctor) {
+	var _p6 = xyorz;
+	switch (_p6.ctor) {
 		case 'X':
 			return _user$project$Types$vec3SetX;
 		case 'Y':
@@ -28657,15 +28651,15 @@ var _user$project$Types$Animated = F3(
 	});
 var _user$project$Types$Model = F8(
 	function (a, b, c, d, e, f, g, h) {
-		return {time: a, graph: b, examples: c, rootId: d, editing: e, menuHover: f, device: g, webGLSupport: h};
+		return {time: a, graph: b, examples: c, rootId: d, editing: e, focusedUi: f, device: g, webGLSupport: h};
 	});
 var _user$project$Types$TransformUtils = F4(
 	function (a, b, c, d) {
 		return {edgeLens: a, min: b, max: c, step: d};
 	});
 var _user$project$Types$transformUtils = function (attribute) {
-	var _p8 = attribute;
-	switch (_p8.ctor) {
+	var _p7 = attribute;
+	switch (_p7.ctor) {
 		case 'Translation':
 			return A4(_user$project$Types$TransformUtils, _user$project$Types$edgeLensTranslation, -4, 4, 0.1);
 		case 'Scale':
@@ -28682,16 +28676,17 @@ var _user$project$Types$Cylinder = {ctor: 'Cylinder'};
 var _user$project$Types$Sphere = {ctor: 'Sphere'};
 var _user$project$Types$Box = {ctor: 'Box'};
 var _user$project$Types$shapeFromString = function (str) {
-	var _p9 = str;
-	switch (_p9) {
+	var _p8 = str;
+	switch (_p8) {
 		case 'Box':
-			return _user$project$Types$Box;
+			return _elm_lang$core$Result$Ok(_user$project$Types$Box);
 		case 'Sphere':
-			return _user$project$Types$Sphere;
+			return _elm_lang$core$Result$Ok(_user$project$Types$Sphere);
 		case 'Cylinder':
-			return _user$project$Types$Cylinder;
+			return _elm_lang$core$Result$Ok(_user$project$Types$Cylinder);
 		default:
-			return _user$project$Types$Box;
+			return _elm_lang$core$Result$Err(
+				A2(_elm_lang$core$Basics_ops['++'], 'I don\'t recognize this shape name: ', str));
 	}
 };
 var _user$project$Types$entityDecoder = A4(
@@ -28700,11 +28695,27 @@ var _user$project$Types$entityDecoder = A4(
 	A2(
 		_elm_lang$core$Json_Decode$field,
 		'shape',
-		A2(_elm_lang$core$Json_Decode$map, _user$project$Types$shapeFromString, _elm_lang$core$Json_Decode$string)),
+		A2(
+			_elm_lang$core$Json_Decode$map,
+			function (_p9) {
+				return A2(
+					_elm_lang$core$Result$withDefault,
+					_user$project$Types$Box,
+					_user$project$Types$shapeFromString(_p9));
+			},
+			_elm_lang$core$Json_Decode$string)),
 	A2(
 		_elm_lang$core$Json_Decode$field,
 		'color',
-		A2(_elm_lang$core$Json_Decode$map, _user$project$Types$hexToColorSafe, _elm_lang$core$Json_Decode$string)),
+		A2(
+			_elm_lang$core$Json_Decode$map,
+			function (_p10) {
+				return A2(
+					_elm_lang$core$Maybe$withDefault,
+					_elm_lang$core$Color$black,
+					_eskimoblood$elm_color_extra$Color_Convert$hexToColor(_p10));
+			},
+			_elm_lang$core$Json_Decode$string)),
 	A2(_elm_lang$core$Json_Decode$field, 'opacity', _elm_lang$core$Json_Decode$float));
 var _user$project$Types$nodeDecoder = A3(
 	_elm_lang$core$Json_Decode$map2,
@@ -28722,14 +28733,14 @@ var _user$project$Types$graphDecoder = A3(
 		_elm_lang$core$Json_Decode$field,
 		'edges',
 		_elm_lang$core$Json_Decode$list(_user$project$Types$edgeDecoder)));
-var _user$project$Types$decodeGraph = function (_p10) {
+var _user$project$Types$decodeGraph = function (_p11) {
 	return A2(
 		_elm_lang$core$Result$map,
-		function (_p11) {
-			var _p12 = _p11;
-			return A2(_elm_community$graph$Graph$fromNodesAndEdges, _p12.nodes, _p12.edges);
+		function (_p12) {
+			var _p13 = _p12;
+			return A2(_elm_community$graph$Graph$fromNodesAndEdges, _p13.nodes, _p13.edges);
 		},
-		A2(_elm_lang$core$Json_Decode$decodeString, _user$project$Types$graphDecoder, _p10));
+		A2(_elm_lang$core$Json_Decode$decodeString, _user$project$Types$graphDecoder, _p11));
 };
 var _user$project$Types$Edge = F2(
 	function (a, b) {
@@ -28739,11 +28750,12 @@ var _user$project$Types$Node = function (a) {
 	return {ctor: 'Node', _0: a};
 };
 var _user$project$Types$WasdHelp = {ctor: 'WasdHelp'};
+var _user$project$Types$EditNodeShapeMenu = {ctor: 'EditNodeShapeMenu'};
 var _user$project$Types$EditEdgeMenu = {ctor: 'EditEdgeMenu'};
 var _user$project$Types$NewEdgeMenu = {ctor: 'NewEdgeMenu'};
 var _user$project$Types$NewNodeMenu = {ctor: 'NewNodeMenu'};
 var _user$project$Types$ExamplesMenu = {ctor: 'ExamplesMenu'};
-var _user$project$Types$NoMenu = {ctor: 'NoMenu'};
+var _user$project$Types$NoElem = {ctor: 'NoElem'};
 var _user$project$Types$Toggle = function (a) {
 	return {ctor: 'Toggle', _0: a};
 };
@@ -28755,8 +28767,8 @@ var _user$project$Types$NoOp = {ctor: 'NoOp'};
 var _user$project$Types$WindowResize = function (a) {
 	return {ctor: 'WindowResize', _0: a};
 };
-var _user$project$Types$ChangeMenuHover = function (a) {
-	return {ctor: 'ChangeMenuHover', _0: a};
+var _user$project$Types$ShowOrHideUi = function (a) {
+	return {ctor: 'ShowOrHideUi', _0: a};
 };
 var _user$project$Types$Load = function (a) {
 	return {ctor: 'Load', _0: a};
@@ -28769,6 +28781,10 @@ var _user$project$Types$EdgeFromTo = F4(
 var _user$project$Types$ChangeTransformation = F5(
 	function (a, b, c, d, e) {
 		return {ctor: 'ChangeTransformation', _0: a, _1: b, _2: c, _3: d, _4: e};
+	});
+var _user$project$Types$ChangeShape = F2(
+	function (a, b) {
+		return {ctor: 'ChangeShape', _0: a, _1: b};
 	});
 var _user$project$Types$ChangeOpacity = F2(
 	function (a, b) {
@@ -29392,6 +29408,15 @@ var _user$project$MyStyles$wasdOverlay = {
 				}
 			}
 		}
+	}
+};
+var _user$project$MyStyles$shapePicker = {
+	ctor: '::',
+	_0: A2(_user$project$MyStyles_ops['=>'], 'padding', '20px'),
+	_1: {
+		ctor: '::',
+		_0: A2(_user$project$MyStyles_ops['=>'], 'background', 'yellow'),
+		_1: {ctor: '[]'}
 	}
 };
 var _user$project$MyStyles$colorPicker = {
@@ -30248,12 +30273,12 @@ var _user$project$View$viewScene = function (model) {
 					_1: {
 						ctor: '::',
 						_0: _elm_lang$html$Html_Events$onMouseDown(
-							_user$project$Types$ChangeMenuHover(
+							_user$project$Types$ShowOrHideUi(
 								_user$project$Types$Show(_user$project$Types$WasdHelp))),
 						_1: {
 							ctor: '::',
 							_0: _elm_lang$html$Html_Events$onMouseUp(
-								_user$project$Types$ChangeMenuHover(_user$project$Types$Hide)),
+								_user$project$Types$ShowOrHideUi(_user$project$Types$Hide)),
 							_1: {ctor: '[]'}
 						}
 					}
@@ -30326,7 +30351,7 @@ var _user$project$View$viewSceneContainer = function (model) {
 			ctor: '::',
 			_0: A2(
 				_mdgriffith$style_elements$Element$when,
-				_elm_lang$core$Native_Utils.eq(model.device.phone, false) && _elm_lang$core$Native_Utils.eq(model.menuHover, _user$project$Types$WasdHelp),
+				_elm_lang$core$Native_Utils.eq(model.device.phone, false) && _elm_lang$core$Native_Utils.eq(model.focusedUi, _user$project$Types$WasdHelp),
 				A3(
 					_mdgriffith$style_elements$Element$row,
 					_user$project$MyStyles$WasdOverlay,
@@ -30561,12 +30586,12 @@ var _user$project$View$viewExamplesMenu = function (model) {
 						_1: {
 							ctor: '::',
 							_0: _mdgriffith$style_elements$Element_Events$onMouseEnter(
-								_user$project$Types$ChangeMenuHover(
+								_user$project$Types$ShowOrHideUi(
 									_user$project$Types$Show(_user$project$Types$ExamplesMenu))),
 							_1: {
 								ctor: '::',
 								_0: _mdgriffith$style_elements$Element_Events$onMouseLeave(
-									_user$project$Types$ChangeMenuHover(_user$project$Types$Hide)),
+									_user$project$Types$ShowOrHideUi(_user$project$Types$Hide)),
 								_1: {ctor: '[]'}
 							}
 						}
@@ -30599,7 +30624,7 @@ var _user$project$View$viewExamplesMenu = function (model) {
 						_1: {
 							ctor: '::',
 							_0: _user$project$View$hideUnless(
-								_elm_lang$core$Native_Utils.eq(model.menuHover, _user$project$Types$ExamplesMenu)),
+								_elm_lang$core$Native_Utils.eq(model.focusedUi, _user$project$Types$ExamplesMenu)),
 							_1: {ctor: '[]'}
 						}
 					}
@@ -30617,6 +30642,73 @@ var _user$project$View$viewExamplesMenu = function (model) {
 			},
 			A2(_elm_lang$core$List$map, exampleRow, model.examples)));
 };
+var _user$project$View$dropdown = F2(
+	function (model, config) {
+		return A2(
+			_mdgriffith$style_elements$Element$below,
+			{
+				ctor: '::',
+				_0: A3(
+					_mdgriffith$style_elements$Element$el,
+					_user$project$MyStyles$Dropdown,
+					{
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$inlineStyle(
+							_user$project$MyStyles$zIndex(10)),
+						_1: {
+							ctor: '::',
+							_0: _user$project$View$hideUnless(
+								_elm_lang$core$Native_Utils.eq(model.focusedUi, config.uiElement)),
+							_1: {ctor: '[]'}
+						}
+					},
+					A3(
+						_mdgriffith$style_elements$Element$row,
+						_user$project$MyStyles$None,
+						{
+							ctor: '::',
+							_0: _mdgriffith$style_elements$Element_Attributes$width(
+								_mdgriffith$style_elements$Element_Attributes$percent(100)),
+							_1: {ctor: '[]'}
+						},
+						A2(
+							_elm_lang$core$List$map,
+							function (item) {
+								return A3(
+									_mdgriffith$style_elements$Element$el,
+									_user$project$MyStyles$DropdownItem,
+									{
+										ctor: '::',
+										_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 16, 8),
+										_1: {
+											ctor: '::',
+											_0: _mdgriffith$style_elements$Element_Events$onClick(
+												config.onClick(item)),
+											_1: {ctor: '[]'}
+										}
+									},
+									config.viewItem(item));
+							},
+							config.items))),
+				_1: {ctor: '[]'}
+			},
+			A3(
+				_mdgriffith$style_elements$Element$el,
+				_user$project$MyStyles$None,
+				{
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Events$onMouseEnter(
+						_user$project$Types$ShowOrHideUi(
+							_user$project$Types$Show(config.uiElement))),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Events$onMouseLeave(
+							_user$project$Types$ShowOrHideUi(_user$project$Types$Hide)),
+						_1: {ctor: '[]'}
+					}
+				},
+				config.viewHead));
+	});
 var _user$project$View$viewSelectionSidebar = function (model) {
 	var _p8 = A2(
 		_elm_lang$core$Maybe$withDefault,
@@ -30636,7 +30728,7 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 						_0: A2(
 							_mdgriffith$style_elements$Element_Attributes$vary,
 							_user$project$MyStyles$Selected,
-							_elm_lang$core$Native_Utils.eq(model.menuHover, menuType)),
+							_elm_lang$core$Native_Utils.eq(model.focusedUi, menuType)),
 						_1: {ctor: '[]'}
 					}
 				},
@@ -30719,80 +30811,53 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 						{
 							ctor: '::',
 							_0: A2(
-								_mdgriffith$style_elements$Element$below,
+								_user$project$View$dropdown,
+								model,
 								{
-									ctor: '::',
-									_0: A3(
-										_mdgriffith$style_elements$Element$el,
-										_user$project$MyStyles$Dropdown,
-										{
-											ctor: '::',
-											_0: _mdgriffith$style_elements$Element_Attributes$inlineStyle(
-												_user$project$MyStyles$zIndex(10)),
-											_1: {
-												ctor: '::',
-												_0: _user$project$View$hideUnless(
-													_elm_lang$core$Native_Utils.eq(model.menuHover, _user$project$Types$NewNodeMenu)),
-												_1: {ctor: '[]'}
-											}
-										},
-										A3(
-											_mdgriffith$style_elements$Element$row,
+									viewHead: A3(
+										newButton,
+										40,
+										_user$project$Types$NewNodeMenu,
+										_user$project$Types$ShowOrHideUi(
+											_user$project$Types$Toggle(_user$project$Types$NewNodeMenu))),
+									uiElement: _user$project$Types$NewNodeMenu,
+									items: _elm_community$graph$Graph$nodes(model.graph),
+									viewItem: function (n) {
+										return A3(
+											_mdgriffith$style_elements$Element$column,
 											_user$project$MyStyles$None,
 											{
 												ctor: '::',
-												_0: _mdgriffith$style_elements$Element_Attributes$width(
-													_mdgriffith$style_elements$Element_Attributes$percent(100)),
+												_0: _mdgriffith$style_elements$Element_Attributes$paddingBottom(4),
 												_1: {ctor: '[]'}
 											},
-											A2(
-												_elm_lang$core$List$map,
-												function (n) {
-													return A3(
-														_mdgriffith$style_elements$Element$column,
-														_user$project$MyStyles$DropdownItem,
-														{
-															ctor: '::',
-															_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 16, 8),
-															_1: {
-																ctor: '::',
-																_0: _mdgriffith$style_elements$Element_Events$onClick(
-																	_user$project$Types$NewNode(n.id)),
-																_1: {ctor: '[]'}
-															}
-														},
-														{
-															ctor: '::',
-															_0: A3(
-																_mdgriffith$style_elements$Element$el,
-																_user$project$MyStyles$None,
-																{
-																	ctor: '::',
-																	_0: _mdgriffith$style_elements$Element_Attributes$paddingBottom(4),
-																	_1: {ctor: '[]'}
-																},
-																_mdgriffith$style_elements$Element$text('from')),
-															_1: {
-																ctor: '::',
-																_0: A4(
-																	_user$project$View$viewNodeBadge,
-																	model,
-																	n,
-																	30,
-																	{ctor: '[]'}),
-																_1: {ctor: '[]'}
-															}
-														});
-												},
-												_elm_community$graph$Graph$nodes(model.graph)))),
-									_1: {ctor: '[]'}
-								},
-								A3(
-									newButton,
-									40,
-									_user$project$Types$NewNodeMenu,
-									_user$project$Types$ChangeMenuHover(
-										_user$project$Types$Toggle(_user$project$Types$NewNodeMenu)))),
+											{
+												ctor: '::',
+												_0: A3(
+													_mdgriffith$style_elements$Element$el,
+													_user$project$MyStyles$None,
+													{
+														ctor: '::',
+														_0: _mdgriffith$style_elements$Element_Attributes$paddingBottom(4),
+														_1: {ctor: '[]'}
+													},
+													_mdgriffith$style_elements$Element$text('from')),
+												_1: {
+													ctor: '::',
+													_0: A4(
+														_user$project$View$viewNodeBadge,
+														model,
+														n,
+														30,
+														{ctor: '[]'}),
+													_1: {ctor: '[]'}
+												}
+											});
+									},
+									onClick: function (n) {
+										return _user$project$Types$NewNode(n.id);
+									}
+								}),
 							_1: {ctor: '[]'}
 						}),
 					_1: {
@@ -30808,81 +30873,29 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 							{
 								ctor: '::',
 								_0: A2(
-									_mdgriffith$style_elements$Element$below,
+									_user$project$View$dropdown,
+									model,
 									{
-										ctor: '::',
-										_0: A3(
-											_mdgriffith$style_elements$Element$el,
-											_user$project$MyStyles$Dropdown,
-											{
-												ctor: '::',
-												_0: _mdgriffith$style_elements$Element_Attributes$inlineStyle(
-													_user$project$MyStyles$zIndex(10)),
-												_1: {
-													ctor: '::',
-													_0: _user$project$View$hideUnless(
-														_elm_lang$core$Native_Utils.eq(model.menuHover, _user$project$Types$NewEdgeMenu)),
-													_1: {ctor: '[]'}
-												}
-											},
-											A3(
-												_mdgriffith$style_elements$Element$row,
-												_user$project$MyStyles$None,
-												{
-													ctor: '::',
-													_0: _mdgriffith$style_elements$Element_Attributes$width(
-														_mdgriffith$style_elements$Element_Attributes$percent(100)),
-													_1: {ctor: '[]'}
-												},
-												A2(
-													_elm_lang$core$List$map,
-													function (_p10) {
-														var _p11 = _p10;
-														var _p13 = _p11._1;
-														var _p12 = _p11._0;
-														return A3(
-															_mdgriffith$style_elements$Element$column,
-															_user$project$MyStyles$DropdownItem,
-															{
-																ctor: '::',
-																_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 16, 8),
-																_1: {
-																	ctor: '::',
-																	_0: _mdgriffith$style_elements$Element_Events$onClick(
-																		A2(_user$project$Types$NewEdge, _p12, _p13)),
-																	_1: {ctor: '[]'}
-																}
-															},
-															{
-																ctor: '::',
-																_0: A3(
-																	_mdgriffith$style_elements$Element$el,
-																	_user$project$MyStyles$None,
-																	{
-																		ctor: '::',
-																		_0: _mdgriffith$style_elements$Element_Attributes$paddingBottom(4),
-																		_1: {ctor: '[]'}
-																	},
-																	_mdgriffith$style_elements$Element$text('')),
-																_1: {
-																	ctor: '::',
-																	_0: A2(
-																		_user$project$View$viewEdgeBadge,
-																		model,
-																		A3(_elm_community$graph$Graph$Edge, _p12, _p13, _user$project$Types$emptyTransformation)),
-																	_1: {ctor: '[]'}
-																}
-															});
-													},
-													_user$project$Graph_Extra$availableEdges(model.graph)))),
-										_1: {ctor: '[]'}
-									},
-									A3(
-										newButton,
-										45,
-										_user$project$Types$NewEdgeMenu,
-										_user$project$Types$ChangeMenuHover(
-											_user$project$Types$Toggle(_user$project$Types$NewEdgeMenu)))),
+										viewHead: A3(
+											newButton,
+											45,
+											_user$project$Types$NewEdgeMenu,
+											_user$project$Types$ShowOrHideUi(
+												_user$project$Types$Toggle(_user$project$Types$NewEdgeMenu))),
+										uiElement: _user$project$Types$NewEdgeMenu,
+										items: _user$project$Graph_Extra$availableEdges(model.graph),
+										viewItem: function (_p10) {
+											var _p11 = _p10;
+											return A2(
+												_user$project$View$viewEdgeBadge,
+												model,
+												A3(_elm_community$graph$Graph$Edge, _p11._0, _p11._1, _user$project$Types$emptyTransformation));
+										},
+										onClick: function (_p12) {
+											var _p13 = _p12;
+											return A2(_user$project$Types$NewEdge, _p13._0, _p13._1);
+										}
+									}),
 								_1: {ctor: '[]'}
 							}),
 						_1: {ctor: '[]'}
@@ -31095,51 +31108,6 @@ var _user$project$View$viewEdgeDetail = F2(
 					_1: {ctor: '[]'}
 				});
 		};
-		var dropdown = F3(
-			function (labelStr, selectedVal, msgConstructor) {
-				return A3(
-					_mdgriffith$style_elements$Element$row,
-					_user$project$MyStyles$None,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: A3(
-							_mdgriffith$style_elements$Element$el,
-							_user$project$MyStyles$None,
-							{
-								ctor: '::',
-								_0: _mdgriffith$style_elements$Element_Attributes$paddingRight(4),
-								_1: {
-									ctor: '::',
-									_0: _mdgriffith$style_elements$Element_Attributes$verticalCenter,
-									_1: {ctor: '[]'}
-								}
-							},
-							_mdgriffith$style_elements$Element$text(labelStr)),
-						_1: {
-							ctor: '::',
-							_0: _mdgriffith$style_elements$Element$html(
-								A2(
-									_elm_lang$html$Html$select,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$value(
-											_elm_lang$core$Basics$toString(selectedVal)),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Events$onInput(
-												A2(_user$project$View$msgFromString, _elm_lang$core$String$toInt, msgConstructor)),
-											_1: {ctor: '[]'}
-										}
-									},
-									A2(
-										_elm_lang$core$List$map,
-										dropdownChoice,
-										_elm_community$graph$Graph$nodes(model.graph)))),
-							_1: {ctor: '[]'}
-						}
-					});
-			});
 		var fromToNodes = function () {
 			var _p15 = {
 				ctor: '_Tuple2',
@@ -31207,98 +31175,66 @@ var _user$project$View$viewEdgeDetail = F2(
 					});
 			},
 			fromToNodes);
-		var dropdownMenu = A2(
-			_mdgriffith$style_elements$Element$below,
+		var headerWithDropdown = A2(
+			_user$project$View$dropdown,
+			model,
 			{
-				ctor: '::',
-				_0: A3(
+				viewHead: A3(
 					_mdgriffith$style_elements$Element$el,
-					_user$project$MyStyles$Dropdown,
+					_user$project$MyStyles$SelectorItem,
 					{
 						ctor: '::',
-						_0: _mdgriffith$style_elements$Element_Attributes$inlineStyle(
-							_user$project$MyStyles$zIndex(10)),
+						_0: A2(
+							_mdgriffith$style_elements$Element_Attributes$vary,
+							_user$project$MyStyles$Selected,
+							_elm_lang$core$Native_Utils.eq(model.focusedUi, _user$project$Types$EditEdgeMenu)),
 						_1: {
 							ctor: '::',
-							_0: _user$project$View$hideUnless(
-								_elm_lang$core$Native_Utils.eq(model.menuHover, _user$project$Types$EditEdgeMenu)),
+							_0: _mdgriffith$style_elements$Element_Events$onMouseDown(
+								_user$project$Types$ShowOrHideUi(
+									_user$project$Types$Toggle(_user$project$Types$EditEdgeMenu))),
 							_1: {ctor: '[]'}
 						}
 					},
-					A3(
-						_mdgriffith$style_elements$Element$row,
-						_user$project$MyStyles$None,
+					description),
+				uiElement: _user$project$Types$EditEdgeMenu,
+				items: _user$project$Graph_Extra$availableEdges(model.graph),
+				viewItem: function (_p18) {
+					var _p19 = _p18;
+					return A3(
+						_mdgriffith$style_elements$Element$column,
+						_user$project$MyStyles$DropdownItem,
 						{
 							ctor: '::',
-							_0: _mdgriffith$style_elements$Element_Attributes$width(
-								_mdgriffith$style_elements$Element_Attributes$percent(100)),
+							_0: _mdgriffith$style_elements$Element_Attributes$center,
 							_1: {ctor: '[]'}
 						},
-						A2(
-							_elm_lang$core$List$map,
-							function (_p18) {
-								var _p19 = _p18;
-								var _p21 = _p19._1;
-								var _p20 = _p19._0;
-								return A3(
-									_mdgriffith$style_elements$Element$column,
-									_user$project$MyStyles$DropdownItem,
-									{
-										ctor: '::',
-										_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 16, 8),
-										_1: {
-											ctor: '::',
-											_0: _mdgriffith$style_elements$Element_Events$onClick(
-												A4(_user$project$Types$EdgeFromTo, edge.from, edge.to, _p20, _p21)),
-											_1: {
-												ctor: '::',
-												_0: _mdgriffith$style_elements$Element_Attributes$center,
-												_1: {ctor: '[]'}
-											}
-										}
-									},
-									{
-										ctor: '::',
-										_0: A3(
-											_mdgriffith$style_elements$Element$el,
-											_user$project$MyStyles$None,
-											{
-												ctor: '::',
-												_0: _mdgriffith$style_elements$Element_Attributes$paddingBottom(4),
-												_1: {ctor: '[]'}
-											},
-											_mdgriffith$style_elements$Element$text('Change to')),
-										_1: {
-											ctor: '::',
-											_0: A2(
-												_user$project$View$viewEdgeBadge,
-												model,
-												A3(_elm_community$graph$Graph$Edge, _p20, _p21, _user$project$Types$emptyTransformation)),
-											_1: {ctor: '[]'}
-										}
-									});
-							},
-							_user$project$Graph_Extra$availableEdges(model.graph)))),
-				_1: {ctor: '[]'}
-			},
-			A3(
-				_mdgriffith$style_elements$Element$el,
-				_user$project$MyStyles$SelectorItem,
-				{
-					ctor: '::',
-					_0: A2(
-						_mdgriffith$style_elements$Element_Attributes$vary,
-						_user$project$MyStyles$Selected,
-						_elm_lang$core$Native_Utils.eq(model.menuHover, _user$project$Types$EditEdgeMenu)),
-					_1: {
-						ctor: '::',
-						_0: _mdgriffith$style_elements$Element_Events$onMouseDown(
-							_user$project$Types$ChangeMenuHover(
-								_user$project$Types$Toggle(_user$project$Types$EditEdgeMenu))),
-						_1: {ctor: '[]'}
-					}
+						{
+							ctor: '::',
+							_0: A3(
+								_mdgriffith$style_elements$Element$el,
+								_user$project$MyStyles$None,
+								{
+									ctor: '::',
+									_0: _mdgriffith$style_elements$Element_Attributes$paddingBottom(4),
+									_1: {ctor: '[]'}
+								},
+								_mdgriffith$style_elements$Element$text('Change to')),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_user$project$View$viewEdgeBadge,
+									model,
+									A3(_elm_community$graph$Graph$Edge, _p19._0, _p19._1, _user$project$Types$emptyTransformation)),
+								_1: {ctor: '[]'}
+							}
+						});
 				},
-				description));
+				onClick: function (_p20) {
+					var _p21 = _p20;
+					return A4(_user$project$Types$EdgeFromTo, edge.from, edge.to, _p21._0, _p21._1);
+				}
+			});
 		var sliderTriplet = F3(
 			function (label1, label2, transformAttribute) {
 				return A3(
@@ -31364,7 +31300,7 @@ var _user$project$View$viewEdgeDetail = F2(
 			{ctor: '[]'},
 			{
 				ctor: '::',
-				_0: dropdownMenu,
+				_0: headerWithDropdown,
 				_1: {
 					ctor: '::',
 					_0: _mdgriffith$style_elements$Element$hairline(_user$project$MyStyles$Hairline),
@@ -31442,17 +31378,46 @@ var _user$project$View$viewEdgeDetail = F2(
 	});
 var _user$project$View$viewNodeDetail = F2(
 	function (model, node) {
-		var createMsg = function (msgConstructor) {
-			return function (_p24) {
-				return A2(
-					_elm_lang$core$Result$withDefault,
-					_user$project$Types$NoOp,
-					A2(
-						_elm_lang$core$Result$map,
-						msgConstructor(node.id),
-						_elm_lang$core$String$toFloat(_p24)));
-			};
-		};
+		var inputWithLabel = F2(
+			function (str, input) {
+				return A3(
+					_mdgriffith$style_elements$Element$column,
+					_user$project$MyStyles$None,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: A3(
+							_mdgriffith$style_elements$Element$row,
+							_user$project$MyStyles$None,
+							{
+								ctor: '::',
+								_0: _mdgriffith$style_elements$Element_Attributes$paddingBottom(5),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _mdgriffith$style_elements$Element$text(str),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: input,
+							_1: {ctor: '[]'}
+						}
+					});
+			});
+		var createMsg = F2(
+			function (convertString, msgConstructor) {
+				return function (_p24) {
+					return A2(
+						_elm_lang$core$Result$withDefault,
+						_user$project$Types$NoOp,
+						A2(
+							_elm_lang$core$Result$map,
+							msgConstructor(node.id),
+							convertString(_p24)));
+				};
+			});
 		var opacitySlider = _mdgriffith$style_elements$Element$html(
 			A2(
 				_elm_lang$html$Html$input,
@@ -31475,7 +31440,7 @@ var _user$project$View$viewNodeDetail = F2(
 									_1: {
 										ctor: '::',
 										_0: _elm_lang$html$Html_Events$onInput(
-											createMsg(_user$project$Types$ChangeOpacity)),
+											A2(createMsg, _elm_lang$core$String$toFloat, _user$project$Types$ChangeOpacity)),
 										_1: {
 											ctor: '::',
 											_0: _elm_lang$html$Html_Attributes$style(
@@ -31492,6 +31457,43 @@ var _user$project$View$viewNodeDetail = F2(
 					}
 				},
 				{ctor: '[]'}));
+		var shapePicker = A2(
+			_user$project$View$dropdown,
+			model,
+			{
+				viewHead: A3(
+					_mdgriffith$style_elements$Element$el,
+					_user$project$MyStyles$SelectorItem,
+					{
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$padding(20),
+						_1: {ctor: '[]'}
+					},
+					_mdgriffith$style_elements$Element$text(
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'Shape: ',
+							_elm_lang$core$Basics$toString(node.label.shape)))),
+				uiElement: _user$project$Types$EditNodeShapeMenu,
+				items: {
+					ctor: '::',
+					_0: _user$project$Types$Box,
+					_1: {
+						ctor: '::',
+						_0: _user$project$Types$Sphere,
+						_1: {
+							ctor: '::',
+							_0: _user$project$Types$Cylinder,
+							_1: {ctor: '[]'}
+						}
+					}
+				},
+				viewItem: function (shape) {
+					return _mdgriffith$style_elements$Element$text(
+						_elm_lang$core$Basics$toString(shape));
+				},
+				onClick: _user$project$Types$ChangeShape(node.id)
+			});
 		var colorPicker = _mdgriffith$style_elements$Element$html(
 			A2(
 				_elm_lang$html$Html$input,
@@ -31529,90 +31531,46 @@ var _user$project$View$viewNodeDetail = F2(
 			},
 			{
 				ctor: '::',
-				_0: A3(
-					_mdgriffith$style_elements$Element$column,
-					_user$project$MyStyles$None,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: A3(
-							_mdgriffith$style_elements$Element$row,
-							_user$project$MyStyles$None,
-							{
-								ctor: '::',
-								_0: _mdgriffith$style_elements$Element_Attributes$paddingBottom(5),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _mdgriffith$style_elements$Element$text('Color: '),
-								_1: {ctor: '[]'}
-							}),
-						_1: {
-							ctor: '::',
-							_0: colorPicker,
-							_1: {ctor: '[]'}
-						}
-					}),
+				_0: A2(inputWithLabel, 'Color:', colorPicker),
 				_1: {
 					ctor: '::',
-					_0: A3(
-						_mdgriffith$style_elements$Element$column,
-						_user$project$MyStyles$None,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: A3(
-								_mdgriffith$style_elements$Element$row,
-								_user$project$MyStyles$None,
-								{
-									ctor: '::',
-									_0: _mdgriffith$style_elements$Element_Attributes$paddingBottom(5),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: _mdgriffith$style_elements$Element$text('Opacity: '),
-									_1: {ctor: '[]'}
-								}),
-							_1: {
-								ctor: '::',
-								_0: opacitySlider,
-								_1: {ctor: '[]'}
-							}
-						}),
+					_0: A2(inputWithLabel, 'Opacity:', opacitySlider),
 					_1: {
 						ctor: '::',
-						_0: _mdgriffith$style_elements$Element$hairline(_user$project$MyStyles$Hairline),
+						_0: shapePicker,
 						_1: {
 							ctor: '::',
-							_0: A3(
-								_mdgriffith$style_elements$Element$button,
-								_user$project$MyStyles$DeleteButton,
-								{
-									ctor: '::',
-									_0: _mdgriffith$style_elements$Element_Attributes$height(
-										_mdgriffith$style_elements$Element_Attributes$px(50)),
-									_1: {
+							_0: _mdgriffith$style_elements$Element$hairline(_user$project$MyStyles$Hairline),
+							_1: {
+								ctor: '::',
+								_0: A3(
+									_mdgriffith$style_elements$Element$button,
+									_user$project$MyStyles$DeleteButton,
+									{
 										ctor: '::',
-										_0: _mdgriffith$style_elements$Element_Attributes$width(
-											_mdgriffith$style_elements$Element_Attributes$px(100)),
+										_0: _mdgriffith$style_elements$Element_Attributes$height(
+											_mdgriffith$style_elements$Element_Attributes$px(50)),
 										_1: {
 											ctor: '::',
-											_0: _mdgriffith$style_elements$Element_Events$onClick(
-												_user$project$Types$Delete(
-													_user$project$Types$Node(node.id))),
+											_0: _mdgriffith$style_elements$Element_Attributes$width(
+												_mdgriffith$style_elements$Element_Attributes$px(100)),
 											_1: {
 												ctor: '::',
-												_0: _user$project$View$hideUnless(
-													!_elm_lang$core$Native_Utils.eq(node.id, model.rootId)),
-												_1: {ctor: '[]'}
+												_0: _mdgriffith$style_elements$Element_Events$onClick(
+													_user$project$Types$Delete(
+														_user$project$Types$Node(node.id))),
+												_1: {
+													ctor: '::',
+													_0: _user$project$View$hideUnless(
+														!_elm_lang$core$Native_Utils.eq(node.id, model.rootId)),
+													_1: {ctor: '[]'}
+												}
 											}
 										}
-									}
-								},
-								_mdgriffith$style_elements$Element$text('Delete')),
-							_1: {ctor: '[]'}
+									},
+									_mdgriffith$style_elements$Element$text('Delete')),
+								_1: {ctor: '[]'}
+							}
 						}
 					}
 				}
@@ -31744,12 +31702,12 @@ var _user$project$View$viewNavbar = function (model) {
 									{
 										ctor: '::',
 										_0: _mdgriffith$style_elements$Element_Events$onMouseEnter(
-											_user$project$Types$ChangeMenuHover(
+											_user$project$Types$ShowOrHideUi(
 												_user$project$Types$Show(_user$project$Types$ExamplesMenu))),
 										_1: {
 											ctor: '::',
 											_0: _mdgriffith$style_elements$Element_Events$onMouseLeave(
-												_user$project$Types$ChangeMenuHover(_user$project$Types$Hide)),
+												_user$project$Types$ShowOrHideUi(_user$project$Types$Hide)),
 											_1: {ctor: '[]'}
 										}
 									})),
@@ -31804,7 +31762,7 @@ var _user$project$View$root = function (model) {
 				_1: {
 					ctor: '::',
 					_0: _mdgriffith$style_elements$Element_Events$onClick(
-						(!_elm_lang$core$Native_Utils.eq(model.menuHover, _user$project$Types$NoMenu)) ? _user$project$Types$ChangeMenuHover(_user$project$Types$Hide) : _user$project$Types$NoOp),
+						(!_elm_lang$core$Native_Utils.eq(model.focusedUi, _user$project$Types$NoElem)) ? _user$project$Types$ShowOrHideUi(_user$project$Types$Hide) : _user$project$Types$NoOp),
 					_1: {ctor: '[]'}
 				}
 			},
@@ -31833,6 +31791,10 @@ var _user$project$View$root = function (model) {
 				}
 			}));
 };
+var _user$project$View$DropdownConfig = F5(
+	function (a, b, c, d, e) {
+		return {viewHead: a, uiElement: b, items: c, viewItem: d, onClick: e};
+	});
 
 var _user$project$Main$subscriptions = function (model) {
 	return _elm_lang$window$Window$resizes(_user$project$Types$WindowResize);
@@ -31857,6 +31819,14 @@ var _user$project$Main$toggleAnimation = F2(
 			};
 			return A4(_user$project$Graph_Extra$updateEdge, _p1.from, _p1.to, updater, graph);
 		}
+	});
+var _user$project$Main$updateNode = F3(
+	function (model, id, updaterFunc) {
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{
+				graph: A3(_user$project$Graph_Extra$updateNode, id, updaterFunc, model.graph)
+			});
 	});
 var _user$project$Main$update = F2(
 	function (msg, model) {
@@ -31962,34 +31932,36 @@ var _user$project$Main$update = F2(
 								graph: A2(_user$project$Graph_Extra$insertEdge, edge, model.graph),
 								editing: _elm_lang$core$Maybe$Just(
 									A2(_user$project$Types$Edge, _p6, _p7)),
-								menuHover: _user$project$Types$NoMenu
+								focusedUi: _user$project$Types$NoElem
 							}),
 						{ctor: '[]'});
 				case 'ChangeColor':
-					var nodeUpdater = A2(
-						_elm_lang$core$Maybe$withDefault,
+					var setNewColor = A3(
+						_elm_community$maybe_extra$Maybe_Extra$unwrap,
 						_elm_lang$core$Basics$identity,
-						A2(
-							_elm_lang$core$Maybe$map,
-							_user$project$Types$nodeLensColor.set,
-							_eskimoblood$elm_color_extra$Color_Convert$hexToColor(_p2._1)));
+						_user$project$Types$nodeLensColor.set,
+						_eskimoblood$elm_color_extra$Color_Convert$hexToColor(_p2._1));
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
-							model,
-							{
-								graph: A3(_user$project$Graph_Extra$updateNode, _p2._0, nodeUpdater, model.graph)
-							}),
+						A3(_user$project$Main$updateNode, model, _p2._0, setNewColor),
 						{ctor: '[]'});
 				case 'ChangeOpacity':
-					var nodeUpdater = _user$project$Types$nodeLensOpacity.set(_p2._1);
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
+						A3(
+							_user$project$Main$updateNode,
 							model,
-							{
-								graph: A3(_user$project$Graph_Extra$updateNode, _p2._0, nodeUpdater, model.graph)
-							}),
+							_p2._0,
+							_user$project$Types$nodeLensOpacity.set(_p2._1)),
+						{ctor: '[]'});
+				case 'ChangeShape':
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						A3(
+							_user$project$Main$updateNode,
+							model,
+							_p2._0,
+							_user$project$Types$nodeLensShape.set(_p2._1)),
 						{ctor: '[]'});
 				case 'ChangeTransformation':
 					var lens = function (_) {
@@ -32052,25 +32024,28 @@ var _user$project$Main$update = F2(
 							model,
 							{graph: newGraph}),
 						{ctor: '[]'});
-				case 'ChangeMenuHover':
+				case 'ShowOrHideUi':
 					var answer = function () {
 						var _p10 = _p2._0;
 						switch (_p10.ctor) {
 							case 'Show':
 								return _p10._0;
 							case 'Hide':
-								return _user$project$Types$NoMenu;
+								return _user$project$Types$NoElem;
 							default:
 								var _p11 = _p10._0;
-								return _elm_lang$core$Native_Utils.eq(model.menuHover, _p11) ? _user$project$Types$NoMenu : _p11;
+								return _elm_lang$core$Native_Utils.eq(model.focusedUi, _p11) ? _user$project$Types$NoElem : _p11;
 						}
 					}();
 					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
-							model,
-							{menuHover: answer}),
-						{ctor: '[]'});
+						_elm_lang$core$Debug$log,
+						'model after ui toggle',
+						A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{focusedUi: answer}),
+							{ctor: '[]'}));
 				case 'WindowResize':
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
@@ -32103,7 +32078,7 @@ var _user$project$Main$init = function (flags) {
 				examples: _user$project$Examples$loadJson,
 				editing: _elm_lang$core$Maybe$Just(
 					A2(_user$project$Types$Edge, 0, 1)),
-				menuHover: _user$project$Types$NoMenu,
+				focusedUi: _user$project$Types$NoElem,
 				device: A2(
 					_elm_lang$core$Debug$log,
 					'init size',
