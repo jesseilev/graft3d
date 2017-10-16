@@ -86,7 +86,15 @@ viewNavbar model =
                 [ Attr.padding 0, Attr.spacing 0, Attr.verticalCenter ]
                 { name = "Graft 3D"
                 , options =
-                    [ navlink "Examples"
+                    [ --dropdown model
+                      --    { viewHead = navlink "Examples"
+                      --    , uiElement = ExamplesMenu
+                      --    , options =
+                      --    , viewOption =
+                      --        \title ->
+                      --    , onClick = Load
+                      --    }
+                      navlink "Examples"
                         "#"
                         [ Events.onMouseEnter <| ShowOrHideUi (Show ExamplesMenu)
                         , Events.onMouseLeave <| ShowOrHideUi Hide
@@ -135,20 +143,25 @@ viewNodeDetail model node =
 
         --    dropdown
         --        { viewHead = El.text <| "Shape: " ++ node.label.shape
-        --        , viewItem = \shape -> El.text <| toString shape
-        --        , items = [ Box, Sphere, Cylinder ]
+        --        , viewOption = \shape -> El.text <| toString shape
+        --        , options = [ Box, Sphere, Cylinder ]
         --        , msg = ChangeShape node.id
         --        }
         shapePicker =
             dropdown model
                 { viewHead =
                     El.el SelectorItem
-                        [ Attr.padding 20 ]
-                        (El.text <| "Shape: " ++ toString node.label.shape)
+                        [ Attr.padding 10
+                        , Attr.vary Selected (model.focusedUi == EditNodeShapeMenu)
+                        ]
+                        (El.el NewButton
+                            [ Attr.padding 10 ]
+                            (El.text <| toString node.label.shape)
+                        )
                 , uiElement = EditNodeShapeMenu
-                , items = [ Box, Sphere, Cylinder ]
-                , viewItem =
-                    \shape -> El.text <| toString shape
+                , options = [ Box, Sphere, Cylinder ]
+                , viewOption =
+                    \shape -> El.el None [ Attr.padding 10 ] <| El.text (toString shape)
                 , onClick = ChangeShape node.id
                 }
 
@@ -234,8 +247,8 @@ viewEdgeDetail model edge =
                         ]
                         description
                 , uiElement = EditEdgeMenu
-                , items = GraphEx.availableEdges model.graph
-                , viewItem =
+                , options = GraphEx.availableEdges model.graph
+                , viewOption =
                     \( from, to ) ->
                         El.column DropdownItem
                             [ Attr.center ]
@@ -358,27 +371,56 @@ viewTransformationSliders model edge transformAttribute =
 
 viewSelectionSidebar model =
     let
-        viewBadgeSelectors model getItems viewItems stuffAfterBadges =
+        viewBadgeSelectors model getoptions viewoptions stuffAfterBadges =
             El.column None
                 [ Attr.padding 0, Attr.spacing 0 ]
-                (List.map (viewItems model) (getItems model.graph) ++ stuffAfterBadges)
+                (List.map (viewoptions model) (getoptions model.graph) ++ stuffAfterBadges)
 
-        newButton size menuType msg =
+        newButton size menuType =
             El.el SelectorItem
                 [ Attr.padding 10
                 , Attr.vary Selected (model.focusedUi == menuType)
                 ]
-                (El.button NewButton
-                    [ Events.onClick msg
-                    , Attr.width <| Attr.px size
+                (El.el NewButton
+                    [ Attr.width <| Attr.px size
                     , Attr.height <| Attr.px size
                     ]
-                    (El.text "+")
+                    (El.el None [ Attr.verticalCenter, Attr.center ] <| El.text "+")
                 )
 
         ( _, maxId ) =
             Graph.nodeIdRange model.graph
                 |> Maybe.withDefault ( 0, 0 )
+
+        newNodeMenu =
+            dropdown model
+                { viewHead =
+                    newButton 40 NewNodeMenu
+                    --<| ShowOrHideUi (Toggle NewNodeMenu)
+                , uiElement = NewNodeMenu
+                , options = Graph.nodes model.graph
+                , viewOption =
+                    \n ->
+                        El.column None
+                            [ Attr.paddingBottom 4 ]
+                            [ El.el None [ Attr.paddingBottom 4 ] (El.text "from")
+                            , viewNodeBadge model n 30 []
+                            ]
+                , onClick = \n -> NewNode n.id
+                }
+
+        newEdgeMenu =
+            dropdown model
+                { viewHead =
+                    newButton 45 NewEdgeMenu
+                    --<| ShowOrHideUi (Toggle NewEdgeMenu)
+                , uiElement = NewEdgeMenu
+                , options = GraphEx.availableEdges model.graph
+                , viewOption =
+                    \( from, to ) ->
+                        viewEdgeBadge model (Graph.Edge from to emptyTransformation)
+                , onClick = \( from, to ) -> NewEdge from to
+                }
     in
         El.sidebar Sidebar
             [ Attr.height <| Attr.percent 100
@@ -388,38 +430,17 @@ viewSelectionSidebar model =
             ]
             [ El.row None
                 [ Attr.spacing 10 ]
-                [ viewBadgeSelectors model
-                    Graph.nodes
-                    viewNodeSelector
-                    [ dropdown model
-                        { viewHead =
-                            newButton 40 NewNodeMenu <| ShowOrHideUi (Toggle NewNodeMenu)
-                        , uiElement = NewNodeMenu
-                        , items = Graph.nodes model.graph
-                        , viewItem =
-                            \n ->
-                                El.column None
-                                    [ Attr.paddingBottom 4 ]
-                                    [ El.el None [ Attr.paddingBottom 4 ] (El.text "from")
-                                    , viewNodeBadge model n 30 []
-                                    ]
-                        , onClick = \n -> NewNode n.id
-                        }
-                    ]
-                , viewBadgeSelectors model
-                    (List.reverse << Graph.edges)
-                    viewEdgeSelector
-                    [ dropdown model
-                        { viewHead =
-                            newButton 45 NewEdgeMenu <| ShowOrHideUi (Toggle NewEdgeMenu)
-                        , uiElement = NewEdgeMenu
-                        , items = GraphEx.availableEdges model.graph
-                        , viewItem =
-                            \( from, to ) ->
-                                viewEdgeBadge model (Graph.Edge from to emptyTransformation)
-                        , onClick = \( from, to ) -> NewEdge from to
-                        }
-                    ]
+                [ El.column None
+                    []
+                    (List.map (viewNodeSelector model) (Graph.nodes model.graph)
+                        ++ [ newNodeMenu ]
+                    )
+                , El.column None
+                    []
+                    (List.map (viewEdgeSelector model) (Graph.edges model.graph)
+                        |> List.reverse
+                        |> flip (++) [ newEdgeMenu ]
+                    )
                 ]
               --, viewSaveButton
             ]
@@ -428,8 +449,8 @@ viewSelectionSidebar model =
 type alias DropdownConfig a =
     { viewHead : Element
     , uiElement : UiElement
-    , items : List a
-    , viewItem : a -> Element
+    , options : List a
+    , viewOption : a -> Element
     , onClick : a -> Msg
     }
 
@@ -454,9 +475,9 @@ dropdown model config =
                                 [ Attr.paddingXY 16 8
                                 , Events.onClick <| config.onClick item
                                 ]
-                                (config.viewItem item)
+                                (config.viewOption item)
                         )
-                        config.items
+                        config.options
                     )
                 )
             ]

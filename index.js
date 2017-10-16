@@ -29801,34 +29801,8 @@ var _user$project$MyStyles$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																	_1: {
 																		ctor: '::',
 																		_0: _mdgriffith$style_elements$Style_Color$background(
-																			_elm_lang$core$Color$greyscale(0.2)),
-																		_1: {
-																			ctor: '::',
-																			_0: _mdgriffith$style_elements$Style$hover(
-																				{
-																					ctor: '::',
-																					_0: _mdgriffith$style_elements$Style_Color$background(
-																						_elm_lang$core$Color$greyscale(0.25)),
-																					_1: {ctor: '[]'}
-																				}),
-																			_1: {
-																				ctor: '::',
-																				_0: A2(
-																					_mdgriffith$style_elements$Style$pseudo,
-																					'active',
-																					{
-																						ctor: '::',
-																						_0: _mdgriffith$style_elements$Style_Color$background(
-																							_elm_lang$core$Color$greyscale(0.3)),
-																						_1: {
-																							ctor: '::',
-																							_0: _mdgriffith$style_elements$Style_Shadow$box(_user$project$MyStyles$noShadow),
-																							_1: {ctor: '[]'}
-																						}
-																					}),
-																				_1: {ctor: '[]'}
-																			}
-																		}
+																			_elm_lang$core$Color$greyscale(0.4)),
+																		_1: {ctor: '[]'}
 																	}
 																}
 															}
@@ -29895,7 +29869,11 @@ var _user$project$MyStyles$stylesheet = _mdgriffith$style_elements$Style$styleSh
 																						_1: {ctor: '[]'}
 																					}
 																				}),
-																			_1: {ctor: '[]'}
+																			_1: {
+																				ctor: '::',
+																				_0: _mdgriffith$style_elements$Style$cursor('pointer'),
+																				_1: {ctor: '[]'}
+																			}
 																		}
 																	}
 																}
@@ -30687,9 +30665,9 @@ var _user$project$View$dropdown = F2(
 											_1: {ctor: '[]'}
 										}
 									},
-									config.viewItem(item));
+									config.viewOption(item));
 							},
-							config.items))),
+							config.options))),
 				_1: {ctor: '[]'}
 			},
 			A3(
@@ -30715,8 +30693,8 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 		{ctor: '_Tuple2', _0: 0, _1: 0},
 		_elm_community$graph$Graph$nodeIdRange(model.graph));
 	var maxId = _p8._1;
-	var newButton = F3(
-		function (size, menuType, msg) {
+	var newButton = F2(
+		function (size, menuType) {
 			return A3(
 				_mdgriffith$style_elements$Element$el,
 				_user$project$MyStyles$SelectorItem,
@@ -30733,27 +30711,97 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 					}
 				},
 				A3(
-					_mdgriffith$style_elements$Element$button,
+					_mdgriffith$style_elements$Element$el,
 					_user$project$MyStyles$NewButton,
 					{
 						ctor: '::',
-						_0: _mdgriffith$style_elements$Element_Events$onClick(msg),
+						_0: _mdgriffith$style_elements$Element_Attributes$width(
+							_mdgriffith$style_elements$Element_Attributes$px(size)),
 						_1: {
 							ctor: '::',
-							_0: _mdgriffith$style_elements$Element_Attributes$width(
+							_0: _mdgriffith$style_elements$Element_Attributes$height(
 								_mdgriffith$style_elements$Element_Attributes$px(size)),
-							_1: {
-								ctor: '::',
-								_0: _mdgriffith$style_elements$Element_Attributes$height(
-									_mdgriffith$style_elements$Element_Attributes$px(size)),
-								_1: {ctor: '[]'}
-							}
+							_1: {ctor: '[]'}
 						}
 					},
-					_mdgriffith$style_elements$Element$text('+')));
+					A3(
+						_mdgriffith$style_elements$Element$el,
+						_user$project$MyStyles$None,
+						{
+							ctor: '::',
+							_0: _mdgriffith$style_elements$Element_Attributes$verticalCenter,
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$style_elements$Element_Attributes$center,
+								_1: {ctor: '[]'}
+							}
+						},
+						_mdgriffith$style_elements$Element$text('+'))));
+		});
+	var newNodeMenu = A2(
+		_user$project$View$dropdown,
+		model,
+		{
+			viewHead: A2(newButton, 40, _user$project$Types$NewNodeMenu),
+			uiElement: _user$project$Types$NewNodeMenu,
+			options: _elm_community$graph$Graph$nodes(model.graph),
+			viewOption: function (n) {
+				return A3(
+					_mdgriffith$style_elements$Element$column,
+					_user$project$MyStyles$None,
+					{
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$paddingBottom(4),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A3(
+							_mdgriffith$style_elements$Element$el,
+							_user$project$MyStyles$None,
+							{
+								ctor: '::',
+								_0: _mdgriffith$style_elements$Element_Attributes$paddingBottom(4),
+								_1: {ctor: '[]'}
+							},
+							_mdgriffith$style_elements$Element$text('from')),
+						_1: {
+							ctor: '::',
+							_0: A4(
+								_user$project$View$viewNodeBadge,
+								model,
+								n,
+								30,
+								{ctor: '[]'}),
+							_1: {ctor: '[]'}
+						}
+					});
+			},
+			onClick: function (n) {
+				return _user$project$Types$NewNode(n.id);
+			}
+		});
+	var newEdgeMenu = A2(
+		_user$project$View$dropdown,
+		model,
+		{
+			viewHead: A2(newButton, 45, _user$project$Types$NewEdgeMenu),
+			uiElement: _user$project$Types$NewEdgeMenu,
+			options: _user$project$Graph_Extra$availableEdges(model.graph),
+			viewOption: function (_p9) {
+				var _p10 = _p9;
+				return A2(
+					_user$project$View$viewEdgeBadge,
+					model,
+					A3(_elm_community$graph$Graph$Edge, _p10._0, _p10._1, _user$project$Types$emptyTransformation));
+			},
+			onClick: function (_p11) {
+				var _p12 = _p11;
+				return A2(_user$project$Types$NewEdge, _p12._0, _p12._1);
+			}
 		});
 	var viewBadgeSelectors = F4(
-		function (model, getItems, viewItems, stuffAfterBadges) {
+		function (model, getoptions, viewoptions, stuffAfterBadges) {
 			return A3(
 				_mdgriffith$style_elements$Element$column,
 				_user$project$MyStyles$None,
@@ -30770,8 +30818,8 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 					_elm_lang$core$Basics_ops['++'],
 					A2(
 						_elm_lang$core$List$map,
-						viewItems(model),
-						getItems(model.graph)),
+						viewoptions(model),
+						getoptions(model.graph)),
 					stuffAfterBadges));
 		});
 	return A3(
@@ -30803,101 +30851,43 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 				},
 				{
 					ctor: '::',
-					_0: A4(
-						viewBadgeSelectors,
-						model,
-						_elm_community$graph$Graph$nodes,
-						_user$project$View$viewNodeSelector,
-						{
-							ctor: '::',
-							_0: A2(
-								_user$project$View$dropdown,
-								model,
-								{
-									viewHead: A3(
-										newButton,
-										40,
-										_user$project$Types$NewNodeMenu,
-										_user$project$Types$ShowOrHideUi(
-											_user$project$Types$Toggle(_user$project$Types$NewNodeMenu))),
-									uiElement: _user$project$Types$NewNodeMenu,
-									items: _elm_community$graph$Graph$nodes(model.graph),
-									viewItem: function (n) {
-										return A3(
-											_mdgriffith$style_elements$Element$column,
-											_user$project$MyStyles$None,
-											{
-												ctor: '::',
-												_0: _mdgriffith$style_elements$Element_Attributes$paddingBottom(4),
-												_1: {ctor: '[]'}
-											},
-											{
-												ctor: '::',
-												_0: A3(
-													_mdgriffith$style_elements$Element$el,
-													_user$project$MyStyles$None,
-													{
-														ctor: '::',
-														_0: _mdgriffith$style_elements$Element_Attributes$paddingBottom(4),
-														_1: {ctor: '[]'}
-													},
-													_mdgriffith$style_elements$Element$text('from')),
-												_1: {
-													ctor: '::',
-													_0: A4(
-														_user$project$View$viewNodeBadge,
-														model,
-														n,
-														30,
-														{ctor: '[]'}),
-													_1: {ctor: '[]'}
-												}
-											});
-									},
-									onClick: function (n) {
-										return _user$project$Types$NewNode(n.id);
-									}
-								}),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A4(
-							viewBadgeSelectors,
-							model,
-							function (_p9) {
-								return _elm_lang$core$List$reverse(
-									_elm_community$graph$Graph$edges(_p9));
-							},
-							_user$project$View$viewEdgeSelector,
+					_0: A3(
+						_mdgriffith$style_elements$Element$column,
+						_user$project$MyStyles$None,
+						{ctor: '[]'},
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							A2(
+								_elm_lang$core$List$map,
+								_user$project$View$viewNodeSelector(model),
+								_elm_community$graph$Graph$nodes(model.graph)),
 							{
 								ctor: '::',
-								_0: A2(
-									_user$project$View$dropdown,
-									model,
-									{
-										viewHead: A3(
-											newButton,
-											45,
-											_user$project$Types$NewEdgeMenu,
-											_user$project$Types$ShowOrHideUi(
-												_user$project$Types$Toggle(_user$project$Types$NewEdgeMenu))),
-										uiElement: _user$project$Types$NewEdgeMenu,
-										items: _user$project$Graph_Extra$availableEdges(model.graph),
-										viewItem: function (_p10) {
-											var _p11 = _p10;
-											return A2(
-												_user$project$View$viewEdgeBadge,
-												model,
-												A3(_elm_community$graph$Graph$Edge, _p11._0, _p11._1, _user$project$Types$emptyTransformation));
-										},
-										onClick: function (_p12) {
-											var _p13 = _p12;
-											return A2(_user$project$Types$NewEdge, _p13._0, _p13._1);
-										}
-									}),
+								_0: newNodeMenu,
 								_1: {ctor: '[]'}
-							}),
+							})),
+					_1: {
+						ctor: '::',
+						_0: A3(
+							_mdgriffith$style_elements$Element$column,
+							_user$project$MyStyles$None,
+							{ctor: '[]'},
+							A3(
+								_elm_lang$core$Basics$flip,
+								F2(
+									function (x, y) {
+										return A2(_elm_lang$core$Basics_ops['++'], x, y);
+									}),
+								{
+									ctor: '::',
+									_0: newEdgeMenu,
+									_1: {ctor: '[]'}
+								},
+								_elm_lang$core$List$reverse(
+									A2(
+										_elm_lang$core$List$map,
+										_user$project$View$viewEdgeSelector(model),
+										_elm_community$graph$Graph$edges(model.graph))))),
 						_1: {ctor: '[]'}
 					}
 				}),
@@ -30907,14 +30897,14 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 var _user$project$View$viewTransformationSliders = F3(
 	function (model, edge, transformAttribute) {
 		var createMsg = function (xyorz) {
-			return function (_p14) {
+			return function (_p13) {
 				return A2(
 					_elm_lang$core$Result$withDefault,
 					_user$project$Types$NoOp,
 					A2(
 						_elm_lang$core$Result$map,
 						A4(_user$project$Types$ChangeTransformation, transformAttribute, xyorz, edge.from, edge.to),
-						_elm_lang$core$String$toFloat(_p14)));
+						_elm_lang$core$String$toFloat(_p13)));
 			};
 		};
 		var utils = _user$project$Types$transformUtils(transformAttribute);
@@ -31109,14 +31099,14 @@ var _user$project$View$viewEdgeDetail = F2(
 				});
 		};
 		var fromToNodes = function () {
-			var _p15 = {
+			var _p14 = {
 				ctor: '_Tuple2',
 				_0: A2(_elm_community$graph$Graph$get, edge.from, model.graph),
 				_1: A2(_elm_community$graph$Graph$get, edge.to, model.graph)
 			};
-			if (((_p15.ctor === '_Tuple2') && (_p15._0.ctor === 'Just')) && (_p15._1.ctor === 'Just')) {
+			if (((_p14.ctor === '_Tuple2') && (_p14._0.ctor === 'Just')) && (_p14._1.ctor === 'Just')) {
 				return _elm_lang$core$Maybe$Just(
-					{ctor: '_Tuple2', _0: _p15._0._0.node, _1: _p15._1._0.node});
+					{ctor: '_Tuple2', _0: _p14._0._0.node, _1: _p14._1._0.node});
 			} else {
 				return _elm_lang$core$Maybe$Nothing;
 			}
@@ -31124,8 +31114,8 @@ var _user$project$View$viewEdgeDetail = F2(
 		var description = A3(
 			_elm_community$maybe_extra$Maybe_Extra$unwrap,
 			_mdgriffith$style_elements$Element$empty,
-			function (_p16) {
-				var _p17 = _p16;
+			function (_p15) {
+				var _p16 = _p15;
 				return A3(
 					_mdgriffith$style_elements$Element$row,
 					_user$project$MyStyles$None,
@@ -31154,7 +31144,7 @@ var _user$project$View$viewEdgeDetail = F2(
 							_0: A4(
 								_user$project$View$viewNodeBadge,
 								model,
-								_p17._0,
+								_p16._0,
 								25,
 								{ctor: '[]'}),
 							_1: {
@@ -31165,7 +31155,7 @@ var _user$project$View$viewEdgeDetail = F2(
 									_0: A4(
 										_user$project$View$viewNodeBadge,
 										model,
-										_p17._1,
+										_p16._1,
 										25,
 										{ctor: '[]'}),
 									_1: {ctor: '[]'}
@@ -31198,9 +31188,9 @@ var _user$project$View$viewEdgeDetail = F2(
 					},
 					description),
 				uiElement: _user$project$Types$EditEdgeMenu,
-				items: _user$project$Graph_Extra$availableEdges(model.graph),
-				viewItem: function (_p18) {
-					var _p19 = _p18;
+				options: _user$project$Graph_Extra$availableEdges(model.graph),
+				viewOption: function (_p17) {
+					var _p18 = _p17;
 					return A3(
 						_mdgriffith$style_elements$Element$column,
 						_user$project$MyStyles$DropdownItem,
@@ -31225,14 +31215,14 @@ var _user$project$View$viewEdgeDetail = F2(
 								_0: A2(
 									_user$project$View$viewEdgeBadge,
 									model,
-									A3(_elm_community$graph$Graph$Edge, _p19._0, _p19._1, _user$project$Types$emptyTransformation)),
+									A3(_elm_community$graph$Graph$Edge, _p18._0, _p18._1, _user$project$Types$emptyTransformation)),
 								_1: {ctor: '[]'}
 							}
 						});
 				},
-				onClick: function (_p20) {
-					var _p21 = _p20;
-					return A4(_user$project$Types$EdgeFromTo, edge.from, edge.to, _p21._0, _p21._1);
+				onClick: function (_p19) {
+					var _p20 = _p19;
+					return A4(_user$project$Types$EdgeFromTo, edge.from, edge.to, _p20._0, _p20._1);
 				}
 			});
 		var sliderTriplet = F3(
@@ -31271,12 +31261,12 @@ var _user$project$View$viewEdgeDetail = F2(
 									_0: A2(
 										_mdgriffith$style_elements$Element$whenJust,
 										fromToNodes,
-										function (_p22) {
-											var _p23 = _p22;
+										function (_p21) {
+											var _p22 = _p21;
 											return A4(
 												_user$project$View$viewNodeBadge,
 												model,
-												_p23._1,
+												_p22._1,
 												25,
 												{ctor: '[]'});
 										}),
@@ -31408,14 +31398,14 @@ var _user$project$View$viewNodeDetail = F2(
 			});
 		var createMsg = F2(
 			function (convertString, msgConstructor) {
-				return function (_p24) {
+				return function (_p23) {
 					return A2(
 						_elm_lang$core$Result$withDefault,
 						_user$project$Types$NoOp,
 						A2(
 							_elm_lang$core$Result$map,
 							msgConstructor(node.id),
-							convertString(_p24)));
+							convertString(_p23)));
 				};
 			});
 		var opacitySlider = _mdgriffith$style_elements$Element$html(
@@ -31466,16 +31456,28 @@ var _user$project$View$viewNodeDetail = F2(
 					_user$project$MyStyles$SelectorItem,
 					{
 						ctor: '::',
-						_0: _mdgriffith$style_elements$Element_Attributes$padding(20),
-						_1: {ctor: '[]'}
+						_0: _mdgriffith$style_elements$Element_Attributes$padding(10),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_mdgriffith$style_elements$Element_Attributes$vary,
+								_user$project$MyStyles$Selected,
+								_elm_lang$core$Native_Utils.eq(model.focusedUi, _user$project$Types$EditNodeShapeMenu)),
+							_1: {ctor: '[]'}
+						}
 					},
-					_mdgriffith$style_elements$Element$text(
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							'Shape: ',
+					A3(
+						_mdgriffith$style_elements$Element$el,
+						_user$project$MyStyles$NewButton,
+						{
+							ctor: '::',
+							_0: _mdgriffith$style_elements$Element_Attributes$padding(10),
+							_1: {ctor: '[]'}
+						},
+						_mdgriffith$style_elements$Element$text(
 							_elm_lang$core$Basics$toString(node.label.shape)))),
 				uiElement: _user$project$Types$EditNodeShapeMenu,
-				items: {
+				options: {
 					ctor: '::',
 					_0: _user$project$Types$Box,
 					_1: {
@@ -31488,9 +31490,17 @@ var _user$project$View$viewNodeDetail = F2(
 						}
 					}
 				},
-				viewItem: function (shape) {
-					return _mdgriffith$style_elements$Element$text(
-						_elm_lang$core$Basics$toString(shape));
+				viewOption: function (shape) {
+					return A3(
+						_mdgriffith$style_elements$Element$el,
+						_user$project$MyStyles$None,
+						{
+							ctor: '::',
+							_0: _mdgriffith$style_elements$Element_Attributes$padding(10),
+							_1: {ctor: '[]'}
+						},
+						_mdgriffith$style_elements$Element$text(
+							_elm_lang$core$Basics$toString(shape)));
 				},
 				onClick: _user$project$Types$ChangeShape(node.id)
 			});
@@ -31602,19 +31612,19 @@ var _user$project$View$viewDetailSidebar = function (model) {
 					_1: {ctor: '[]'}
 				});
 		});
-	var _p25 = model.editing;
-	if (_p25.ctor === 'Nothing') {
+	var _p24 = model.editing;
+	if (_p24.ctor === 'Nothing') {
 		return _mdgriffith$style_elements$Element$empty;
 	} else {
-		if (_p25._0.ctor === 'Node') {
+		if (_p24._0.ctor === 'Node') {
 			return A2(
 				showDetails,
-				_user$project$Graph_Extra$getNode(_p25._0._0),
+				_user$project$Graph_Extra$getNode(_p24._0._0),
 				_user$project$View$viewNodeDetail(model));
 		} else {
 			return A2(
 				showDetails,
-				A2(_user$project$Graph_Extra$getEdge, _p25._0._0, _p25._0._1),
+				A2(_user$project$Graph_Extra$getEdge, _p24._0._0, _p24._0._1),
 				_user$project$View$viewEdgeDetail(model));
 		}
 	}
@@ -31793,7 +31803,7 @@ var _user$project$View$root = function (model) {
 };
 var _user$project$View$DropdownConfig = F5(
 	function (a, b, c, d, e) {
-		return {viewHead: a, uiElement: b, items: c, viewItem: d, onClick: e};
+		return {viewHead: a, uiElement: b, options: c, viewOption: d, onClick: e};
 	});
 
 var _user$project$Main$subscriptions = function (model) {

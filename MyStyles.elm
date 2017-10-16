@@ -128,12 +128,12 @@ stylesheet =
             , Shadow.simple
             , Border.all 0
             , Color.text Color.white
-            , Color.background <| Color.greyscale 0.2
-            , Style.hover [ Color.background <| Color.greyscale 0.25 ]
-            , Style.pseudo "active"
-                [ Color.background <| Color.greyscale 0.3
-                , Shadow.box noShadow
-                ]
+            , Color.background <| Color.greyscale 0.4
+              --, Style.hover [ Color.background <| Color.greyscale 0.25 ]
+              --, Style.pseudo "active"
+              --    [ Color.background <| Color.greyscale 0.3
+              --    , Shadow.box noShadow
+              --    ]
             ]
         , Style.style Dropdown
             [ Color.background <| Color.greyscale 0.75
@@ -150,6 +150,7 @@ stylesheet =
                 [ Color.background <| Color.greyscale 0.7
                 , Style.hover [ Color.background <| Color.greyscale 0.65 ]
                 ]
+            , Style.cursor "pointer"
             ]
         , Style.style PropertyLabel
             [ Font.weight 400 ]
