@@ -30413,29 +30413,25 @@ var _user$project$View$viewNodeBadge = F4(
 						}
 					}
 				}),
-			_mdgriffith$style_elements$Element$html(
-				A2(
-					_elm_lang$html$Html$span,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$style(
-							{
-								ctor: '::',
-								_0: {
-									ctor: '_Tuple2',
-									_0: 'color',
-									_1: _eskimoblood$elm_color_extra$Color_Convert$colorToHex(_elm_lang$core$Color$white)
-								},
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(
-							_user$project$View$alphaChar(node.id)),
-						_1: {ctor: '[]'}
-					})));
+			A3(
+				_mdgriffith$style_elements$Element$el,
+				_user$project$MyStyles$None,
+				{
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Attributes$inlineStyle(
+						{
+							ctor: '::',
+							_0: {
+								ctor: '_Tuple2',
+								_0: 'color',
+								_1: _eskimoblood$elm_color_extra$Color_Convert$colorToHex(_elm_lang$core$Color$white)
+							},
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				},
+				_mdgriffith$style_elements$Element$text(
+					_user$project$View$alphaChar(node.id))));
 	});
 var _user$project$View$viewEdgeBadge = F2(
 	function (model, edge) {
@@ -31547,7 +31543,7 @@ var _user$project$View$viewNodeDetail = F2(
 					_0: A2(inputWithLabel, 'Opacity:', opacitySlider),
 					_1: {
 						ctor: '::',
-						_0: shapePicker,
+						_0: A2(inputWithLabel, 'Shape:', shapePicker),
 						_1: {
 							ctor: '::',
 							_0: _mdgriffith$style_elements$Element$hairline(_user$project$MyStyles$Hairline),

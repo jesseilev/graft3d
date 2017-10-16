@@ -141,12 +141,6 @@ viewNodeDetail model node =
                     ]
                     []
 
-        --    dropdown
-        --        { viewHead = El.text <| "Shape: " ++ node.label.shape
-        --        , viewOption = \shape -> El.text <| toString shape
-        --        , options = [ Box, Sphere, Cylinder ]
-        --        , msg = ChangeShape node.id
-        --        }
         shapePicker =
             dropdown model
                 { viewHead =
@@ -197,7 +191,7 @@ viewNodeDetail model node =
             [ Attr.spacing 20, Attr.padding 20 ]
             [ inputWithLabel "Color:" colorPicker
             , inputWithLabel "Opacity:" opacitySlider
-            , shapePicker
+            , inputWithLabel "Shape:" shapePicker
             , El.hairline Hairline
             , El.button DeleteButton
                 [ Attr.height <| Attr.px 50
@@ -538,16 +532,10 @@ viewNodeBadge model node size attrs =
                , Attr.height <| Attr.px size
                ]
         )
-        (El.html
-            (Html.span
-                [ HtmlAttr.style
-                    [ ( "color", colorToHex Color.white )
-                      -- , ("backgroundColor", colorToHex <| Color.black)
-                      -- , ("opacity", "0.5")
-                    ]
-                ]
-                [ Html.text (alphaChar node.id) ]
-            )
+        (El.el None
+            [ Attr.inlineStyle [ ( "color", colorToHex Color.white ) ]
+            ]
+            (El.text (alphaChar node.id))
         )
 
 
