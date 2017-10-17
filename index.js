@@ -31071,6 +31071,56 @@ var _user$project$View$msgFromString = F3(
 	});
 var _user$project$View$viewEdgeDetail = F2(
 	function (model, edge) {
+		var description = function (_p14) {
+			var _p15 = _p14;
+			return A3(
+				_mdgriffith$style_elements$Element$row,
+				_user$project$MyStyles$None,
+				{
+					ctor: '::',
+					_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 20, 30),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$spacing(8),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$style_elements$Element_Attributes$alignLeft,
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$style_elements$Element_Attributes$alignBottom,
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				},
+				{
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element$text('Each'),
+					_1: {
+						ctor: '::',
+						_0: A4(
+							_user$project$View$viewNodeBadge,
+							model,
+							_p15._0,
+							25,
+							{ctor: '[]'}),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$style_elements$Element$text('spawns a new'),
+							_1: {
+								ctor: '::',
+								_0: A4(
+									_user$project$View$viewNodeBadge,
+									model,
+									_p15._1,
+									25,
+									{ctor: '[]'}),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				});
+		};
 		var dropdownChoice = function (node) {
 			return A2(
 				_elm_lang$html$Html$option,
@@ -31095,72 +31145,18 @@ var _user$project$View$viewEdgeDetail = F2(
 				});
 		};
 		var fromToNodes = function () {
-			var _p14 = {
+			var _p16 = {
 				ctor: '_Tuple2',
 				_0: A2(_elm_community$graph$Graph$get, edge.from, model.graph),
 				_1: A2(_elm_community$graph$Graph$get, edge.to, model.graph)
 			};
-			if (((_p14.ctor === '_Tuple2') && (_p14._0.ctor === 'Just')) && (_p14._1.ctor === 'Just')) {
+			if (((_p16.ctor === '_Tuple2') && (_p16._0.ctor === 'Just')) && (_p16._1.ctor === 'Just')) {
 				return _elm_lang$core$Maybe$Just(
-					{ctor: '_Tuple2', _0: _p14._0._0.node, _1: _p14._1._0.node});
+					{ctor: '_Tuple2', _0: _p16._0._0.node, _1: _p16._1._0.node});
 			} else {
 				return _elm_lang$core$Maybe$Nothing;
 			}
 		}();
-		var description = A3(
-			_elm_community$maybe_extra$Maybe_Extra$unwrap,
-			_mdgriffith$style_elements$Element$empty,
-			function (_p15) {
-				var _p16 = _p15;
-				return A3(
-					_mdgriffith$style_elements$Element$row,
-					_user$project$MyStyles$None,
-					{
-						ctor: '::',
-						_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 20, 30),
-						_1: {
-							ctor: '::',
-							_0: _mdgriffith$style_elements$Element_Attributes$spacing(8),
-							_1: {
-								ctor: '::',
-								_0: _mdgriffith$style_elements$Element_Attributes$alignLeft,
-								_1: {
-									ctor: '::',
-									_0: _mdgriffith$style_elements$Element_Attributes$alignBottom,
-									_1: {ctor: '[]'}
-								}
-							}
-						}
-					},
-					{
-						ctor: '::',
-						_0: _mdgriffith$style_elements$Element$text('Each'),
-						_1: {
-							ctor: '::',
-							_0: A4(
-								_user$project$View$viewNodeBadge,
-								model,
-								_p16._0,
-								25,
-								{ctor: '[]'}),
-							_1: {
-								ctor: '::',
-								_0: _mdgriffith$style_elements$Element$text('spawns a new'),
-								_1: {
-									ctor: '::',
-									_0: A4(
-										_user$project$View$viewNodeBadge,
-										model,
-										_p16._1,
-										25,
-										{ctor: '[]'}),
-									_1: {ctor: '[]'}
-								}
-							}
-						}
-					});
-			},
-			fromToNodes);
 		var headerWithDropdown = A2(
 			_user$project$View$dropdown,
 			model,
@@ -31182,7 +31178,7 @@ var _user$project$View$viewEdgeDetail = F2(
 							_1: {ctor: '[]'}
 						}
 					},
-					description),
+					A3(_elm_community$maybe_extra$Maybe_Extra$unwrap, _mdgriffith$style_elements$Element$empty, description, fromToNodes)),
 				uiElement: _user$project$Types$EditEdgeMenu,
 				options: _user$project$Graph_Extra$availableEdges(model.graph),
 				viewOption: function (_p17) {

@@ -239,7 +239,7 @@ viewEdgeDetail model edge =
                         [ Attr.vary Selected (model.focusedUi == EditEdgeMenu)
                         , Events.onMouseDown <| ShowOrHideUi (Toggle EditEdgeMenu)
                         ]
-                        description
+                        (MaybeEx.unwrap El.empty description fromToNodes)
                 , uiElement = EditEdgeMenu
                 , options = GraphEx.availableEdges model.graph
                 , viewOption =
@@ -253,23 +253,18 @@ viewEdgeDetail model edge =
                     \( from, to ) -> EdgeFromTo edge.from edge.to from to
                 }
 
-        description =
-            fromToNodes
-                |> MaybeEx.unwrap El.empty
-                    (\( from, to ) ->
-                        (El.row None
-                            [ Attr.paddingXY 20 30
-                            , Attr.spacing 8
-                            , Attr.alignLeft
-                            , Attr.alignBottom
-                            ]
-                            [ El.text "Each"
-                            , viewNodeBadge model from 25 []
-                            , El.text "spawns a new"
-                            , viewNodeBadge model to 25 []
-                            ]
-                        )
-                    )
+        description ( from, to ) =
+            El.row None
+                [ Attr.paddingXY 20 30
+                , Attr.spacing 8
+                , Attr.alignLeft
+                , Attr.alignBottom
+                ]
+                [ El.text "Each"
+                , viewNodeBadge model from 25 []
+                , El.text "spawns a new"
+                , viewNodeBadge model to 25 []
+                ]
     in
         El.column None
             []
