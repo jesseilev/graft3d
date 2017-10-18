@@ -29,6 +29,7 @@ init : Flags -> ( Model, Cmd Msg )
 init flags =
     ( { time = 0
       , rootId = 0
+      , backgroundColor = Color.rgb 100 120 160
       , graph = Examples.graph1
       , examples = Examples.loadJson
       , editing = Just (Edge 0 1)
@@ -74,6 +75,9 @@ update msg model =
 
                         Edge from to ->
                             GraphEx.removeEdge from to
+
+                        _ ->
+                            identity
             in
                 { model | graph = graphUpdater model.graph } ! []
 
@@ -115,6 +119,16 @@ update msg model =
                     , focusedUi = NoElem
                 }
                     ! []
+
+        ChangeBackgroundColor hex ->
+            { model
+                | backgroundColor =
+                    Maybe.withDefault model.backgroundColor (hexToColor hex)
+            }
+                ! []
+
+        ChangeRootId id ->
+            { model | rootId = id } ! []
 
         ChangeColor id hex ->
             let

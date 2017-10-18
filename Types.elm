@@ -80,6 +80,7 @@ type alias Model =
     , graph : Graph
     , examples : List ( String, Graph )
     , rootId : Id
+    , backgroundColor : Color
     , editing : Maybe Editable
     , focusedUi : UiElement
     , device : El.Device
@@ -90,6 +91,7 @@ type alias Model =
 type Editable
     = Node Id
     | Edge Id Id
+    | GeneralSettings
 
 
 type UiElement
@@ -99,6 +101,7 @@ type UiElement
     | NewEdgeMenu
     | EditEdgeMenu
     | EditNodeShapeMenu
+    | EditRootMenu
     | WasdHelp
 
 
@@ -124,6 +127,8 @@ type
     | Delete Editable
     | NewNode Id
     | NewEdge Id Id
+    | ChangeBackgroundColor String
+    | ChangeRootId Id
     | ChangeColor Id String
     | ChangeOpacity Id Float
     | ChangeShape Id Shape

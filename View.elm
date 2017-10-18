@@ -110,12 +110,14 @@ viewNavbar model =
 viewDetailSidebar : Model -> Element
 viewDetailSidebar model =
     let
-        showDetails getGraphData viewDetailContent =
+        sidebar =
             El.sidebar Sidebar
                 [ Attr.height <| Attr.percent 100
                 , Attr.minWidth <| Attr.px 280
                 ]
-                [ El.whenJust (getGraphData model.graph) viewDetailContent ]
+
+        showDetails getGraphData viewDetailContent =
+            sidebar [ El.whenJust (getGraphData model.graph) viewDetailContent ]
     in
         case model.editing of
             Nothing ->
@@ -127,10 +129,20 @@ viewDetailSidebar model =
             Just (Types.Edge from to) ->
                 showDetails (GraphEx.getEdge from to) (viewEdgeDetail model)
 
+            Just GeneralSettings ->
+                sidebar [ viewGeneralSettingsDetail model ]
+
 
 viewNodeDetail : Model -> Node -> Element
 viewNodeDetail model node =
     let
+        inputWithLabel str input =
+            El.column None
+                []
+                [ El.row None [ Attr.paddingBottom 5 ] [ El.text str ]
+                , input
+                ]
+
         colorPicker =
             El.html
                 <| Html.input
@@ -179,13 +191,6 @@ viewNodeDetail model node =
                         ++ (MyStyles.opacitySlider node.label.color)
                     ]
                     []
-
-        inputWithLabel str input =
-            El.column None
-                []
-                [ El.row None [ Attr.paddingBottom 5 ] [ El.text str ]
-                , input
-                ]
     in
         El.column None
             [ Attr.spacing 20, Attr.padding 20 ]
@@ -288,6 +293,56 @@ viewEdgeDetail model edge =
                     ]
                     (El.text "Delete")
                 ]
+            ]
+
+
+viewGeneralSettingsDetail model =
+    let
+        inputWithLabel str input =
+            El.column None
+                []
+                [ El.row None [ Attr.paddingBottom 5 ] [ El.text str ]
+                , input
+                ]
+
+        colorPicker =
+            El.html
+                <| Html.input
+                    [ HtmlAttr.type_ "color"
+                    , HtmlAttr.value <| colorToHex model.backgroundColor
+                    , HtmlEvents.onInput ChangeBackgroundColor
+                    , HtmlAttr.style MyStyles.colorPicker
+                    ]
+                    []
+
+        rootNode =
+            Graph.get model.rootId model.graph
+                |> Maybe.map .node
+
+        rootMenu =
+            dropdown model
+                { viewHead =
+                    El.el SelectorItem
+                        [ Attr.padding 10
+                        , Attr.vary Selected <| model.focusedUi == EditRootMenu
+                        ]
+                        (El.whenJust rootNode <| \rn -> viewNodeBadge model rn 40 [])
+                , uiElement = EditRootMenu
+                , options = Graph.nodes model.graph
+                , viewOption =
+                    \n ->
+                        El.column None
+                            [ Attr.spacing 5, Attr.center ]
+                            [ El.text "Change to"
+                            , viewNodeBadge model n 40 []
+                            ]
+                , onClick = ChangeRootId << .id
+                }
+    in
+        El.column None
+            [ Attr.padding 20, Attr.spacing 20 ]
+            [ inputWithLabel "Background Color:" colorPicker
+            , inputWithLabel "Root Entity" rootMenu
             ]
 
 
@@ -410,6 +465,32 @@ viewSelectionSidebar model =
                         viewEdgeBadge model (Graph.Edge from to emptyTransformation)
                 , onClick = \( from, to ) -> NewEdge from to
                 }
+
+        skySelector =
+            let
+                skynode =
+                    Graph.Node -1
+                        { color = model.backgroundColor, opacity = 1, shape = Box }
+
+                skyEdge =
+                    Graph.Edge -1 model.rootId emptyTransformation
+            in
+                El.el SelectorItem
+                    [ Attr.padding 10
+                    , Events.onClick <| Edit GeneralSettings
+                    ]
+                    (viewNodeBadge model skynode 45 []
+                        |> El.within
+                            [ viewNodeBadge model
+                                (Graph.get model.rootId model.graph
+                                    |> MaybeEx.unwrap skynode .node
+                                )
+                                25
+                                [ Attr.alignRight
+                                , Attr.alignBottom
+                                ]
+                            ]
+                    )
     in
         El.sidebar Sidebar
             [ Attr.height <| Attr.percent 100
@@ -426,12 +507,16 @@ viewSelectionSidebar model =
                     )
                 , El.column None
                     []
-                    (List.map (viewEdgeSelector model) (Graph.edges model.graph)
-                        |> List.reverse
-                        |> flip (++) [ newEdgeMenu ]
+                    (List.concat
+                        [ [ skySelector ]
+                        , (List.map (viewEdgeSelector model) (Graph.edges model.graph)
+                            |> List.reverse
+                          )
+                        , [ newEdgeMenu ]
+                        ]
                     )
                 ]
-              --, viewSaveButton
+            , viewSaveButton
             ]
 
 
@@ -612,7 +697,7 @@ viewScene model =
                     "true"
             , HtmlAttr.attribute "fog"
                 <| "type: linear; density: 0.05; color: "
-                ++ (colorToHex backgroundColor)
+                ++ (colorToHex model.backgroundColor)
             , HtmlAttr.style [ "cursor" => "all-scroll" ]
             , HtmlEvents.onMouseDown <| ShowOrHideUi (Show WasdHelp)
             , HtmlEvents.onMouseUp <| ShowOrHideUi Hide
@@ -738,13 +823,10 @@ viewSaveButton =
         [ Events.onClick Save
         , Attr.alignBottom
         , Attr.center
+        , Attr.id "saveButton"
+        , Attr.hidden
         ]
         (El.text "Save")
-
-
-backgroundColor : Color.Color
-backgroundColor =
-    Color.rgb 100 120 160
 
 
 getShapePrimitive shape =
@@ -764,7 +846,7 @@ alphaChar id =
     String.toList "abcdefghijklmnopqrstuvwxyz"
         |> Array.fromList
         |> Array.get id
-        |> MaybeEx.unwrap "Z" String.fromChar
+        |> MaybeEx.unwrap "" String.fromChar
 
 
 uncurry3 : (a -> b -> c -> d) -> ( a, b, c ) -> d
