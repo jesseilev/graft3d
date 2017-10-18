@@ -30285,7 +30285,11 @@ var _user$project$View$viewScene = function (model) {
 				ctor: '::',
 				_0: A2(
 					_halfzebra$elm_aframe$AFrame_Primitives$sky,
-					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _halfzebra$elm_aframe$AFrame_Primitives_Attributes$color(model.backgroundColor),
+						_1: {ctor: '[]'}
+					},
 					{ctor: '[]'}),
 				_1: {
 					ctor: '::',

@@ -703,7 +703,8 @@ viewScene model =
             , HtmlEvents.onMouseUp <| ShowOrHideUi Hide
             ]
             (MaybeEx.toList rootEntityView
-                ++ [ sky [] []
+                ++ [ sky [ color model.backgroundColor ]
+                        []
                    , light
                         [ Light.type_ Light.Ambient
                         , position 20 100 0
