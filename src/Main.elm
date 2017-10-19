@@ -84,7 +84,7 @@ update msg model =
         NewNode from ->
             let
                 entity =
-                    { color = Color.greyscale 0.75, opacity = 0.75, shape = Box }
+                    { color = Color.greyscale 0.65, opacity = 0.75, shape = Sphere }
 
                 nextId =
                     Graph.nodeIdRange model.graph
