@@ -46,9 +46,44 @@ root model =
 
         childViews =
             reverseIfPhone
-                [ viewSelectionSidebar model
-                , viewDetailSidebar model
+                [ El.column Sidebar
+                    [ Attr.paddingXY 0 0 ]
+                    [ newproject
+                    , El.hairline Hairline
+                    , El.row None
+                        []
+                        [ viewSelectionSidebar model
+                        , viewDetailSidebar model
+                        ]
+                    ]
                 , viewSceneContainer model
+                ]
+
+        newproject =
+            El.row None
+                [ Attr.padding 10 ]
+                [ El.el None
+                    [ Attr.padding 10 ]
+                    <| El.el Button
+                        [ Attr.padding 10
+                        , Events.onClick NewProject
+                        ]
+                        (El.text "New")
+                , dropdown model
+                    { viewHead =
+                        El.el SelectorItem
+                            [ Attr.padding 10
+                            , Attr.vary Selected <| model.focusedUi == NewProjectMenu
+                            ]
+                            <| El.el Button
+                                [ Attr.padding 10, Attr.center ]
+                                (El.text "Examples")
+                    , uiElement = NewProjectMenu
+                    , options = model.examples
+                    , viewOption = \( title, _ ) -> El.el None [ Attr.padding 10 ] <| El.text title
+                    , onClick = \( title, _ ) -> Load title
+                    , orientation = Vertical
+                    }
                 ]
     in
         El.viewport MyStyles.stylesheet
@@ -84,7 +119,7 @@ viewNavbar model =
             [ El.el Header [ Attr.vary Title True ] (El.text "Graft3D")
             , El.navigation None
                 [ Attr.padding 0, Attr.spacing 0, Attr.verticalCenter ]
-                { name = "Graft 3D"
+                { name = "Graft.ink"
                 , options =
                     [ --dropdown model
                       --    { viewHead = navlink "Examples"
@@ -94,13 +129,13 @@ viewNavbar model =
                       --        \title ->
                       --    , onClick = Load
                       --    }
-                      navlink "Examples"
-                        "#"
-                        [ Events.onMouseEnter <| ShowOrHideUi (Show ExamplesMenu)
-                        , Events.onMouseLeave <| ShowOrHideUi Hide
-                        ]
-                        |> El.below [ viewExamplesMenu model ]
-                    , navlink "Graft2D" "https://jesseilev.github.io/graft" []
+                      --navlink "Examples"
+                      --  "#"
+                      --  [ Events.onMouseEnter <| ShowOrHideUi (Show ExamplesMenu)
+                      --  , Events.onMouseLeave <| ShowOrHideUi Hide
+                      --  ]
+                      --  |> El.below [ viewExamplesMenu model ]
+                      navlink "Graft2D" "https://jesseilev.github.io/graft" []
                     , navlink "Github" "https://github.com/jesseilev/graft3d" []
                     ]
                 }
@@ -160,7 +195,7 @@ viewNodeDetail model node =
                         [ Attr.padding 10
                         , Attr.vary Selected (model.focusedUi == EditNodeShapeMenu)
                         ]
-                        (El.el NewButton
+                        (El.el Button
                             [ Attr.padding 10 ]
                             (El.text <| toString node.label.shape)
                         )
@@ -169,6 +204,7 @@ viewNodeDetail model node =
                 , viewOption =
                     \shape -> El.el None [ Attr.padding 10 ] <| El.text (toString shape)
                 , onClick = ChangeShape node.id
+                , orientation = Horizontal
                 }
 
         createMsg : (String -> Result err a) -> (Id -> a -> Msg) -> String -> Msg
@@ -198,11 +234,12 @@ viewNodeDetail model node =
             , inputWithLabel "Opacity:" opacitySlider
             , inputWithLabel "Shape:" shapePicker
             , El.hairline Hairline
-            , El.button DeleteButton
+            , El.button Button
                 [ Attr.height <| Attr.px 50
                 , Attr.width <| Attr.px 100
                 , Events.onClick <| Delete (Node node.id)
                 , hideUnless (node.id /= model.rootId)
+                  --, Attr.vary Delete True
                 ]
                 (El.text "Delete")
             ]
@@ -256,6 +293,7 @@ viewEdgeDetail model edge =
                             ]
                 , onClick =
                     \( from, to ) -> EdgeFromTo edge.from edge.to from to
+                , orientation = Horizontal
                 }
 
         description ( from, to ) =
@@ -286,10 +324,11 @@ viewEdgeDetail model edge =
                 , El.hairline Hairline
                 , sliderTriplet "Rotate" "around axis:" Rotation
                 , El.hairline Hairline
-                , El.button DeleteButton
+                , El.button Button
                     [ Attr.height <| Attr.px 50
                     , Attr.width <| Attr.px 100
                     , Events.onClick <| Delete (Edge edge.from edge.to)
+                    , Attr.vary DeleteButton True
                     ]
                     (El.text "Delete")
                 ]
@@ -337,6 +376,7 @@ viewGeneralSettingsDetail model =
                             , viewNodeBadge model n 40 []
                             ]
                 , onClick = ChangeRootId << .id
+                , orientation = Horizontal
                 }
     in
         El.column None
@@ -425,11 +465,14 @@ viewSelectionSidebar model =
                 [ Attr.padding 10
                 , Attr.vary Selected (model.focusedUi == menuType)
                 ]
-                (El.el NewButton
+                (El.el Button
                     [ Attr.width <| Attr.px size
                     , Attr.height <| Attr.px size
                     ]
-                    (El.el None [ Attr.verticalCenter, Attr.center ] <| El.text "+")
+                    (El.el None
+                        [ Attr.verticalCenter, Attr.center, Attr.vary NewButton True ]
+                        <| El.text "+"
+                    )
                 )
 
         ( _, maxId ) =
@@ -451,6 +494,7 @@ viewSelectionSidebar model =
                             , viewNodeBadge model n 30 []
                             ]
                 , onClick = \n -> NewNode n.id
+                , orientation = Horizontal
                 }
 
         newEdgeMenu =
@@ -464,6 +508,7 @@ viewSelectionSidebar model =
                     \( from, to ) ->
                         viewEdgeBadge model (Graph.Edge from to emptyTransformation)
                 , onClick = \( from, to ) -> NewEdge from to
+                , orientation = Horizontal
                 }
 
         skySelector =
@@ -478,6 +523,7 @@ viewSelectionSidebar model =
                 El.el SelectorItem
                     [ Attr.padding 10
                     , Events.onClick <| Edit GeneralSettings
+                    , Attr.vary Selected <| model.editing == Just GeneralSettings
                     ]
                     (viewNodeBadge model skynode 45 []
                         |> El.within
@@ -495,28 +541,32 @@ viewSelectionSidebar model =
         El.sidebar Sidebar
             [ Attr.height <| Attr.percent 100
               -- , Attr.paddingTop 20
-            , Attr.paddingXY 6 20
+              --, Attr.paddingXY 6 20
+            , Attr.padding 10
             , Attr.spacing 6
             ]
-            [ El.row None
-                [ Attr.spacing 10 ]
-                [ El.column None
-                    []
-                    (List.map (viewNodeSelector model) (Graph.nodes model.graph)
-                        ++ [ newNodeMenu ]
-                    )
-                , El.column None
-                    []
-                    (List.concat
-                        [ [ skySelector ]
-                        , (List.map (viewEdgeSelector model) (Graph.edges model.graph)
-                            |> List.reverse
-                          )
-                        , [ newEdgeMenu ]
-                        ]
-                    )
+            [ El.column None
+                [ Attr.spacing 20 ]
+                [ El.row None
+                    [ Attr.spacing 10 ]
+                    [ El.column None
+                        []
+                        (List.map (viewNodeSelector model) (Graph.nodes model.graph)
+                            ++ [ newNodeMenu ]
+                        )
+                    , El.column None
+                        []
+                        (List.concat
+                            [ [ skySelector ]
+                            , (List.map (viewEdgeSelector model) (Graph.edges model.graph)
+                                |> List.reverse
+                              )
+                            , [ newEdgeMenu ]
+                            ]
+                        )
+                    ]
+                , viewSaveButton
                 ]
-            , viewSaveButton
             ]
 
 
@@ -526,7 +576,13 @@ type alias DropdownConfig a =
     , options : List a
     , viewOption : a -> Element
     , onClick : a -> Msg
+    , orientation : Orientation
     }
+
+
+type Orientation
+    = Horizontal
+    | Vertical
 
 
 dropdown : Model -> DropdownConfig a -> Element
@@ -541,7 +597,12 @@ dropdown model config =
                 [ Attr.inlineStyle <| MyStyles.zIndex 10
                 , hideUnless <| model.focusedUi == config.uiElement
                 ]
-                (El.row None
+                ((if config.orientation == Horizontal then
+                    El.row
+                  else
+                    El.column
+                 )
+                    None
                     [ Attr.width <| Attr.percent 100 ]
                     (List.map
                         (\item ->
@@ -820,7 +881,7 @@ viewNoWebGLNotification =
 
 viewSaveButton : Element
 viewSaveButton =
-    El.button NewButton
+    El.button Button
         [ Events.onClick Save
         , Attr.alignBottom
         , Attr.center

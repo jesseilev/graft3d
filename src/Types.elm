@@ -102,6 +102,7 @@ type UiElement
     | EditEdgeMenu
     | EditNodeShapeMenu
     | EditRootMenu
+    | NewProjectMenu
     | WasdHelp
 
 
@@ -135,6 +136,7 @@ type
     | ChangeTransformation TransformAttribute XYorZ Id Id Float
     | EdgeFromTo Id Id Id Id
       -- META
+    | NewProject
     | Save
     | Load String
     | ShowOrHideUi UiAppearence

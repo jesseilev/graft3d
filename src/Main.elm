@@ -83,16 +83,13 @@ update msg model =
 
         NewNode from ->
             let
-                entity =
-                    { color = Color.greyscale 0.65, opacity = 0.75, shape = Sphere }
-
                 nextId =
                     Graph.nodeIdRange model.graph
                         |> Maybe.map (Tuple.second >> ((+) 1))
                         |> Maybe.withDefault 0
 
                 node =
-                    { id = nextId, label = entity }
+                    { id = nextId, label = basicEntity }
 
                 newModel =
                     { model | graph = GraphEx.insertNode node model.graph }
@@ -165,6 +162,13 @@ update msg model =
             in
                 { model | graph = newGraph, editing = Just (Edge newFrom newTo) } ! []
 
+        NewProject ->
+            { model
+                | graph = Graph.fromNodesAndEdges [ Graph.Node 0 basicEntity ] []
+                , editing = Just (Node 0)
+            }
+                ! []
+
         Save ->
             let
                 json =
@@ -206,6 +210,10 @@ update msg model =
 
         _ ->
             model ! []
+
+
+basicEntity =
+    { color = Color.greyscale 0.65, opacity = 0.75, shape = Sphere }
 
 
 updateNode model id updaterFunc =

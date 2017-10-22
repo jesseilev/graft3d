@@ -21,8 +21,7 @@ type Style
     | NavLink
     | Badge
     | Hairline
-    | DeleteButton
-    | NewButton
+    | Button
     | Dropdown
     | DropdownItem
     | PropertyLabel
@@ -33,6 +32,8 @@ type Variation
     = Selected
     | NavMenu
     | Title
+    | DeleteButton
+    | NewButton
 
 
 stylesheet : StyleSheet Style Variation
@@ -104,17 +105,23 @@ stylesheet =
             [ Color.border <| Color.rgba 0 0 0 0.1
             , Border.bottom 1
             ]
-        , Style.style DeleteButton
+        , Style.style Button
             [ Border.rounded 2
             , Border.all 0
+            , Style.cursor "pointer"
             , Color.background <| Color.greyscale 0.2
-            , Color.text deleteRed
+            , Color.text Color.white
             , Shadow.deep
             , Style.hover [ Color.background <| Color.greyscale 0.25 ]
             , Style.pseudo "active"
                 [ Shadow.box noShadow
                 , Color.background <| Color.greyscale 0.3
                 ]
+            , Style.variation DeleteButton
+                [ Color.text deleteRed
+                ]
+            , Style.variation NewButton
+                [ Color.text <| Color.rgb 0 255 255 ]
             , Font.typeface
                 [ Font.font "Gill Sans"
                 , Font.font "Trebuchet MS"
@@ -123,18 +130,18 @@ stylesheet =
                 ]
               --, Font.light
             ]
-        , Style.style NewButton
-            [ Border.rounded 2
-            , Shadow.simple
-            , Border.all 0
-            , Color.text Color.white
-            , Color.background <| Color.greyscale 0.4
-              --, Style.hover [ Color.background <| Color.greyscale 0.25 ]
-              --, Style.pseudo "active"
-              --    [ Color.background <| Color.greyscale 0.3
-              --    , Shadow.box noShadow
-              --    ]
-            ]
+          --, Style.style NewButton
+          --    [ Border.rounded 2
+          --    , Shadow.simple
+          --    , Border.all 0
+          --    , Color.text Color.white
+          --    , Color.background <| Color.greyscale 0.4
+          --      --, Style.hover [ Color.background <| Color.greyscale 0.25 ]
+          --      --, Style.pseudo "active"
+          --      --    [ Color.background <| Color.greyscale 0.3
+          --      --    , Shadow.box noShadow
+          --      --    ]
+          --    ]
         , Style.style Dropdown
             [ Color.background <| Color.greyscale 0.75
             , Shadow.deep
