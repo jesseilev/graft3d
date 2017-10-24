@@ -66,7 +66,7 @@ stylesheet =
                 }
             ]
         , Style.style SelectorItem
-            [ Color.background Color.lightGrey
+            [ Color.background <| Color.rgba 0 0 0 0
             , Style.hover [ Color.background Color.grey ]
             , Style.variation Selected
                 [ Color.background <| Color.greyscale 0.7

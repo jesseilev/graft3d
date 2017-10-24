@@ -41,7 +41,7 @@ root model =
         sidebar =
             El.column Sidebar
                 [ Attr.paddingXY 0 0 ]
-                [ newproject
+                [ newProject
                 , El.hairline Hairline
                 , El.row None
                     []
@@ -55,13 +55,14 @@ root model =
                 :: ([ sidebar ] |> unless model.device.phone [ El.empty ])
                 |> List.reverse
 
-        newproject =
+        newProject =
             El.row None
-                [ Attr.padding 10 ]
+                [ Attr.paddingXY 10 4, Attr.spacing 4 ]
                 [ El.el None
-                    [ Attr.padding 10 ]
+                    [ Attr.padding 0 ]
                     <| El.el Button
                         [ Attr.padding 10
+                        , Attr.verticalCenter
                         , Events.onClick NewProject
                         ]
                         (El.text "New")
@@ -230,7 +231,7 @@ viewNodeDetail model node =
                 , Attr.width <| Attr.px 100
                 , Events.onClick <| Delete (Node node.id)
                 , hideUnless (node.id /= model.rootId)
-                , Attr.vary Delete True
+                  --, Attr.vary DeleteButton True
                 ]
                 (El.text "Delete")
             ]
