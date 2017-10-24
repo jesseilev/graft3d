@@ -34,6 +34,7 @@ init flags =
       , examples = Examples.loadJson
       , editing = Just (Edge 0 1)
       , focusedUi = NoElem
+      , vrMode = False
       , device = El.classifyDevice (Window.Size 0 0) |> Debug.log "init size"
       , webGLSupport = flags.webGLSupport
       }

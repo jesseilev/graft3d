@@ -55,6 +55,9 @@ type Shape
     = Box
     | Sphere
     | Cylinder
+    | Cone
+    | Circle
+    | Ring
 
 
 type alias Transformation =
@@ -84,6 +87,7 @@ type alias Model =
     , editing : Maybe Editable
     , focusedUi : UiElement
     , device : El.Device
+    , vrMode : Bool
     , webGLSupport : Bool
     }
 
@@ -456,6 +460,15 @@ shapeFromString str =
 
         "Cylinder" ->
             Ok Cylinder
+
+        "Cone" ->
+            Ok Cone
+
+        "Circle" ->
+            Ok Circle
+
+        "Ring" ->
+            Ok Ring
 
         _ ->
             Err ("I don't recognize this shape name: " ++ str)

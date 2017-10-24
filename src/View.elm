@@ -38,26 +38,22 @@ type alias Element =
 root : Model -> Html Msg
 root model =
     let
-        reverseIfPhone =
-            if model.device.phone then
-                List.reverse
-            else
-                identity
+        sidebar =
+            El.column Sidebar
+                [ Attr.paddingXY 0 0 ]
+                [ newproject
+                , El.hairline Hairline
+                , El.row None
+                    []
+                    [ viewSelectionSidebar model
+                    , viewDetailSidebar model
+                    ]
+                ]
 
         childViews =
-            reverseIfPhone
-                [ El.column Sidebar
-                    [ Attr.paddingXY 0 0 ]
-                    [ newproject
-                    , El.hairline Hairline
-                    , El.row None
-                        []
-                        [ viewSelectionSidebar model
-                        , viewDetailSidebar model
-                        ]
-                    ]
-                , viewSceneContainer model
-                ]
+            viewSceneContainer model
+                :: ([ sidebar ] |> unless model.device.phone [ El.empty ])
+                |> List.reverse
 
         newproject =
             El.row None
@@ -95,7 +91,8 @@ root model =
                        else
                         NoOp
                 ]
-                [ viewNavbar model |> El.when (model.device.phone == False)
+                [ viewNavbar model
+                    |> unless (model.device.phone && not model.device.portrait) El.empty
                 , El.row None
                     [ Attr.width Attr.fill
                     , Attr.height Attr.fill
@@ -107,35 +104,27 @@ root model =
 viewNavbar : Model -> Element
 viewNavbar model =
     let
+        padding =
+            if model.device.phone then
+                10
+            else
+                20
+
         navlink text href attrs =
             El.el NavLink
                 (attrs)
                 (El.link href
-                    <| El.el NavLink [ Attr.paddingXY 10 24 ] (El.text text)
+                    <| El.el NavLink [ Attr.paddingXY 10 padding ] (El.text text)
                 )
     in
         El.row Nav
-            [ Attr.spread, Attr.paddingXY 20 0, Attr.verticalCenter ]
-            [ El.el Header [ Attr.vary Title True ] (El.text "Graft3D")
+            [ Attr.spread, Attr.paddingXY padding 0, Attr.verticalCenter ]
+            [ El.el Header [ Attr.vary Title True ] (El.text "Graft")
             , El.navigation None
                 [ Attr.padding 0, Attr.spacing 0, Attr.verticalCenter ]
-                { name = "Graft.ink"
+                { name = ""
                 , options =
-                    [ --dropdown model
-                      --    { viewHead = navlink "Examples"
-                      --    , uiElement = ExamplesMenu
-                      --    , options =
-                      --    , viewOption =
-                      --        \title ->
-                      --    , onClick = Load
-                      --    }
-                      --navlink "Examples"
-                      --  "#"
-                      --  [ Events.onMouseEnter <| ShowOrHideUi (Show ExamplesMenu)
-                      --  , Events.onMouseLeave <| ShowOrHideUi Hide
-                      --  ]
-                      --  |> El.below [ viewExamplesMenu model ]
-                      navlink "Graft2D" "https://jesseilev.github.io/graft" []
+                    [ navlink "Graft2D" "https://jesseilev.github.io/graft" []
                     , navlink "Github" "https://github.com/jesseilev/graft3d" []
                     ]
                 }
@@ -148,7 +137,7 @@ viewDetailSidebar model =
         sidebar =
             El.sidebar Sidebar
                 [ Attr.height <| Attr.percent 100
-                , Attr.minWidth <| Attr.px 280
+                , Attr.minWidth <| Attr.px 270
                 ]
 
         showDetails getGraphData viewDetailContent =
@@ -200,7 +189,9 @@ viewNodeDetail model node =
                             (El.text <| toString node.label.shape)
                         )
                 , uiElement = EditNodeShapeMenu
-                , options = [ Box, Sphere, Cylinder ]
+                , options =
+                    [ Box, Sphere, Cylinder ]
+                    --, Cone, Circle, Ring ]
                 , viewOption =
                     \shape -> El.el None [ Attr.padding 10 ] <| El.text (toString shape)
                 , onClick = ChangeShape node.id
@@ -239,7 +230,7 @@ viewNodeDetail model node =
                 , Attr.width <| Attr.px 100
                 , Events.onClick <| Delete (Node node.id)
                 , hideUnless (node.id /= model.rootId)
-                  --, Attr.vary Delete True
+                , Attr.vary Delete True
                 ]
                 (El.text "Delete")
             ]
@@ -382,7 +373,7 @@ viewGeneralSettingsDetail model =
         El.column None
             [ Attr.padding 20, Attr.spacing 20 ]
             [ inputWithLabel "Background Color:" colorPicker
-            , inputWithLabel "Root Entity" rootMenu
+            , inputWithLabel "Lucy:" rootMenu
             ]
 
 
@@ -776,10 +767,8 @@ viewScene model =
                         , position 200 200 200
                         ]
                         []
-                   , camera [ position 0 0 10 ]
-                        [-- cursor
-                         --     [ Cursor.fuse True, Cursor.timeout 1 ]
-                         --     [ sphere [ radius 0.00 ] [] ]
+                   , entity [ position 0 0 10 ]
+                        [ camera [] []
                         ]
                    ]
             )
@@ -901,6 +890,15 @@ getShapePrimitive shape =
 
         Cylinder ->
             Primitives.cylinder
+
+        Cone ->
+            Primitives.cone
+
+        Circle ->
+            Primitives.circle
+
+        Ring ->
+            Primitives.ring
 
 
 alphaChar : Id -> String

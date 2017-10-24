@@ -28649,10 +28649,27 @@ var _user$project$Types$Animated = F3(
 	function (a, b, c) {
 		return {data: a, animate: b, isAnimating: c};
 	});
-var _user$project$Types$Model = F9(
-	function (a, b, c, d, e, f, g, h, i) {
-		return {time: a, graph: b, examples: c, rootId: d, backgroundColor: e, editing: f, focusedUi: g, device: h, webGLSupport: i};
-	});
+var _user$project$Types$Model = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return {time: a, graph: b, examples: c, rootId: d, backgroundColor: e, editing: f, focusedUi: g, device: h, vrMode: i, webGLSupport: j};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
 var _user$project$Types$TransformUtils = F4(
 	function (a, b, c, d) {
 		return {edgeLens: a, min: b, max: c, step: d};
@@ -28672,6 +28689,9 @@ var _user$project$Types$AlmostGraph = F2(
 	function (a, b) {
 		return {nodes: a, edges: b};
 	});
+var _user$project$Types$Ring = {ctor: 'Ring'};
+var _user$project$Types$Circle = {ctor: 'Circle'};
+var _user$project$Types$Cone = {ctor: 'Cone'};
 var _user$project$Types$Cylinder = {ctor: 'Cylinder'};
 var _user$project$Types$Sphere = {ctor: 'Sphere'};
 var _user$project$Types$Box = {ctor: 'Box'};
@@ -28684,6 +28704,12 @@ var _user$project$Types$shapeFromString = function (str) {
 			return _elm_lang$core$Result$Ok(_user$project$Types$Sphere);
 		case 'Cylinder':
 			return _elm_lang$core$Result$Ok(_user$project$Types$Cylinder);
+		case 'Cone':
+			return _elm_lang$core$Result$Ok(_user$project$Types$Cone);
+		case 'Circle':
+			return _elm_lang$core$Result$Ok(_user$project$Types$Circle);
+		case 'Ring':
+			return _elm_lang$core$Result$Ok(_user$project$Types$Ring);
 		default:
 			return _elm_lang$core$Result$Err(
 				A2(_elm_lang$core$Basics_ops['++'], 'I don\'t recognize this shape name: ', str));
@@ -29978,8 +30004,14 @@ var _user$project$View$getShapePrimitive = function (shape) {
 			return _halfzebra$elm_aframe$AFrame_Primitives$box;
 		case 'Sphere':
 			return _halfzebra$elm_aframe$AFrame_Primitives$sphere;
+		case 'Cylinder':
+			return _halfzebra$elm_aframe$AFrame_Primitives$tetrahedron;
+		case 'Cone':
+			return _halfzebra$elm_aframe$AFrame_Primitives$cone;
+		case 'Circle':
+			return _halfzebra$elm_aframe$AFrame_Primitives$circle;
 		default:
-			return _halfzebra$elm_aframe$AFrame_Primitives$cylinder;
+			return _halfzebra$elm_aframe$AFrame_Primitives$ring;
 	}
 };
 var _user$project$View$viewSaveButton = A3(
@@ -30324,13 +30356,20 @@ var _user$project$View$viewScene = function (model) {
 						_1: {
 							ctor: '::',
 							_0: A2(
-								_halfzebra$elm_aframe$AFrame_Primitives_Camera$camera,
+								_halfzebra$elm_aframe$AFrame$entity,
 								{
 									ctor: '::',
 									_0: A3(_halfzebra$elm_aframe$AFrame_Primitives_Attributes$position, 0, 0, 10),
 									_1: {ctor: '[]'}
 								},
-								{ctor: '[]'}),
+								{
+									ctor: '::',
+									_0: A2(
+										_halfzebra$elm_aframe$AFrame_Primitives_Camera$camera,
+										{ctor: '[]'},
+										{ctor: '[]'}),
+									_1: {ctor: '[]'}
+								}),
 							_1: {ctor: '[]'}
 						}
 					}
@@ -30816,95 +30855,6 @@ var _user$project$View$msgFromString = F3(
 				constructMsg,
 				convertString(str)));
 	});
-var _user$project$View$viewNavbar = function (model) {
-	var navlink = F3(
-		function (text, href, attrs) {
-			return A3(
-				_mdgriffith$style_elements$Element$el,
-				_user$project$MyStyles$NavLink,
-				attrs,
-				A2(
-					_mdgriffith$style_elements$Element$link,
-					href,
-					A3(
-						_mdgriffith$style_elements$Element$el,
-						_user$project$MyStyles$NavLink,
-						{
-							ctor: '::',
-							_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 10, 24),
-							_1: {ctor: '[]'}
-						},
-						_mdgriffith$style_elements$Element$text(text))));
-		});
-	return A3(
-		_mdgriffith$style_elements$Element$row,
-		_user$project$MyStyles$Nav,
-		{
-			ctor: '::',
-			_0: _mdgriffith$style_elements$Element_Attributes$spread,
-			_1: {
-				ctor: '::',
-				_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 20, 0),
-				_1: {
-					ctor: '::',
-					_0: _mdgriffith$style_elements$Element_Attributes$verticalCenter,
-					_1: {ctor: '[]'}
-				}
-			}
-		},
-		{
-			ctor: '::',
-			_0: A3(
-				_mdgriffith$style_elements$Element$el,
-				_user$project$MyStyles$Header,
-				{
-					ctor: '::',
-					_0: A2(_mdgriffith$style_elements$Element_Attributes$vary, _user$project$MyStyles$Title, true),
-					_1: {ctor: '[]'}
-				},
-				_mdgriffith$style_elements$Element$text('Graft3D')),
-			_1: {
-				ctor: '::',
-				_0: A3(
-					_mdgriffith$style_elements$Element$navigation,
-					_user$project$MyStyles$None,
-					{
-						ctor: '::',
-						_0: _mdgriffith$style_elements$Element_Attributes$padding(0),
-						_1: {
-							ctor: '::',
-							_0: _mdgriffith$style_elements$Element_Attributes$spacing(0),
-							_1: {
-								ctor: '::',
-								_0: _mdgriffith$style_elements$Element_Attributes$verticalCenter,
-								_1: {ctor: '[]'}
-							}
-						}
-					},
-					{
-						name: 'Graft.ink',
-						options: {
-							ctor: '::',
-							_0: A3(
-								navlink,
-								'Graft2D',
-								'https://jesseilev.github.io/graft',
-								{ctor: '[]'}),
-							_1: {
-								ctor: '::',
-								_0: A3(
-									navlink,
-									'Github',
-									'https://github.com/jesseilev/graft3d',
-									{ctor: '[]'}),
-								_1: {ctor: '[]'}
-							}
-						}
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
-};
 var _user$project$View$DropdownConfig = F6(
 	function (a, b, c, d, e, f) {
 		return {viewHead: a, uiElement: b, options: c, viewOption: d, onClick: e, orientation: f};
@@ -30978,18 +30928,220 @@ var _user$project$View$dropdown = F2(
 				},
 				config.viewHead));
 	});
+var _user$project$View$viewNavbar = function (model) {
+	var newproject = A3(
+		_mdgriffith$style_elements$Element$row,
+		_user$project$MyStyles$None,
+		{
+			ctor: '::',
+			_0: _mdgriffith$style_elements$Element_Attributes$padding(0),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A3(
+				_mdgriffith$style_elements$Element$el,
+				_user$project$MyStyles$None,
+				{
+					ctor: '::',
+					_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 10, 0),
+					_1: {ctor: '[]'}
+				},
+				A3(
+					_mdgriffith$style_elements$Element$el,
+					_user$project$MyStyles$Button,
+					{
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$padding(10),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$style_elements$Element_Events$onClick(_user$project$Types$NewProject),
+							_1: {ctor: '[]'}
+						}
+					},
+					_mdgriffith$style_elements$Element$text('New'))),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_user$project$View$dropdown,
+					model,
+					{
+						viewHead: A3(
+							_mdgriffith$style_elements$Element$el,
+							_user$project$MyStyles$SelectorItem,
+							{
+								ctor: '::',
+								_0: _mdgriffith$style_elements$Element_Attributes$padding(10),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_mdgriffith$style_elements$Element_Attributes$vary,
+										_user$project$MyStyles$Selected,
+										_elm_lang$core$Native_Utils.eq(model.focusedUi, _user$project$Types$NewProjectMenu)),
+									_1: {ctor: '[]'}
+								}
+							},
+							A3(
+								_mdgriffith$style_elements$Element$el,
+								_user$project$MyStyles$Button,
+								{
+									ctor: '::',
+									_0: _mdgriffith$style_elements$Element_Attributes$padding(10),
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$style_elements$Element_Attributes$center,
+										_1: {ctor: '[]'}
+									}
+								},
+								_mdgriffith$style_elements$Element$text('Examples'))),
+						uiElement: _user$project$Types$NewProjectMenu,
+						options: model.examples,
+						viewOption: function (_p9) {
+							var _p10 = _p9;
+							return A3(
+								_mdgriffith$style_elements$Element$el,
+								_user$project$MyStyles$None,
+								{
+									ctor: '::',
+									_0: _mdgriffith$style_elements$Element_Attributes$padding(10),
+									_1: {ctor: '[]'}
+								},
+								_mdgriffith$style_elements$Element$text(_p10._0));
+						},
+						onClick: function (_p11) {
+							var _p12 = _p11;
+							return _user$project$Types$Load(_p12._0);
+						},
+						orientation: _user$project$View$Vertical
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+	var padding = model.device.phone ? 10 : 20;
+	var navlink = F3(
+		function (text, href, attrs) {
+			return A3(
+				_mdgriffith$style_elements$Element$el,
+				_user$project$MyStyles$NavLink,
+				attrs,
+				A2(
+					_mdgriffith$style_elements$Element$link,
+					href,
+					A3(
+						_mdgriffith$style_elements$Element$el,
+						_user$project$MyStyles$NavLink,
+						{
+							ctor: '::',
+							_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 10, padding),
+							_1: {ctor: '[]'}
+						},
+						_mdgriffith$style_elements$Element$text(text))));
+		});
+	return A3(
+		_mdgriffith$style_elements$Element$column,
+		_user$project$MyStyles$None,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A3(
+				_mdgriffith$style_elements$Element$row,
+				_user$project$MyStyles$Nav,
+				{
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Attributes$spread,
+					_1: {
+						ctor: '::',
+						_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, padding, 0),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$style_elements$Element_Attributes$verticalCenter,
+							_1: {ctor: '[]'}
+						}
+					}
+				},
+				{
+					ctor: '::',
+					_0: A3(
+						_mdgriffith$style_elements$Element$el,
+						_user$project$MyStyles$Header,
+						{
+							ctor: '::',
+							_0: A2(_mdgriffith$style_elements$Element_Attributes$vary, _user$project$MyStyles$Title, true),
+							_1: {ctor: '[]'}
+						},
+						_mdgriffith$style_elements$Element$text('Graft')),
+					_1: {
+						ctor: '::',
+						_0: A3(
+							_mdgriffith$style_elements$Element$navigation,
+							_user$project$MyStyles$None,
+							{
+								ctor: '::',
+								_0: _mdgriffith$style_elements$Element_Attributes$padding(0),
+								_1: {
+									ctor: '::',
+									_0: _mdgriffith$style_elements$Element_Attributes$spacing(0),
+									_1: {
+										ctor: '::',
+										_0: _mdgriffith$style_elements$Element_Attributes$verticalCenter,
+										_1: {ctor: '[]'}
+									}
+								}
+							},
+							{
+								name: '',
+								options: {
+									ctor: '::',
+									_0: A3(
+										navlink,
+										'Graft2D',
+										'https://jesseilev.github.io/graft',
+										{ctor: '[]'}),
+									_1: {
+										ctor: '::',
+										_0: A3(
+											navlink,
+											'Github',
+											'https://github.com/jesseilev/graft3d',
+											{ctor: '[]'}),
+										_1: {ctor: '[]'}
+									}
+								}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A3(
+					_mdgriffith$style_elements$Element$row,
+					_user$project$MyStyles$Sidebar,
+					{
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$padding(0),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: newproject,
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
 var _user$project$View$viewNodeDetail = F2(
 	function (model, node) {
 		var createMsg = F2(
 			function (convertString, msgConstructor) {
-				return function (_p9) {
+				return function (_p13) {
 					return A2(
 						_elm_lang$core$Result$withDefault,
 						_user$project$Types$NoOp,
 						A2(
 							_elm_lang$core$Result$map,
 							msgConstructor(node.id),
-							convertString(_p9)));
+							convertString(_p13)));
 				};
 			});
 		var opacitySlider = _mdgriffith$style_elements$Element$html(
@@ -31070,7 +31222,19 @@ var _user$project$View$viewNodeDetail = F2(
 						_1: {
 							ctor: '::',
 							_0: _user$project$Types$Cylinder,
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: _user$project$Types$Cone,
+								_1: {
+									ctor: '::',
+									_0: _user$project$Types$Circle,
+									_1: {
+										ctor: '::',
+										_0: _user$project$Types$Ring,
+										_1: {ctor: '[]'}
+									}
+								}
+							}
 						}
 					}
 				},
@@ -31186,7 +31350,11 @@ var _user$project$View$viewNodeDetail = F2(
 													ctor: '::',
 													_0: _user$project$View$hideUnless(
 														!_elm_lang$core$Native_Utils.eq(node.id, model.rootId)),
-													_1: {ctor: '[]'}
+													_1: {
+														ctor: '::',
+														_0: A2(_mdgriffith$style_elements$Element_Attributes$vary, _user$project$MyStyles$DeleteButton, true),
+														_1: {ctor: '[]'}
+													}
 												}
 											}
 										}
@@ -31201,8 +31369,8 @@ var _user$project$View$viewNodeDetail = F2(
 	});
 var _user$project$View$viewEdgeDetail = F2(
 	function (model, edge) {
-		var description = function (_p10) {
-			var _p11 = _p10;
+		var description = function (_p14) {
+			var _p15 = _p14;
 			return A3(
 				_mdgriffith$style_elements$Element$row,
 				_user$project$MyStyles$None,
@@ -31231,7 +31399,7 @@ var _user$project$View$viewEdgeDetail = F2(
 						_0: A4(
 							_user$project$View$viewNodeBadge,
 							model,
-							_p11._0,
+							_p15._0,
 							25,
 							{ctor: '[]'}),
 						_1: {
@@ -31242,7 +31410,7 @@ var _user$project$View$viewEdgeDetail = F2(
 								_0: A4(
 									_user$project$View$viewNodeBadge,
 									model,
-									_p11._1,
+									_p15._1,
 									25,
 									{ctor: '[]'}),
 								_1: {ctor: '[]'}
@@ -31275,14 +31443,14 @@ var _user$project$View$viewEdgeDetail = F2(
 				});
 		};
 		var fromToNodes = function () {
-			var _p12 = {
+			var _p16 = {
 				ctor: '_Tuple2',
 				_0: A2(_elm_community$graph$Graph$get, edge.from, model.graph),
 				_1: A2(_elm_community$graph$Graph$get, edge.to, model.graph)
 			};
-			if (((_p12.ctor === '_Tuple2') && (_p12._0.ctor === 'Just')) && (_p12._1.ctor === 'Just')) {
+			if (((_p16.ctor === '_Tuple2') && (_p16._0.ctor === 'Just')) && (_p16._1.ctor === 'Just')) {
 				return _elm_lang$core$Maybe$Just(
-					{ctor: '_Tuple2', _0: _p12._0._0.node, _1: _p12._1._0.node});
+					{ctor: '_Tuple2', _0: _p16._0._0.node, _1: _p16._1._0.node});
 			} else {
 				return _elm_lang$core$Maybe$Nothing;
 			}
@@ -31311,8 +31479,8 @@ var _user$project$View$viewEdgeDetail = F2(
 					A3(_elm_community$maybe_extra$Maybe_Extra$unwrap, _mdgriffith$style_elements$Element$empty, description, fromToNodes)),
 				uiElement: _user$project$Types$EditEdgeMenu,
 				options: _user$project$Graph_Extra$availableEdges(model.graph),
-				viewOption: function (_p13) {
-					var _p14 = _p13;
+				viewOption: function (_p17) {
+					var _p18 = _p17;
 					return A3(
 						_mdgriffith$style_elements$Element$column,
 						_user$project$MyStyles$DropdownItem,
@@ -31337,14 +31505,14 @@ var _user$project$View$viewEdgeDetail = F2(
 								_0: A2(
 									_user$project$View$viewEdgeBadge,
 									model,
-									A3(_elm_community$graph$Graph$Edge, _p14._0, _p14._1, _user$project$Types$emptyTransformation)),
+									A3(_elm_community$graph$Graph$Edge, _p18._0, _p18._1, _user$project$Types$emptyTransformation)),
 								_1: {ctor: '[]'}
 							}
 						});
 				},
-				onClick: function (_p15) {
-					var _p16 = _p15;
-					return A4(_user$project$Types$EdgeFromTo, edge.from, edge.to, _p16._0, _p16._1);
+				onClick: function (_p19) {
+					var _p20 = _p19;
+					return A4(_user$project$Types$EdgeFromTo, edge.from, edge.to, _p20._0, _p20._1);
 				},
 				orientation: _user$project$View$Horizontal
 			});
@@ -31384,12 +31552,12 @@ var _user$project$View$viewEdgeDetail = F2(
 									_0: A2(
 										_mdgriffith$style_elements$Element$whenJust,
 										fromToNodes,
-										function (_p17) {
-											var _p18 = _p17;
+										function (_p21) {
+											var _p22 = _p21;
 											return A4(
 												_user$project$View$viewNodeBadge,
 												model,
-												_p18._1,
+												_p22._1,
 												25,
 												{ctor: '[]'});
 										}),
@@ -31560,11 +31728,11 @@ var _user$project$View$viewGeneralSettingsDetail = function (model) {
 						}
 					});
 			},
-			onClick: function (_p19) {
+			onClick: function (_p23) {
 				return _user$project$Types$ChangeRootId(
 					function (_) {
 						return _.id;
-					}(_p19));
+					}(_p23));
 			},
 			orientation: _user$project$View$Horizontal
 		});
@@ -31635,7 +31803,7 @@ var _user$project$View$viewGeneralSettingsDetail = function (model) {
 			_0: A2(inputWithLabel, 'Background Color:', colorPicker),
 			_1: {
 				ctor: '::',
-				_0: A2(inputWithLabel, 'Root Entity', rootMenu),
+				_0: A2(inputWithLabel, 'Lucy:', rootMenu),
 				_1: {ctor: '[]'}
 			}
 		});
@@ -31651,7 +31819,7 @@ var _user$project$View$viewDetailSidebar = function (model) {
 			_1: {
 				ctor: '::',
 				_0: _mdgriffith$style_elements$Element_Attributes$minWidth(
-					_mdgriffith$style_elements$Element_Attributes$px(280)),
+					_mdgriffith$style_elements$Element_Attributes$px(270)),
 				_1: {ctor: '[]'}
 			}
 		});
@@ -31667,20 +31835,20 @@ var _user$project$View$viewDetailSidebar = function (model) {
 					_1: {ctor: '[]'}
 				});
 		});
-	var _p20 = model.editing;
-	if (_p20.ctor === 'Nothing') {
+	var _p24 = model.editing;
+	if (_p24.ctor === 'Nothing') {
 		return _mdgriffith$style_elements$Element$empty;
 	} else {
-		switch (_p20._0.ctor) {
+		switch (_p24._0.ctor) {
 			case 'Node':
 				return A2(
 					showDetails,
-					_user$project$Graph_Extra$getNode(_p20._0._0),
+					_user$project$Graph_Extra$getNode(_p24._0._0),
 					_user$project$View$viewNodeDetail(model));
 			case 'Edge':
 				return A2(
 					showDetails,
-					A2(_user$project$Graph_Extra$getEdge, _p20._0._0, _p20._0._1),
+					A2(_user$project$Graph_Extra$getEdge, _p24._0._0, _p24._0._1),
 					_user$project$View$viewEdgeDetail(model));
 			default:
 				return sidebar(
@@ -31754,11 +31922,11 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 					45,
 					{ctor: '[]'})));
 	}();
-	var _p21 = A2(
+	var _p25 = A2(
 		_elm_lang$core$Maybe$withDefault,
 		{ctor: '_Tuple2', _0: 0, _1: 0},
 		_elm_community$graph$Graph$nodeIdRange(model.graph));
-	var maxId = _p21._1;
+	var maxId = _p25._1;
 	var newButton = F2(
 		function (size, menuType) {
 			return A3(
@@ -31859,16 +32027,16 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 			viewHead: A2(newButton, 45, _user$project$Types$NewEdgeMenu),
 			uiElement: _user$project$Types$NewEdgeMenu,
 			options: _user$project$Graph_Extra$availableEdges(model.graph),
-			viewOption: function (_p22) {
-				var _p23 = _p22;
+			viewOption: function (_p26) {
+				var _p27 = _p26;
 				return A2(
 					_user$project$View$viewEdgeBadge,
 					model,
-					A3(_elm_community$graph$Graph$Edge, _p23._0, _p23._1, _user$project$Types$emptyTransformation));
+					A3(_elm_community$graph$Graph$Edge, _p27._0, _p27._1, _user$project$Types$emptyTransformation));
 			},
-			onClick: function (_p24) {
-				var _p25 = _p24;
-				return A2(_user$project$Types$NewEdge, _p25._0, _p25._1);
+			onClick: function (_p28) {
+				var _p29 = _p28;
+				return A2(_user$project$Types$NewEdge, _p29._0, _p29._1);
 			},
 			orientation: _user$project$View$Horizontal
 		});
@@ -31993,136 +32161,48 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 		});
 };
 var _user$project$View$root = function (model) {
-	var newproject = A3(
-		_mdgriffith$style_elements$Element$row,
-		_user$project$MyStyles$None,
+	var sidebar = A3(
+		_mdgriffith$style_elements$Element$column,
+		_user$project$MyStyles$Sidebar,
 		{
 			ctor: '::',
-			_0: _mdgriffith$style_elements$Element_Attributes$padding(10),
+			_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 0, 0),
 			_1: {ctor: '[]'}
 		},
 		{
 			ctor: '::',
 			_0: A3(
-				_mdgriffith$style_elements$Element$el,
+				_mdgriffith$style_elements$Element$row,
 				_user$project$MyStyles$None,
+				{ctor: '[]'},
 				{
 					ctor: '::',
-					_0: _mdgriffith$style_elements$Element_Attributes$padding(10),
-					_1: {ctor: '[]'}
-				},
-				A3(
-					_mdgriffith$style_elements$Element$el,
-					_user$project$MyStyles$Button,
-					{
-						ctor: '::',
-						_0: _mdgriffith$style_elements$Element_Attributes$padding(10),
-						_1: {
-							ctor: '::',
-							_0: _mdgriffith$style_elements$Element_Events$onClick(_user$project$Types$NewProject),
-							_1: {ctor: '[]'}
-						}
-					},
-					_mdgriffith$style_elements$Element$text('New'))),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_user$project$View$dropdown,
-					model,
-					{
-						viewHead: A3(
-							_mdgriffith$style_elements$Element$el,
-							_user$project$MyStyles$SelectorItem,
-							{
-								ctor: '::',
-								_0: _mdgriffith$style_elements$Element_Attributes$padding(10),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_mdgriffith$style_elements$Element_Attributes$vary,
-										_user$project$MyStyles$Selected,
-										_elm_lang$core$Native_Utils.eq(model.focusedUi, _user$project$Types$NewProjectMenu)),
-									_1: {ctor: '[]'}
-								}
-							},
-							A3(
-								_mdgriffith$style_elements$Element$el,
-								_user$project$MyStyles$Button,
-								{
-									ctor: '::',
-									_0: _mdgriffith$style_elements$Element_Attributes$padding(10),
-									_1: {
-										ctor: '::',
-										_0: _mdgriffith$style_elements$Element_Attributes$center,
-										_1: {ctor: '[]'}
-									}
-								},
-								_mdgriffith$style_elements$Element$text('Examples'))),
-						uiElement: _user$project$Types$NewProjectMenu,
-						options: model.examples,
-						viewOption: function (_p26) {
-							var _p27 = _p26;
-							return A3(
-								_mdgriffith$style_elements$Element$el,
-								_user$project$MyStyles$None,
-								{
-									ctor: '::',
-									_0: _mdgriffith$style_elements$Element_Attributes$padding(10),
-									_1: {ctor: '[]'}
-								},
-								_mdgriffith$style_elements$Element$text(_p27._0));
-						},
-						onClick: function (_p28) {
-							var _p29 = _p28;
-							return _user$project$Types$Load(_p29._0);
-						},
-						orientation: _user$project$View$Vertical
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
-	var reverseIfPhone = model.device.phone ? _elm_lang$core$List$reverse : _elm_lang$core$Basics$identity;
-	var childViews = reverseIfPhone(
-		{
-			ctor: '::',
-			_0: A3(
-				_mdgriffith$style_elements$Element$column,
-				_user$project$MyStyles$Sidebar,
-				{
-					ctor: '::',
-					_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 0, 0),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: newproject,
+					_0: _user$project$View$viewSelectionSidebar(model),
 					_1: {
 						ctor: '::',
-						_0: _mdgriffith$style_elements$Element$hairline(_user$project$MyStyles$Hairline),
-						_1: {
-							ctor: '::',
-							_0: A3(
-								_mdgriffith$style_elements$Element$row,
-								_user$project$MyStyles$None,
-								{ctor: '[]'},
-								{
-									ctor: '::',
-									_0: _user$project$View$viewSelectionSidebar(model),
-									_1: {
-										ctor: '::',
-										_0: _user$project$View$viewDetailSidebar(model),
-										_1: {ctor: '[]'}
-									}
-								}),
-							_1: {ctor: '[]'}
-						}
+						_0: _user$project$View$viewDetailSidebar(model),
+						_1: {ctor: '[]'}
 					}
 				}),
-			_1: {
-				ctor: '::',
-				_0: _user$project$View$viewSceneContainer(model),
-				_1: {ctor: '[]'}
-			}
+			_1: {ctor: '[]'}
+		});
+	var childViews = _elm_lang$core$List$reverse(
+		{
+			ctor: '::',
+			_0: _user$project$View$viewSceneContainer(model),
+			_1: A3(
+				_user$project$View$unless,
+				model.device.phone,
+				{
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element$empty,
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: sidebar,
+					_1: {ctor: '[]'}
+				})
 		});
 	return A2(
 		_mdgriffith$style_elements$Element$viewport,
@@ -32142,9 +32222,10 @@ var _user$project$View$root = function (model) {
 			},
 			{
 				ctor: '::',
-				_0: A2(
-					_mdgriffith$style_elements$Element$when,
-					_elm_lang$core$Native_Utils.eq(model.device.phone, false),
+				_0: A3(
+					_user$project$View$unless,
+					model.device.phone && (!model.device.portrait),
+					_mdgriffith$style_elements$Element$empty,
 					_user$project$View$viewNavbar(model)),
 				_1: {
 					ctor: '::',
@@ -32490,6 +32571,7 @@ var _user$project$Main$init = function (flags) {
 				editing: _elm_lang$core$Maybe$Just(
 					A2(_user$project$Types$Edge, 0, 1)),
 				focusedUi: _user$project$Types$NoElem,
+				vrMode: false,
 				device: A2(
 					_elm_lang$core$Debug$log,
 					'init size',
