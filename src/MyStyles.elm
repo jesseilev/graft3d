@@ -34,6 +34,7 @@ type Variation
     | Title
     | DeleteButton
     | NewButton
+    | Expanded
 
 
 stylesheet : StyleSheet Style Variation
@@ -67,10 +68,12 @@ stylesheet =
             ]
         , Style.style SelectorItem
             [ Color.background <| Color.rgba 0 0 0 0
-            , Style.hover [ Color.background Color.grey ]
+            , Style.hover [ Color.background <| Color.greyscale 0.2 ]
+            , Border.all 1
+            , Color.border <| Color.rgba 0 0 0 0
             , Style.variation Selected
-                [ Color.background <| Color.greyscale 0.7
-                , Style.hover [ Color.background <| Color.greyscale 0.7 ]
+                [ Color.border Color.darkGrey
+                , Style.hover [ Color.background <| Color.rgba 0 0 0 0 ]
                 ]
             , Style.cursor "pointer"
             ]
@@ -143,9 +146,12 @@ stylesheet =
           --      --    ]
           --    ]
         , Style.style Dropdown
-            [ Color.background <| Color.greyscale 0.75
-            , Shadow.deep
-            , Style.prop "z-index" "100"
+            [ Color.background <| Color.rgba 0 0 0 0
+            , Style.variation Expanded
+                [ Color.background <| Color.greyscale 0.7
+                , Shadow.deep
+                , Style.prop "z-index" "100"
+                ]
             ]
         , Style.style DropdownItem
             [ Color.text <| Color.lightGrey

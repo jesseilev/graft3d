@@ -68,13 +68,14 @@ root model =
                         (El.text "New")
                 , dropdown model
                     { viewHead =
-                        El.el SelectorItem
-                            [ Attr.padding 10
-                            , Attr.vary Selected <| model.focusedUi == NewProjectMenu
-                            ]
-                            <| El.el Button
-                                [ Attr.padding 10, Attr.center ]
-                                (El.text "Examples")
+                        --El.el SelectorItem
+                        --    [ Attr.padding 10
+                        --    , Attr.vary Selected <| model.focusedUi == NewProjectMenu
+                        --    ]
+                        --    <|
+                        El.el Button
+                            [ Attr.padding 10, Attr.center ]
+                            (El.text "Examples")
                     , uiElement = NewProjectMenu
                     , options = model.examples
                     , viewOption = \( title, _ ) -> El.el None [ Attr.padding 10 ] <| El.text title
@@ -181,14 +182,14 @@ viewNodeDetail model node =
         shapePicker =
             dropdown model
                 { viewHead =
-                    El.el SelectorItem
-                        [ Attr.padding 10
-                        , Attr.vary Selected (model.focusedUi == EditNodeShapeMenu)
-                        ]
-                        (El.el Button
-                            [ Attr.padding 10 ]
-                            (El.text <| toString node.label.shape)
-                        )
+                    --El.el SelectorItem
+                    --    [ Attr.padding 10
+                    --    , Attr.vary Selected (model.focusedUi == EditNodeShapeMenu)
+                    --    ]
+                    (El.el Button
+                        [ Attr.padding 10 ]
+                        (El.text <| toString node.label.shape)
+                    )
                 , uiElement = EditNodeShapeMenu
                 , options =
                     [ Box, Sphere, Cylinder ]
@@ -231,7 +232,7 @@ viewNodeDetail model node =
                 , Attr.width <| Attr.px 100
                 , Events.onClick <| Delete (Node node.id)
                 , hideUnless (node.id /= model.rootId)
-                  --, Attr.vary DeleteButton True
+                , Attr.vary DeleteButton True
                 ]
                 (El.text "Delete")
             ]
@@ -267,63 +268,62 @@ viewEdgeDetail model edge =
                 [ El.toHtml MyStyles.stylesheet <| viewNodeBadge model node 20 [] ]
 
         headerWithDropdown =
-            dropdown model
-                { viewHead =
-                    El.el SelectorItem
-                        [ Attr.vary Selected (model.focusedUi == EditEdgeMenu)
-                        , Events.onMouseDown <| ShowOrHideUi (Toggle EditEdgeMenu)
-                        ]
+            El.column None
+                []
+                [ El.text "Relationship:"
+                , dropdown model
+                    { viewHead =
                         (MaybeEx.unwrap El.empty description fromToNodes)
-                , uiElement = EditEdgeMenu
-                , options = GraphEx.availableEdges model.graph
-                , viewOption =
-                    \( from, to ) ->
-                        El.column DropdownItem
-                            [ Attr.center ]
-                            [ El.el None [ Attr.paddingBottom 4 ] (El.text "Change to")
-                            , viewEdgeBadge model (Graph.Edge from to emptyTransformation)
-                            ]
-                , onClick =
-                    \( from, to ) -> EdgeFromTo edge.from edge.to from to
-                , orientation = Horizontal
-                }
+                    , uiElement = EditEdgeMenu
+                    , options = GraphEx.availableEdges model.graph
+                    , viewOption =
+                        \( from, to ) ->
+                            El.column DropdownItem
+                                [ Attr.center ]
+                                [ El.el None [ Attr.paddingBottom 4 ] (El.text "Change to")
+                                , viewEdgeBadge model (Graph.Edge from to emptyTransformation)
+                                ]
+                    , onClick =
+                        \( from, to ) -> EdgeFromTo edge.from edge.to from to
+                    , orientation = Horizontal
+                    }
+                ]
 
         description ( from, to ) =
-            El.row None
-                [ Attr.paddingXY 20 30
-                , Attr.spacing 8
-                , Attr.alignLeft
-                , Attr.alignBottom
-                ]
-                [ El.text "Each"
-                , viewNodeBadge model from 25 []
-                , El.text "spawns a new"
-                , viewNodeBadge model to 25 []
-                ]
+            El.el Button
+                []
+                <| El.row None
+                    [ Attr.spacing 8
+                    , Attr.alignLeft
+                    , Attr.alignBottom
+                    , Attr.paddingXY 10 10
+                    ]
+                    [ El.text "Each"
+                    , viewNodeBadge model from 25 []
+                    , El.text "spawns a new"
+                    , viewNodeBadge model to 25 []
+                    ]
     in
         El.column None
-            []
+            [ Attr.paddingXY 20 6
+            , Attr.spacing 20
+            , Attr.paddingTop 20
+            ]
             [ headerWithDropdown
             , El.hairline Hairline
-            , El.column None
-                [ Attr.paddingXY 20 6
-                , Attr.spacing 20
-                , Attr.paddingTop 20
+            , sliderTriplet "Move" "along axis:" Translation
+            , El.hairline Hairline
+            , sliderTriplet "Resize" "along axis:" Scale
+            , El.hairline Hairline
+            , sliderTriplet "Rotate" "around axis:" Rotation
+            , El.hairline Hairline
+            , El.button Button
+                [ Attr.height <| Attr.px 50
+                , Attr.width <| Attr.px 100
+                , Events.onClick <| Delete (Edge edge.from edge.to)
+                , Attr.vary DeleteButton True
                 ]
-                [ sliderTriplet "Move" "along axis:" Translation
-                , El.hairline Hairline
-                , sliderTriplet "Resize" "along axis:" Scale
-                , El.hairline Hairline
-                , sliderTriplet "Rotate" "around axis:" Rotation
-                , El.hairline Hairline
-                , El.button Button
-                    [ Attr.height <| Attr.px 50
-                    , Attr.width <| Attr.px 100
-                    , Events.onClick <| Delete (Edge edge.from edge.to)
-                    , Attr.vary DeleteButton True
-                    ]
-                    (El.text "Delete")
-                ]
+                (El.text "Delete")
             ]
 
 
@@ -353,11 +353,7 @@ viewGeneralSettingsDetail model =
         rootMenu =
             dropdown model
                 { viewHead =
-                    El.el SelectorItem
-                        [ Attr.padding 10
-                        , Attr.vary Selected <| model.focusedUi == EditRootMenu
-                        ]
-                        (El.whenJust rootNode <| \rn -> viewNodeBadge model rn 40 [])
+                    El.whenJust rootNode <| \rn -> viewNodeBadge model rn 40 []
                 , uiElement = EditRootMenu
                 , options = Graph.nodes model.graph
                 , viewOption =
@@ -374,7 +370,7 @@ viewGeneralSettingsDetail model =
         El.column None
             [ Attr.padding 20, Attr.spacing 20 ]
             [ inputWithLabel "Background Color:" colorPicker
-            , inputWithLabel "Lucy:" rootMenu
+            , inputWithLabel "First Thing:" rootMenu
             ]
 
 
@@ -453,19 +449,19 @@ viewSelectionSidebar model =
                 (List.map (viewoptions model) (getoptions model.graph) ++ stuffAfterBadges)
 
         newButton size menuType =
-            El.el SelectorItem
-                [ Attr.padding 10
-                , Attr.vary Selected (model.focusedUi == menuType)
+            --El.el SelectorItem
+            --    [ Attr.padding 10
+            --    , Attr.vary Selected (model.focusedUi == menuType)
+            --    ]
+            (El.el Button
+                [ Attr.width <| Attr.px size
+                , Attr.height <| Attr.px size
                 ]
-                (El.el Button
-                    [ Attr.width <| Attr.px size
-                    , Attr.height <| Attr.px size
-                    ]
-                    (El.el None
-                        [ Attr.verticalCenter, Attr.center, Attr.vary NewButton True ]
-                        <| El.text "+"
-                    )
+                (El.el None
+                    [ Attr.verticalCenter, Attr.center, Attr.vary NewButton True ]
+                    <| El.text "+"
                 )
+            )
 
         ( _, maxId ) =
             Graph.nodeIdRange model.graph
@@ -579,9 +575,11 @@ type Orientation
 
 dropdown : Model -> DropdownConfig a -> Element
 dropdown model config =
-    El.el None
+    El.el Dropdown
         [ Events.onMouseEnter <| ShowOrHideUi (Show config.uiElement)
         , Events.onMouseLeave <| ShowOrHideUi Hide
+        , Attr.padding 10
+        , Attr.vary Expanded (model.focusedUi == config.uiElement)
         ]
         config.viewHead
         |> El.below

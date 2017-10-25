@@ -203,10 +203,11 @@ update msg model =
                             else
                                 uiElement
             in
-                { model | focusedUi = answer } ! [] |> Debug.log "model after ui toggle"
+                { model | focusedUi = answer } ! []
 
+        --|> Debug.log "model after ui toggle"
         WindowResize size ->
-            { model | device = El.classifyDevice size |> Debug.log "resize" }
+            { model | device = El.classifyDevice size }
                 ! []
 
         _ ->
