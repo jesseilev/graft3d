@@ -100,13 +100,13 @@ type Editable
 
 type UiElement
     = NoElem
-    | ExamplesMenu
     | NewNodeMenu
     | NewEdgeMenu
     | EditEdgeMenu
     | EditNodeShapeMenu
     | EditRootMenu
-    | NewProjectMenu
+    | ExamplesMenu
+    | NewProjectButton
     | WasdHelp
 
 

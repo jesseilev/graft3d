@@ -85,7 +85,7 @@ viewNavbar model =
     let
         padding =
             if model.device.phone then
-                10
+                20
             else
                 20
 
@@ -113,7 +113,7 @@ viewNavbar model =
                 Attr.id ""
             , Attr.paddingXY padding 0
             , Attr.verticalCenter
-            , Attr.spacing 10
+            , Attr.spacing 30
             ]
             [ El.el Header [ Attr.vary Title True ] (El.text "Graft")
             , El.navigation None
@@ -125,41 +125,72 @@ viewNavbar model =
 
 
 newProjectButton model =
-    El.el Button
-        [ Attr.padding 10
-        , Attr.verticalCenter
-        , Events.onClick NewProject
-        ]
-        (El.text "New")
+    let
+        style =
+            Button |> unless model.device.phone NavLink
+
+        button =
+            El.el style
+                [ Attr.paddingXY 10 10
+                , Attr.verticalCenter
+                , Events.onClick (NewProject |> unless model.device.phone NoOp)
+                ]
+                (El.text "New")
+
+        drop =
+            dropdown model
+                { viewHead = button
+                , uiElement = NewProjectButton
+                , options = [ () ]
+                , viewOption =
+                    \_ -> notification
+                , onClick = \_ -> NoOp
+                , orientation = Vertical
+                }
+
+        notification =
+            El.column None
+                [ Attr.alignLeft
+                , Attr.padding 20
+                , Attr.spacing 6
+                ]
+                [ El.el Header [] (El.text "Not Available for Mobile")
+                , El.hairline Hairline
+                , El.text "To create your own,"
+                , El.text "visit Graft on a computer or tablet"
+                ]
+    in
+        button |> unless model.device.phone drop
 
 
 examplesButton model =
-    dropdown model
-        { viewHead =
-            --El.el SelectorItem
-            --    [ Attr.padding 10
-            --    , Attr.vary Selected <| model.focusedUi == NewProjectMenu
-            --    ]
-            --    <|
-            El.el Button
+    let
+        style =
+            Button |> unless model.device.phone NavLink
+
+        viewHeadShell =
+            El.el style
                 [ Attr.padding 10, Attr.center ]
-                (El.text "Examples")
-        , uiElement = NewProjectMenu
-        , options = model.examples
-        , viewOption =
-            \( title, _ ) ->
-                El.el None
-                    [ Attr.padding 10
-                    , Attr.alignLeft
-                      --, if model.device.phone then
-                      --    Attr.alignRight
-                      --  else
-                      --    Attr.alignLeft
-                    ]
-                    <| El.text title
-        , onClick = \( title, _ ) -> Load title
-        , orientation = Vertical
-        }
+    in
+        dropdown model
+            { viewHead =
+                viewHeadShell (El.text "Examples")
+            , uiElement = ExamplesMenu
+            , options = model.examples
+            , viewOption =
+                \( title, _ ) ->
+                    El.el None
+                        [ Attr.padding 10
+                        , Attr.alignLeft
+                          --, if model.device.phone then
+                          --    Attr.alignRight
+                          --  else
+                          --    Attr.alignLeft
+                        ]
+                        <| El.text title
+            , onClick = \( title, _ ) -> Load title
+            , orientation = Vertical
+            }
 
 
 viewDetailSidebar : Model -> Element
@@ -509,7 +540,7 @@ viewSelectionSidebar model =
                 , viewOption =
                     \n ->
                         El.column None
-                            [ Attr.paddingBottom 4 ]
+                            [ Attr.paddingXY 10 0 ]
                             [ El.el None [ Attr.paddingBottom 4 ] (El.text "from")
                             , viewNodeBadge model n 30 []
                             ]
@@ -629,8 +660,9 @@ dropdown model config =
                     (List.map
                         (\item ->
                             El.el DropdownItem
-                                [ Attr.paddingXY 16 8
+                                [ Attr.paddingXY 10 10
                                 , Events.onClick <| config.onClick item
+                                  --, Attr.alignLeft
                                 ]
                                 (config.viewOption item)
                         )
@@ -640,29 +672,30 @@ dropdown model config =
             ]
 
 
-viewExamplesMenu model =
-    let
-        exampleRow ( title, _ ) =
-            El.row DropdownItem
-                [ Attr.padding 10
-                , Attr.alignLeft
-                , Events.onClick (Load title)
-                , Events.onMouseEnter <| ShowOrHideUi (Show ExamplesMenu)
-                , Events.onMouseLeave <| ShowOrHideUi Hide
-                ]
-                [ El.text title ]
-    in
-        El.el Dropdown
-            [ Attr.width <| Attr.px 200
-            , Attr.alignRight
-            , Attr.vary NavMenu True
-            , Attr.inlineStyle <| MyStyles.zIndex 10
-            , hideUnless (model.focusedUi == ExamplesMenu)
-            ]
-            (El.column None
-                [ Attr.width <| Attr.percent 100 ]
-                (List.map exampleRow model.examples)
-            )
+
+--viewExamplesMenu model =
+--    let
+--        exampleRow ( title, _ ) =
+--            El.row DropdownItem
+--                [ Attr.padding 10
+--                , Attr.alignLeft
+--                , Events.onClick (Load title)
+--                , Events.onMouseEnter <| ShowOrHideUi (Show ExamplesMenu)
+--                , Events.onMouseLeave <| ShowOrHideUi Hide
+--                ]
+--                [ El.text title ]
+--    in
+--        El.el Dropdown
+--            [ Attr.width <| Attr.px 200
+--            , Attr.alignRight
+--            , Attr.vary NavMenu True
+--            , Attr.inlineStyle <| MyStyles.zIndex 10
+--            , hideUnless (model.focusedUi == ExamplesMenu)
+--            ]
+--            (El.column None
+--                [ Attr.width <| Attr.percent 100 ]
+--                (List.map exampleRow model.examples)
+--            )
 
 
 hideUnless : Bool -> El.Attribute Variation Msg
