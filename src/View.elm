@@ -93,7 +93,7 @@ viewNavbar model =
             El.el NavLink
                 (attrs)
                 (El.link href
-                    <| El.el NavLink [ Attr.paddingXY 10 padding ] (El.text text)
+                    <| El.el NavLink [ Attr.paddingXY 0 padding ] (El.text text)
                 )
 
         options =
@@ -113,7 +113,7 @@ viewNavbar model =
                 Attr.id ""
             , Attr.paddingXY padding 0
             , Attr.verticalCenter
-            , Attr.spacing 30
+            , Attr.spacing 10
             ]
             [ El.el Header [ Attr.vary Title True ] (El.text "Graft")
             , El.navigation None
@@ -131,7 +131,7 @@ newProjectButton model =
 
         button =
             El.el style
-                [ Attr.paddingXY 10 10
+                [ Attr.paddingXY 0 10
                 , Attr.verticalCenter
                 , Events.onClick (NewProject |> unless model.device.phone NoOp)
                 ]
@@ -151,13 +151,13 @@ newProjectButton model =
         notification =
             El.column None
                 [ Attr.alignLeft
-                , Attr.padding 20
+                , Attr.padding 10
                 , Attr.spacing 6
                 ]
                 [ El.el Header [] (El.text "Not Available for Mobile")
                 , El.hairline Hairline
                 , El.text "To create your own,"
-                , El.text "visit Graft on a computer or tablet"
+                , El.text "visit on a computer or tablet"
                 ]
     in
         button |> unless model.device.phone drop

@@ -30936,7 +30936,7 @@ var _user$project$View$newProjectButton = function (model) {
 			_0: _mdgriffith$style_elements$Element_Attributes$alignLeft,
 			_1: {
 				ctor: '::',
-				_0: _mdgriffith$style_elements$Element_Attributes$padding(20),
+				_0: _mdgriffith$style_elements$Element_Attributes$padding(10),
 				_1: {
 					ctor: '::',
 					_0: _mdgriffith$style_elements$Element_Attributes$spacing(6),
@@ -30959,7 +30959,7 @@ var _user$project$View$newProjectButton = function (model) {
 					_0: _mdgriffith$style_elements$Element$text('To create your own,'),
 					_1: {
 						ctor: '::',
-						_0: _mdgriffith$style_elements$Element$text('visit Graft on a computer or tablet'),
+						_0: _mdgriffith$style_elements$Element$text('visit on a computer or tablet'),
 						_1: {ctor: '[]'}
 					}
 				}
@@ -30971,7 +30971,7 @@ var _user$project$View$newProjectButton = function (model) {
 		style,
 		{
 			ctor: '::',
-			_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 10, 10),
+			_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 0, 10),
 			_1: {
 				ctor: '::',
 				_0: _mdgriffith$style_elements$Element_Attributes$verticalCenter,
@@ -31066,7 +31066,7 @@ var _user$project$View$viewNavbar = function (model) {
 						_user$project$MyStyles$NavLink,
 						{
 							ctor: '::',
-							_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 10, padding),
+							_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 0, padding),
 							_1: {ctor: '[]'}
 						},
 						_mdgriffith$style_elements$Element$text(text))));
@@ -31110,7 +31110,7 @@ var _user$project$View$viewNavbar = function (model) {
 					_0: _mdgriffith$style_elements$Element_Attributes$verticalCenter,
 					_1: {
 						ctor: '::',
-						_0: _mdgriffith$style_elements$Element_Attributes$spacing(30),
+						_0: _mdgriffith$style_elements$Element_Attributes$spacing(10),
 						_1: {ctor: '[]'}
 					}
 				}
