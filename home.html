@@ -5,36 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Graft | Fractal Composer</title>
     <script src="https://aframe.io/releases/0.2.0/aframe.min.js"></script>
-    <script src="src/index.js"></script>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
 </head>
 <body>
 <script>
 	
 	// determine whether the user's browser supports WebGL
 	function detectWebGLSupport () {
-    // Create canvas element. The canvas is not added to the
-    // document itself, so it is never displayed in the
-    // browser window.
-    var canvas = document.createElement("canvas");
+        // Create canvas element. The canvas is not added to the
+        // document itself, so it is never displayed in the
+        // browser window.
+        var canvas = document.createElement("canvas");
 
-    // Get WebGLRenderingContext from canvas element.
-    var gl = canvas.getContext("webgl")
-      || canvas.getContext("experimental-webgl");
+        // Get WebGLRenderingContext from canvas element.
+        var gl = canvas.getContext("webgl")
+        || canvas.getContext("experimental-webgl");
       
-    // Report the result.
-    return (gl && gl instanceof WebGLRenderingContext) ? true : false;
-  }
+        // Report the result.
+        return (gl && gl instanceof WebGLRenderingContext) ? true : false;
+    }
 
 	// Run everything inside window load event handler, to make sure
 	// DOM is fully loaded and styled before trying to manipulate it.
 	window.addEventListener("load", function() {
-	  Elm.Main.embed(document.body, {
-	  	webGLSupport : detectWebGLSupport()
-	  });
-	}, false);
 
-  
+        var elm = Elm.Main.embed(document.body, {
+            webGLSupport : detectWebGLSupport()
+        });
 
+
+        AFRAME.registerComponent('scene', {
+            schema: {type: 'bool'},
+            init: function () {
+                var stringToLog = this.data;
+                console.log(stringToLog);
+
+                var sceneEl = this.el;
+                sceneEl.addEventListener("enter-vr", function() {
+                    elm.ports.toggleVrMode.send(true);
+                    sceneEl.requestFullScreen();
+                });
+
+                sceneEl.addEventListener("exit-vr", function () {
+
+                });
+
+                sceneEl.addEventListener("renderstart", function () {
+                    console.log("renderstart");
+                });
+
+                sceneEl.addEventListener("loaded", function() {
+                    console.log("loaded");
+                });
+            }
+        });
+
+    }, false);
+
+
+    
+    var html = document.getElementsByTagName('HTML'); 
+    html[0].style.position = 'initial'; 
+    html[0].style.overflow = 'scroll'; 
+    var canvas = document.querySelector('.a-canvas'); 
+    canvas.style.top = '1000px';
 </script>
+
+
+<script src="src/index.js"></script>
 </body>
 </html>

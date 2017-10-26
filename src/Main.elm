@@ -1,4 +1,4 @@
-module Main exposing (..)
+port module Main exposing (..)
 
 import Types exposing (..)
 import Examples
@@ -187,6 +187,9 @@ update msg model =
             in
                 { model | graph = newGraph } ! []
 
+        ToggleVrMode vrMode ->
+            { model | vrMode = vrMode } ! []
+
         ShowOrHideUi uiAppearence ->
             let
                 answer =
@@ -244,4 +247,10 @@ toggleAnimation id graph =
 
 
 subscriptions model =
-    Window.resizes WindowResize
+    Sub.batch
+        [ Window.resizes WindowResize
+        , toggleVrMode ToggleVrMode
+        ]
+
+
+port toggleVrMode : (Bool -> msg) -> Sub msg

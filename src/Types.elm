@@ -143,6 +143,7 @@ type
     | NewProject
     | Save
     | Load String
+    | ToggleVrMode Bool
     | ShowOrHideUi UiAppearence
     | WindowResize Window.Size
     | NoOp

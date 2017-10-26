@@ -58,35 +58,12 @@ root model =
         newProject =
             El.row None
                 [ Attr.paddingXY 10 4, Attr.spacing 4 ]
-                [ El.el None
-                    [ Attr.padding 0 ]
-                    <| El.el Button
-                        [ Attr.padding 10
-                        , Attr.verticalCenter
-                        , Events.onClick NewProject
-                        ]
-                        (El.text "New")
-                , dropdown model
-                    { viewHead =
-                        --El.el SelectorItem
-                        --    [ Attr.padding 10
-                        --    , Attr.vary Selected <| model.focusedUi == NewProjectMenu
-                        --    ]
-                        --    <|
-                        El.el Button
-                            [ Attr.padding 10, Attr.center ]
-                            (El.text "Examples")
-                    , uiElement = NewProjectMenu
-                    , options = model.examples
-                    , viewOption = \( title, _ ) -> El.el None [ Attr.padding 10 ] <| El.text title
-                    , onClick = \( title, _ ) -> Load title
-                    , orientation = Vertical
-                    }
-                ]
+                [ newProjectButton model, examplesButton model ]
     in
         El.viewport MyStyles.stylesheet
             <| El.column Main
-                [ Attr.height Attr.fill
+                [ Attr.height
+                    <| (Attr.fill |> unless model.vrMode (Attr.px 500))
                 , Events.onClick
                     <| if model.focusedUi /= NoElem then
                         ShowOrHideUi Hide
@@ -118,19 +95,71 @@ viewNavbar model =
                 (El.link href
                     <| El.el NavLink [ Attr.paddingXY 10 padding ] (El.text text)
                 )
+
+        options =
+            if model.device.phone then
+                [ newProjectButton model
+                , examplesButton model
+                ]
+            else
+                [ navlink "Graft2D" "https://jesseilev.github.io/graft" []
+                , navlink "Github" "https://github.com/jesseilev/graft3d" []
+                ]
     in
         El.row Nav
-            [ Attr.spread, Attr.paddingXY padding 0, Attr.verticalCenter ]
+            [ if (not model.device.phone) then
+                Attr.spread
+              else
+                Attr.id ""
+            , Attr.paddingXY padding 0
+            , Attr.verticalCenter
+            , Attr.spacing 10
+            ]
             [ El.el Header [ Attr.vary Title True ] (El.text "Graft")
             , El.navigation None
                 [ Attr.padding 0, Attr.spacing 0, Attr.verticalCenter ]
                 { name = ""
-                , options =
-                    [ navlink "Graft2D" "https://jesseilev.github.io/graft" []
-                    , navlink "Github" "https://github.com/jesseilev/graft3d" []
-                    ]
+                , options = options
                 }
             ]
+
+
+newProjectButton model =
+    El.el Button
+        [ Attr.padding 10
+        , Attr.verticalCenter
+        , Events.onClick NewProject
+        ]
+        (El.text "New")
+
+
+examplesButton model =
+    dropdown model
+        { viewHead =
+            --El.el SelectorItem
+            --    [ Attr.padding 10
+            --    , Attr.vary Selected <| model.focusedUi == NewProjectMenu
+            --    ]
+            --    <|
+            El.el Button
+                [ Attr.padding 10, Attr.center ]
+                (El.text "Examples")
+        , uiElement = NewProjectMenu
+        , options = model.examples
+        , viewOption =
+            \( title, _ ) ->
+                El.el None
+                    [ Attr.padding 10
+                    , Attr.alignLeft
+                      --, if model.device.phone then
+                      --    Attr.alignRight
+                      --  else
+                      --    Attr.alignLeft
+                    ]
+                    <| El.text title
+        , onClick = \( title, _ ) -> Load title
+        , orientation = Vertical
+        }
 
 
 viewDetailSidebar : Model -> Element
@@ -138,8 +167,11 @@ viewDetailSidebar model =
     let
         sidebar =
             El.sidebar Sidebar
-                [ Attr.height <| Attr.percent 100
-                , Attr.minWidth <| Attr.px 270
+                [ Attr.width <| Attr.px 270
+                  --Attr.minWidth <| Attr.px 270
+                  --, Attr.height <| Attr.percent 100
+                , Attr.scrollbars
+                , Attr.clip
                 ]
 
         showDetails getGraphData viewDetailContent =
@@ -704,24 +736,61 @@ viewEdgeBadge model edge =
 viewSceneContainer : Model -> Element
 viewSceneContainer model =
     let
+        fakeVr =
+            --model.device.phone && not model.device.portrait
+            True
+
+        spacer =
+            El.el None
+                [ Attr.height <| Attr.px 200
+                , Attr.inlineStyle [ "backgroundColor" => "yellow" ]
+                , Attr.id "spacer"
+                ]
+                (El.text "spacer")
+
+        wasd =
+            El.row WasdOverlay
+                [ Attr.alignBottom
+                , Attr.paddingXY 20 10
+                  --, Attr.center
+                , Attr.width <| Attr.percent 100
+                ]
+                [ El.text "USE w↑ a← s↓ d→ TO MOVE"
+                ]
+
+        scene =
+            El.html (viewScene model)
+
+        --El.el None
+        --    [ Attr.height <| Attr.px 300
+        --    , Attr.inlineStyle [ "backgroundColor" => "red" ]
+        --    ]
+        --    (El.text "scene")
         sceneContents =
-            [ El.html (viewScene model)
-            , El.when (model.device.phone == False && model.focusedUi == WasdHelp)
-                <| El.row WasdOverlay
-                    [ Attr.alignBottom
-                    , Attr.paddingXY 20 10
-                      --, Attr.center
-                    , Attr.width <| Attr.percent 100
-                    ]
-                    [ El.text "USE w↑ a← s↓ d→ TO MOVE"
-                    ]
+            [ scene
+            , El.when (model.device.phone == False && model.focusedUi == WasdHelp) wasd
             ]
+                |> unless (model.webGLSupport == False) [ viewNoWebGLNotification ]
     in
-        El.row None
+        El.column None
             [ Attr.width (Attr.fill)
-            , Attr.height (Attr.fill)
+              --, Attr.height <| Attr.px <| toFloat (model.device.height)
+            , Attr.attribute "id" "sceneContainer"
+              --, Attr.paddingTop
+              --    (if fakeVr then
+              --        200
+              --     else
+              --        0
+              --    )
+            , Attr.yScrollbar
+            , Attr.clipY
+              --, Attr.inlineStyle
+              --    [ "overflow-y" => "scroll"
+              --    , "font-size" => "200px"
+              --    , "height" => (toString model.device.height ++ "px")
+              --    ]
             ]
-            (sceneContents |> unless (model.webGLSupport == False) [ viewNoWebGLNotification ])
+            sceneContents
 
 
 unless : Bool -> a -> a -> a
@@ -749,9 +818,15 @@ viewScene model =
             , HtmlAttr.attribute "fog"
                 <| "type: linear; density: 0.05; color: "
                 ++ (colorToHex model.backgroundColor)
+              --|> unless model.vrMode "yellow")
             , HtmlAttr.style [ "cursor" => "all-scroll" ]
             , HtmlEvents.onMouseDown <| ShowOrHideUi (Show WasdHelp)
             , HtmlEvents.onMouseUp <| ShowOrHideUi Hide
+            , HtmlAttr.attribute "scene" "true"
+              --, HtmlAttr.style
+              --    [ "height" => ("300" ++ "px")
+              --    , "border" => "2px solid green"
+              --    ]
             ]
             (MaybeEx.toList rootEntityView
                 ++ [ sky [ color model.backgroundColor ]
