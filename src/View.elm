@@ -201,8 +201,6 @@ viewDetailSidebar model =
                 [ Attr.width <| Attr.px 270
                   --Attr.minWidth <| Attr.px 270
                   --, Attr.height <| Attr.percent 100
-                , Attr.scrollbars
-                , Attr.clip
                 ]
 
         showDetails getGraphData viewDetailContent =

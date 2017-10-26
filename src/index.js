@@ -31785,15 +31785,7 @@ var _user$project$View$viewDetailSidebar = function (model) {
 			ctor: '::',
 			_0: _mdgriffith$style_elements$Element_Attributes$width(
 				_mdgriffith$style_elements$Element_Attributes$px(270)),
-			_1: {
-				ctor: '::',
-				_0: _mdgriffith$style_elements$Element_Attributes$scrollbars,
-				_1: {
-					ctor: '::',
-					_0: _mdgriffith$style_elements$Element_Attributes$clip,
-					_1: {ctor: '[]'}
-				}
-			}
+			_1: {ctor: '[]'}
 		});
 	var showDetails = F2(
 		function (getGraphData, viewDetailContent) {
