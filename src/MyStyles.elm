@@ -101,7 +101,8 @@ stylesheet =
             , Color.text Color.lightGrey
             , Style.cursor "pointer"
             , Style.hover
-                [ Color.background <| Color.greyscale 0.7
+                [ --Color.background <| Color.greyscale 0.7
+                  Color.text <| Color.greyscale 0.5
                 ]
             ]
         , Style.style Hairline

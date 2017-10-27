@@ -59,6 +59,17 @@ root model =
             El.row None
                 [ Attr.paddingXY 10 4, Attr.spacing 4 ]
                 [ newProjectButton model, examplesButton model ]
+
+        navbar =
+            case ( model.device.phone, model.device.portrait ) of
+                ( False, _ ) ->
+                    viewNavbar model
+
+                ( True, True ) ->
+                    viewNavbarMobile model
+
+                ( True, False ) ->
+                    El.empty
     in
         El.viewport MyStyles.stylesheet
             <| El.column Main
@@ -70,8 +81,7 @@ root model =
                        else
                         NoOp
                 ]
-                [ viewNavbar model
-                    |> unless (model.device.phone && not model.device.portrait) El.empty
+                [ navbar
                 , El.row None
                     [ Attr.width Attr.fill
                     , Attr.height Attr.fill
@@ -83,45 +93,54 @@ root model =
 viewNavbar : Model -> Element
 viewNavbar model =
     let
-        padding =
-            if model.device.phone then
-                20
-            else
-                20
-
         navlink text href attrs =
             El.el NavLink
                 (attrs)
                 (El.link href
-                    <| El.el NavLink [ Attr.paddingXY 0 padding ] (El.text text)
+                    <| El.el NavLink [ Attr.paddingXY 10 20 ] (El.text text)
                 )
 
         options =
-            if model.device.phone then
-                [ newProjectButton model
-                , examplesButton model
-                ]
-            else
-                [ navlink "Graft2D" "https://jesseilev.github.io/graft" []
-                , navlink "Github" "https://github.com/jesseilev/graft3d" []
-                ]
+            [ navlink "Graft2D" "https://jesseilev.github.io/graft" []
+            , navlink "Github" "https://github.com/jesseilev/graft3d" []
+            ]
     in
         El.row Nav
-            [ if (not model.device.phone) then
-                Attr.spread
-              else
-                Attr.id ""
-            , Attr.paddingXY padding 0
+            [ Attr.spread
+            , Attr.paddingXY 20 0
             , Attr.verticalCenter
             , Attr.spacing 10
             ]
             [ El.el Header [ Attr.vary Title True ] (El.text "Graft")
             , El.navigation None
-                [ Attr.padding 0, Attr.spacing 0, Attr.verticalCenter ]
-                { name = ""
+                [ Attr.padding 0, Attr.spacing 10, Attr.verticalCenter ]
+                { name = "Links"
                 , options = options
                 }
             ]
+
+
+viewNavbarMobile : Model -> Element
+viewNavbarMobile model =
+    El.row Nav
+        [ if (not model.device.phone) then
+            Attr.spread
+          else
+            Attr.id ""
+        , Attr.paddingXY 10 0
+        , Attr.verticalCenter
+        , Attr.spacing 20
+        ]
+        [ El.el Header [ Attr.vary Title True ] (El.text "Graft")
+        , El.navigation None
+            [ Attr.padding 0, Attr.spacing 0, Attr.verticalCenter ]
+            { name = "New Project Menu"
+            , options =
+                [ newProjectButton model
+                , examplesButton model
+                ]
+            }
+        ]
 
 
 newProjectButton model =
@@ -129,9 +148,12 @@ newProjectButton model =
         style =
             Button |> unless model.device.phone NavLink
 
+        paddingX =
+            10 |> unless model.device.phone 4
+
         button =
             El.el style
-                [ Attr.paddingXY 0 10
+                [ Attr.paddingXY paddingX 10
                 , Attr.verticalCenter
                 , Events.onClick (NewProject |> unless model.device.phone NoOp)
                 ]
@@ -767,59 +789,33 @@ viewEdgeBadge model edge =
 viewSceneContainer : Model -> Element
 viewSceneContainer model =
     let
-        fakeVr =
-            --model.device.phone && not model.device.portrait
-            True
-
-        spacer =
-            El.el None
-                [ Attr.height <| Attr.px 200
-                , Attr.inlineStyle [ "backgroundColor" => "yellow" ]
-                , Attr.id "spacer"
-                ]
-                (El.text "spacer")
-
         wasd =
-            El.row WasdOverlay
-                [ Attr.alignBottom
-                , Attr.paddingXY 20 10
-                  --, Attr.center
-                , Attr.width <| Attr.percent 100
-                ]
-                [ El.text "USE w↑ a← s↓ d→ TO MOVE"
-                ]
+            El.el None
+                [ Attr.alignBottom ]
+                <| El.row WasdOverlay
+                    [ Attr.alignBottom
+                    , Attr.paddingXY 20 10
+                      --, Attr.center
+                    , Attr.width <| Attr.percent 100
+                    ]
+                    [ El.text "USE w↑ a← s↓ d→ TO MOVE"
+                    ]
 
         scene =
             El.html (viewScene model)
 
-        --El.el None
-        --    [ Attr.height <| Attr.px 300
-        --    , Attr.inlineStyle [ "backgroundColor" => "red" ]
-        --    ]
-        --    (El.text "scene")
         sceneContents =
             [ scene
-            , El.when (model.device.phone == False && model.focusedUi == WasdHelp) wasd
+            , El.when (model.focusedUi == WasdHelp) wasd
             ]
-                |> unless (model.webGLSupport == False) [ viewNoWebGLNotification ]
+                |> unless (model.webGLSupport == False)
+                    [ viewNoWebGLNotification ]
     in
         El.column None
-            [ Attr.width (Attr.fill)
-              --, Attr.height <| Attr.px <| toFloat (model.device.height)
+            [ Attr.width Attr.fill
+            , Attr.height Attr.fill
+              --<| Attr.px <| toFloat model.device.height
             , Attr.attribute "id" "sceneContainer"
-              --, Attr.paddingTop
-              --    (if fakeVr then
-              --        200
-              --     else
-              --        0
-              --    )
-            , Attr.yScrollbar
-            , Attr.clipY
-              --, Attr.inlineStyle
-              --    [ "overflow-y" => "scroll"
-              --    , "font-size" => "200px"
-              --    , "height" => (toString model.device.height ++ "px")
-              --    ]
             ]
             sceneContents
 

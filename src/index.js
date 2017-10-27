@@ -29734,8 +29734,8 @@ var _user$project$MyStyles$stylesheet = _mdgriffith$style_elements$Style$styleSh
 														_0: _mdgriffith$style_elements$Style$hover(
 															{
 																ctor: '::',
-																_0: _mdgriffith$style_elements$Style_Color$background(
-																	_elm_lang$core$Color$greyscale(0.7)),
+																_0: _mdgriffith$style_elements$Style_Color$text(
+																	_elm_lang$core$Color$greyscale(0.5)),
 																_1: {ctor: '[]'}
 															}),
 														_1: {ctor: '[]'}
@@ -30414,27 +30414,35 @@ var _user$project$View$viewSceneContainer = function (model) {
 	var scene = _mdgriffith$style_elements$Element$html(
 		_user$project$View$viewScene(model));
 	var wasd = A3(
-		_mdgriffith$style_elements$Element$row,
-		_user$project$MyStyles$WasdOverlay,
+		_mdgriffith$style_elements$Element$el,
+		_user$project$MyStyles$None,
 		{
 			ctor: '::',
 			_0: _mdgriffith$style_elements$Element_Attributes$alignBottom,
-			_1: {
+			_1: {ctor: '[]'}
+		},
+		A3(
+			_mdgriffith$style_elements$Element$row,
+			_user$project$MyStyles$WasdOverlay,
+			{
 				ctor: '::',
-				_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 20, 10),
+				_0: _mdgriffith$style_elements$Element_Attributes$alignBottom,
 				_1: {
 					ctor: '::',
-					_0: _mdgriffith$style_elements$Element_Attributes$width(
-						_mdgriffith$style_elements$Element_Attributes$percent(100)),
-					_1: {ctor: '[]'}
+					_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 20, 10),
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$width(
+							_mdgriffith$style_elements$Element_Attributes$percent(100)),
+						_1: {ctor: '[]'}
+					}
 				}
-			}
-		},
-		{
-			ctor: '::',
-			_0: _mdgriffith$style_elements$Element$text('USE w↑ a← s↓ d→ TO MOVE'),
-			_1: {ctor: '[]'}
-		});
+			},
+			{
+				ctor: '::',
+				_0: _mdgriffith$style_elements$Element$text('USE w↑ a← s↓ d→ TO MOVE'),
+				_1: {ctor: '[]'}
+			}));
 	var sceneContents = A3(
 		_user$project$View$unless,
 		_elm_lang$core$Native_Utils.eq(model.webGLSupport, false),
@@ -30450,35 +30458,11 @@ var _user$project$View$viewSceneContainer = function (model) {
 				ctor: '::',
 				_0: A2(
 					_mdgriffith$style_elements$Element$when,
-					_elm_lang$core$Native_Utils.eq(model.device.phone, false) && _elm_lang$core$Native_Utils.eq(model.focusedUi, _user$project$Types$WasdHelp),
+					_elm_lang$core$Native_Utils.eq(model.focusedUi, _user$project$Types$WasdHelp),
 					wasd),
 				_1: {ctor: '[]'}
 			}
 		});
-	var spacer = A3(
-		_mdgriffith$style_elements$Element$el,
-		_user$project$MyStyles$None,
-		{
-			ctor: '::',
-			_0: _mdgriffith$style_elements$Element_Attributes$height(
-				_mdgriffith$style_elements$Element_Attributes$px(200)),
-			_1: {
-				ctor: '::',
-				_0: _mdgriffith$style_elements$Element_Attributes$inlineStyle(
-					{
-						ctor: '::',
-						_0: A2(_user$project$Types_ops['=>'], 'backgroundColor', 'yellow'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: _mdgriffith$style_elements$Element_Attributes$id('spacer'),
-					_1: {ctor: '[]'}
-				}
-			}
-		},
-		_mdgriffith$style_elements$Element$text('spacer'));
-	var fakeVr = true;
 	return A3(
 		_mdgriffith$style_elements$Element$column,
 		_user$project$MyStyles$None,
@@ -30487,15 +30471,11 @@ var _user$project$View$viewSceneContainer = function (model) {
 			_0: _mdgriffith$style_elements$Element_Attributes$width(_mdgriffith$style_elements$Element_Attributes$fill),
 			_1: {
 				ctor: '::',
-				_0: A2(_mdgriffith$style_elements$Element_Attributes$attribute, 'id', 'sceneContainer'),
+				_0: _mdgriffith$style_elements$Element_Attributes$height(_mdgriffith$style_elements$Element_Attributes$fill),
 				_1: {
 					ctor: '::',
-					_0: _mdgriffith$style_elements$Element_Attributes$yScrollbar,
-					_1: {
-						ctor: '::',
-						_0: _mdgriffith$style_elements$Element_Attributes$clipY,
-						_1: {ctor: '[]'}
-					}
+					_0: A2(_mdgriffith$style_elements$Element_Attributes$attribute, 'id', 'sceneContainer'),
+					_1: {ctor: '[]'}
 				}
 			}
 		},
@@ -30843,6 +30823,97 @@ var _user$project$View$msgFromString = F3(
 				constructMsg,
 				convertString(str)));
 	});
+var _user$project$View$viewNavbar = function (model) {
+	var navlink = F3(
+		function (text, href, attrs) {
+			return A3(
+				_mdgriffith$style_elements$Element$el,
+				_user$project$MyStyles$NavLink,
+				attrs,
+				A2(
+					_mdgriffith$style_elements$Element$link,
+					href,
+					A3(
+						_mdgriffith$style_elements$Element$el,
+						_user$project$MyStyles$NavLink,
+						{
+							ctor: '::',
+							_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 10, 20),
+							_1: {ctor: '[]'}
+						},
+						_mdgriffith$style_elements$Element$text(text))));
+		});
+	var options = {
+		ctor: '::',
+		_0: A3(
+			navlink,
+			'Graft2D',
+			'https://jesseilev.github.io/graft',
+			{ctor: '[]'}),
+		_1: {
+			ctor: '::',
+			_0: A3(
+				navlink,
+				'Github',
+				'https://github.com/jesseilev/graft3d',
+				{ctor: '[]'}),
+			_1: {ctor: '[]'}
+		}
+	};
+	return A3(
+		_mdgriffith$style_elements$Element$row,
+		_user$project$MyStyles$Nav,
+		{
+			ctor: '::',
+			_0: _mdgriffith$style_elements$Element_Attributes$spread,
+			_1: {
+				ctor: '::',
+				_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 20, 0),
+				_1: {
+					ctor: '::',
+					_0: _mdgriffith$style_elements$Element_Attributes$verticalCenter,
+					_1: {
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$spacing(10),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A3(
+				_mdgriffith$style_elements$Element$el,
+				_user$project$MyStyles$Header,
+				{
+					ctor: '::',
+					_0: A2(_mdgriffith$style_elements$Element_Attributes$vary, _user$project$MyStyles$Title, true),
+					_1: {ctor: '[]'}
+				},
+				_mdgriffith$style_elements$Element$text('Graft')),
+			_1: {
+				ctor: '::',
+				_0: A3(
+					_mdgriffith$style_elements$Element$navigation,
+					_user$project$MyStyles$None,
+					{
+						ctor: '::',
+						_0: _mdgriffith$style_elements$Element_Attributes$padding(0),
+						_1: {
+							ctor: '::',
+							_0: _mdgriffith$style_elements$Element_Attributes$spacing(10),
+							_1: {
+								ctor: '::',
+								_0: _mdgriffith$style_elements$Element_Attributes$verticalCenter,
+								_1: {ctor: '[]'}
+							}
+						}
+					},
+					{name: 'Links', options: options}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
 var _user$project$View$DropdownConfig = F6(
 	function (a, b, c, d, e, f) {
 		return {viewHead: a, uiElement: b, options: c, viewOption: d, onClick: e, orientation: f};
@@ -30965,13 +31036,14 @@ var _user$project$View$newProjectButton = function (model) {
 				}
 			}
 		});
+	var paddingX = A3(_user$project$View$unless, model.device.phone, 4, 10);
 	var style = A3(_user$project$View$unless, model.device.phone, _user$project$MyStyles$NavLink, _user$project$MyStyles$Button);
 	var button = A3(
 		_mdgriffith$style_elements$Element$el,
 		style,
 		{
 			ctor: '::',
-			_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 0, 10),
+			_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, paddingX, 10),
 			_1: {
 				ctor: '::',
 				_0: _mdgriffith$style_elements$Element_Attributes$verticalCenter,
@@ -31050,52 +31122,7 @@ var _user$project$View$examplesButton = function (model) {
 			orientation: _user$project$View$Vertical
 		});
 };
-var _user$project$View$viewNavbar = function (model) {
-	var padding = model.device.phone ? 20 : 20;
-	var navlink = F3(
-		function (text, href, attrs) {
-			return A3(
-				_mdgriffith$style_elements$Element$el,
-				_user$project$MyStyles$NavLink,
-				attrs,
-				A2(
-					_mdgriffith$style_elements$Element$link,
-					href,
-					A3(
-						_mdgriffith$style_elements$Element$el,
-						_user$project$MyStyles$NavLink,
-						{
-							ctor: '::',
-							_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 0, padding),
-							_1: {ctor: '[]'}
-						},
-						_mdgriffith$style_elements$Element$text(text))));
-		});
-	var options = model.device.phone ? {
-		ctor: '::',
-		_0: _user$project$View$newProjectButton(model),
-		_1: {
-			ctor: '::',
-			_0: _user$project$View$examplesButton(model),
-			_1: {ctor: '[]'}
-		}
-	} : {
-		ctor: '::',
-		_0: A3(
-			navlink,
-			'Graft2D',
-			'https://jesseilev.github.io/graft',
-			{ctor: '[]'}),
-		_1: {
-			ctor: '::',
-			_0: A3(
-				navlink,
-				'Github',
-				'https://github.com/jesseilev/graft3d',
-				{ctor: '[]'}),
-			_1: {ctor: '[]'}
-		}
-	};
+var _user$project$View$viewNavbarMobile = function (model) {
 	return A3(
 		_mdgriffith$style_elements$Element$row,
 		_user$project$MyStyles$Nav,
@@ -31104,13 +31131,13 @@ var _user$project$View$viewNavbar = function (model) {
 			_0: (!model.device.phone) ? _mdgriffith$style_elements$Element_Attributes$spread : _mdgriffith$style_elements$Element_Attributes$id(''),
 			_1: {
 				ctor: '::',
-				_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, padding, 0),
+				_0: A2(_mdgriffith$style_elements$Element_Attributes$paddingXY, 10, 0),
 				_1: {
 					ctor: '::',
 					_0: _mdgriffith$style_elements$Element_Attributes$verticalCenter,
 					_1: {
 						ctor: '::',
-						_0: _mdgriffith$style_elements$Element_Attributes$spacing(10),
+						_0: _mdgriffith$style_elements$Element_Attributes$spacing(20),
 						_1: {ctor: '[]'}
 					}
 				}
@@ -31145,7 +31172,18 @@ var _user$project$View$viewNavbar = function (model) {
 							}
 						}
 					},
-					{name: '', options: options}),
+					{
+						name: 'New Project Menu',
+						options: {
+							ctor: '::',
+							_0: _user$project$View$newProjectButton(model),
+							_1: {
+								ctor: '::',
+								_0: _user$project$View$examplesButton(model),
+								_1: {ctor: '[]'}
+							}
+						}
+					}),
 				_1: {ctor: '[]'}
 			}
 		});
@@ -32110,6 +32148,18 @@ var _user$project$View$viewSelectionSidebar = function (model) {
 		});
 };
 var _user$project$View$root = function (model) {
+	var navbar = function () {
+		var _p29 = {ctor: '_Tuple2', _0: model.device.phone, _1: model.device.portrait};
+		if (_p29._0 === false) {
+			return _user$project$View$viewNavbar(model);
+		} else {
+			if (_p29._1 === true) {
+				return _user$project$View$viewNavbarMobile(model);
+			} else {
+				return _mdgriffith$style_elements$Element$empty;
+			}
+		}
+	}();
 	var newProject = A3(
 		_mdgriffith$style_elements$Element$row,
 		_user$project$MyStyles$None,
@@ -32205,11 +32255,7 @@ var _user$project$View$root = function (model) {
 			},
 			{
 				ctor: '::',
-				_0: A3(
-					_user$project$View$unless,
-					model.device.phone && (!model.device.portrait),
-					_mdgriffith$style_elements$Element$empty,
-					_user$project$View$viewNavbar(model)),
+				_0: navbar,
 				_1: {
 					ctor: '::',
 					_0: A3(
