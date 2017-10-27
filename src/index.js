@@ -29604,7 +29604,7 @@ var _user$project$MyStyles$stylesheet = _mdgriffith$style_elements$Style$styleSh
 									{
 										ctor: '::',
 										_0: _mdgriffith$style_elements$Style_Color$background(
-											_elm_lang$core$Color$greyscale(0.2)),
+											_elm_lang$core$Color$greyscale(0.15)),
 										_1: {ctor: '[]'}
 									}),
 								_1: {
@@ -30831,7 +30831,7 @@ var _user$project$View$viewNavbar = function (model) {
 				_user$project$MyStyles$NavLink,
 				attrs,
 				A2(
-					_mdgriffith$style_elements$Element$link,
+					_mdgriffith$style_elements$Element$newTab,
 					href,
 					A3(
 						_mdgriffith$style_elements$Element$el,
@@ -30854,10 +30854,18 @@ var _user$project$View$viewNavbar = function (model) {
 			ctor: '::',
 			_0: A3(
 				navlink,
-				'Github',
-				'https://github.com/jesseilev/graft3d',
+				'Instagram',
+				'https://instagram.com/graft.ink',
 				{ctor: '[]'}),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: A3(
+					navlink,
+					'Github',
+					'https://github.com/jesseilev/graft3d',
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			}
 		}
 	};
 	return A3(

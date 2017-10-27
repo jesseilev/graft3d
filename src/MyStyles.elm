@@ -68,7 +68,7 @@ stylesheet =
             ]
         , Style.style SelectorItem
             [ Color.background <| Color.rgba 0 0 0 0
-            , Style.hover [ Color.background <| Color.greyscale 0.2 ]
+            , Style.hover [ Color.background <| Color.greyscale 0.15 ]
             , Border.all 1
             , Color.border <| Color.rgba 0 0 0 0
             , Style.variation Selected

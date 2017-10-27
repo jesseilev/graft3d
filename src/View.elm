@@ -96,12 +96,13 @@ viewNavbar model =
         navlink text href attrs =
             El.el NavLink
                 (attrs)
-                (El.link href
+                (El.newTab href
                     <| El.el NavLink [ Attr.paddingXY 10 20 ] (El.text text)
                 )
 
         options =
             [ navlink "Graft2D" "https://jesseilev.github.io/graft" []
+            , navlink "Instagram" "https://instagram.com/graft.ink" []
             , navlink "Github" "https://github.com/jesseilev/graft3d" []
             ]
     in
