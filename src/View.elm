@@ -267,7 +267,7 @@ viewEdgeDetail model edge =
                 ]
                 [ El.text "Each"
                 , viewNodeBadge model from 25 []
-                , El.text "spawns a new"
+                , El.text "makes a new"
                 , viewNodeBadge model to 25 []
                 ]
     in

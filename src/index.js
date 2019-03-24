@@ -29151,7 +29151,7 @@ var _user$project$Examples$graph1 = A2(
 	});
 var _user$project$Examples$json = {
 	ctor: '::',
-	_0: A2(_user$project$Types_ops['=>'], 'Starter', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#ff5b00\",\"opacity\":0.69,\"shape\":\"Sphere\"}},{\"id\":1,\"label\":{\"color\":\"#6b0e2b\",\"opacity\":0.55,\"shape\":\"Sphere\"}}],\"edges\":[{\"from\":1,\"to\":1,\"label\":{\"translation\":{\"x\":-1.8,\"y\":0.5,\"z\":-2.6},\"scale\":{\"x\":0.65,\"y\":0.86,\"z\":0.78},\"rotation\":{\"x\":14,\"y\":-50,\"z\":-55}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":-0.7,\"y\":-1.5,\"z\":1.7},\"scale\":{\"x\":0.52,\"y\":0.56,\"z\":0.7},\"rotation\":{\"x\":-1,\"y\":31,\"z\":-20}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":0.4,\"y\":-1,\"z\":-0.1},\"scale\":{\"x\":1.18,\"y\":1.03,\"z\":0.84},\"rotation\":{\"x\":2,\"y\":-13,\"z\":10}}}]}'),
+	_0: A2(_user$project$Types_ops['=>'], 'Starter', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#51adcd\",\"opacity\":0.91,\"shape\":\"Sphere\"}},{\"id\":1,\"label\":{\"color\":\"#5e2258\",\"opacity\":0.75,\"shape\":\"Sphere\"}}],\"edges\":[{\"from\":1,\"to\":1,\"label\":{\"translation\":{\"x\":-1.8,\"y\":0.5,\"z\":-2.6},\"scale\":{\"x\":0.92,\"y\":0.95,\"z\":0.53},\"rotation\":{\"x\":6,\"y\":-60,\"z\":-6}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":-0.7,\"y\":-1.4,\"z\":0.6},\"scale\":{\"x\":0.66,\"y\":0.59,\"z\":0.7},\"rotation\":{\"x\":-1,\"y\":43,\"z\":-20}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":0.4,\"y\":-1,\"z\":-0.1},\"scale\":{\"x\":1.18,\"y\":1.03,\"z\":0.84},\"rotation\":{\"x\":2,\"y\":-13,\"z\":10}}}]}'),
 	_1: {
 		ctor: '::',
 		_0: A2(_user$project$Types_ops['=>'], 'Simple', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#ffbc00\",\"opacity\":0.69,\"shape\":\"Sphere\"}},{\"id\":1,\"label\":{\"color\":\"#f52064\",\"opacity\":0.55,\"shape\":\"Sphere\"}}],\"edges\":[{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":-1,\"y\":-1.4,\"z\":1.2},\"scale\":{\"x\":0.46,\"y\":0.61,\"z\":0.44},\"rotation\":{\"x\":0,\"y\":30,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":0.4,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":1.21,\"y\":0.94,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
@@ -31349,7 +31349,7 @@ var _user$project$View$viewEdgeDetail = F2(
 							{ctor: '[]'}),
 						_1: {
 							ctor: '::',
-							_0: _mdgriffith$style_elements$Element$text('spawns a new'),
+							_0: _mdgriffith$style_elements$Element$text('makes a new'),
 							_1: {
 								ctor: '::',
 								_0: A4(
