@@ -28,18 +28,18 @@ type alias Flags =
 init : Flags -> ( Model, Cmd Msg )
 init flags =
     ( { time = 0
-      , rootId = 0
+      , rootId = 1
       , backgroundColor = Color.rgb 100 120 160
       , graph = Examples.graph1
       , examples = Examples.loadJson
       , editing = Just (Edge 0 1)
       , focusedUi = NoElem
-      , device = El.classifyDevice (Window.Size 0 0) |> Debug.log "init size"
+      , device = El.classifyDevice (Window.Size 0 0)
       , webGLSupport = flags.webGLSupport
       }
     , Task.perform WindowResize Window.size
     )
-        :> update (Load "Simple")
+        :> update (Load "Starter")
 
 
 main =
@@ -94,7 +94,7 @@ update msg model =
                 node =
                     { id = nextId, label = entity }
 
-                newModel =
+                newModel = 
                     { model | graph = GraphEx.insertNode node model.graph }
             in
                 update (NewEdge from nextId) newModel
@@ -105,6 +105,7 @@ update msg model =
                     { data =
                         { emptyTransformation
                             | translation = Vector3d ( -0.5, 0, 0 )
+                            , scale = Vector3d ( 0.75, 0.75, 0.75 )
                         }
                     , isAnimating = False
                     , animate = \_ -> identity

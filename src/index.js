@@ -29130,29 +29130,41 @@ var _user$project$Examples$graph1 = A2(
 						rotation: _opensolid$geometry$OpenSolid_Geometry_Types$Vector3d(
 							{ctor: '_Tuple3', _0: 0, _1: 30, _2: 0})
 					})),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: A3(
+					_elm_community$graph$Graph$Edge,
+					0,
+					0,
+					_user$project$Types$noAnimation(
+						{
+							translation: _opensolid$geometry$OpenSolid_Geometry_Types$Vector3d(
+								{ctor: '_Tuple3', _0: 0.25, _1: 1, _2: 0}),
+							scale: _opensolid$geometry$OpenSolid_Geometry_Types$Vector3d(
+								{ctor: '_Tuple3', _0: 0.4, _1: 0.4, _2: 0.4}),
+							rotation: _opensolid$geometry$OpenSolid_Geometry_Types$Vector3d(
+								{ctor: '_Tuple3', _0: 90, _1: 0, _2: 0})
+						})),
+				_1: {ctor: '[]'}
+			}
 		}
 	});
 var _user$project$Examples$json = {
 	ctor: '::',
-	_0: A2(_user$project$Types_ops['=>'], 'Simple', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#ffbc00\",\"opacity\":0.69,\"shape\":\"Sphere\"}},{\"id\":1,\"label\":{\"color\":\"#f52064\",\"opacity\":0.55,\"shape\":\"Sphere\"}}],\"edges\":[{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":-1,\"y\":-1.4,\"z\":1.2},\"scale\":{\"x\":0.46,\"y\":0.61,\"z\":0.44},\"rotation\":{\"x\":0,\"y\":30,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":0.4,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":1.21,\"y\":0.94,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
+	_0: A2(_user$project$Types_ops['=>'], 'Starter', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#ff5b00\",\"opacity\":0.69,\"shape\":\"Sphere\"}},{\"id\":1,\"label\":{\"color\":\"#6b0e2b\",\"opacity\":0.55,\"shape\":\"Sphere\"}}],\"edges\":[{\"from\":1,\"to\":1,\"label\":{\"translation\":{\"x\":-1.8,\"y\":0.5,\"z\":-2.6},\"scale\":{\"x\":0.65,\"y\":0.86,\"z\":0.78},\"rotation\":{\"x\":14,\"y\":-50,\"z\":-55}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":-0.7,\"y\":-1.5,\"z\":1.7},\"scale\":{\"x\":0.52,\"y\":0.56,\"z\":0.7},\"rotation\":{\"x\":-1,\"y\":31,\"z\":-20}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":0.4,\"y\":-1,\"z\":-0.1},\"scale\":{\"x\":1.18,\"y\":1.03,\"z\":0.84},\"rotation\":{\"x\":2,\"y\":-13,\"z\":10}}}]}'),
 	_1: {
 		ctor: '::',
-		_0: A2(_user$project$Types_ops['=>'], 'Wavy Thing', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#008040\",\"opacity\":0.24,\"shape\":\"Sphere\"}},{\"id\":1,\"label\":{\"color\":\"#e6e6e6\",\"opacity\":0.22,\"shape\":\"Sphere\"}},{\"id\":2,\"label\":{\"color\":\"#008080\",\"opacity\":0.6,\"shape\":\"Sphere\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":1,\"z\":0},\"scale\":{\"x\":1,\"y\":1.34,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":0.6,\"y\":1,\"z\":0.48},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":2.4,\"y\":-1,\"z\":-1.6},\"scale\":{\"x\":0.5,\"y\":1.09,\"z\":0.31},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-0.1,\"y\":-0.1,\"z\":0.4},\"scale\":{\"x\":1.14,\"y\":0.67,\"z\":1.13},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
+		_0: A2(_user$project$Types_ops['=>'], 'Simple', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#ffbc00\",\"opacity\":0.69,\"shape\":\"Sphere\"}},{\"id\":1,\"label\":{\"color\":\"#f52064\",\"opacity\":0.55,\"shape\":\"Sphere\"}}],\"edges\":[{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":-1,\"y\":-1.4,\"z\":1.2},\"scale\":{\"x\":0.46,\"y\":0.61,\"z\":0.44},\"rotation\":{\"x\":0,\"y\":30,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":0.4,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":1.21,\"y\":0.94,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
 		_1: {
 			ctor: '::',
-			_0: A2(_user$project$Types_ops['=>'], 'Sea Shell', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#00964e\",\"opacity\":0.53,\"shape\":\"Sphere\"}},{\"id\":1,\"label\":{\"color\":\"#ff8000\",\"opacity\":0.17,\"shape\":\"Sphere\"}},{\"id\":2,\"label\":{\"color\":\"#00ff80\",\"opacity\":0.17,\"shape\":\"Sphere\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.1,\"z\":0},\"scale\":{\"x\":0.68,\"y\":1.32,\"z\":0.78},\"rotation\":{\"x\":91,\"y\":301,\"z\":286}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":0.2,\"z\":0.2},\"scale\":{\"x\":0.6,\"y\":1,\"z\":0.48},\"rotation\":{\"x\":360,\"y\":360,\"z\":360}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":0.6,\"y\":0.2,\"z\":0.1},\"scale\":{\"x\":1.33,\"y\":1.48,\"z\":0.45},\"rotation\":{\"x\":255,\"y\":184,\"z\":166}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":0,\"y\":-0.1,\"z\":0.4},\"scale\":{\"x\":1.45,\"y\":0.69,\"z\":0.9},\"rotation\":{\"x\":0,\"y\":0,\"z\":346}}}]}'),
+			_0: A2(_user$project$Types_ops['=>'], 'Flower', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#1d1f4d\",\"opacity\":0.24,\"shape\":\"Sphere\"}},{\"id\":1,\"label\":{\"color\":\"#e6187b\",\"opacity\":0.22,\"shape\":\"Sphere\"}},{\"id\":2,\"label\":{\"color\":\"#d3b7d0\",\"opacity\":0.6,\"shape\":\"Sphere\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":1,\"z\":0},\"scale\":{\"x\":1,\"y\":1.18,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":1.2,\"z\":-0.9},\"scale\":{\"x\":0.39,\"y\":0.68,\"z\":1.02},\"rotation\":{\"x\":0,\"y\":11,\"z\":180}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":3.1,\"y\":-1,\"z\":-0.2},\"scale\":{\"x\":0.81,\"y\":1,\"z\":0.91},\"rotation\":{\"x\":1,\"y\":4,\"z\":51}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":0,\"y\":2.5,\"z\":-0.4},\"scale\":{\"x\":2,\"y\":0.88,\"z\":1.04},\"rotation\":{\"x\":15,\"y\":-6,\"z\":-4}}}]}'),
 			_1: {
 				ctor: '::',
-				_0: A2(_user$project$Types_ops['=>'], 'Gathering', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#1d1f4d\",\"opacity\":0.24,\"shape\":\"Sphere\"}},{\"id\":1,\"label\":{\"color\":\"#e6e6e6\",\"opacity\":0.22,\"shape\":\"Sphere\"}},{\"id\":2,\"label\":{\"color\":\"#d35ac4\",\"opacity\":0.6,\"shape\":\"Sphere\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":1,\"z\":0},\"scale\":{\"x\":1,\"y\":1.18,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":1.2,\"z\":-0.9},\"scale\":{\"x\":0.47,\"y\":0.66,\"z\":0.8},\"rotation\":{\"x\":0,\"y\":0,\"z\":179}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":2.4,\"y\":-1,\"z\":-1.6},\"scale\":{\"x\":0.47,\"y\":1.09,\"z\":0.8},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":0,\"y\":0.9,\"z\":0.7},\"scale\":{\"x\":1.24,\"y\":0.67,\"z\":1.13},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
+				_0: A2(_user$project$Types_ops['=>'], 'Phosphorescent   ', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#215584\",\"opacity\":0.53,\"shape\":\"Sphere\"}},{\"id\":1,\"label\":{\"color\":\"#ff99a0\",\"opacity\":0.17,\"shape\":\"Sphere\"}},{\"id\":2,\"label\":{\"color\":\"#00ff80\",\"opacity\":0.17,\"shape\":\"Sphere\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.1,\"z\":0},\"scale\":{\"x\":0.68,\"y\":1.32,\"z\":0.78},\"rotation\":{\"x\":91,\"y\":301,\"z\":286}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":0.2,\"z\":0.2},\"scale\":{\"x\":0.6,\"y\":1,\"z\":0.48},\"rotation\":{\"x\":360,\"y\":360,\"z\":360}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":0.6,\"y\":0.2,\"z\":0.1},\"scale\":{\"x\":1.33,\"y\":1.48,\"z\":0.45},\"rotation\":{\"x\":255,\"y\":184,\"z\":166}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":0,\"y\":0.4,\"z\":0.4},\"scale\":{\"x\":1.45,\"y\":0.69,\"z\":0.9},\"rotation\":{\"x\":0,\"y\":0,\"z\":346}}}]}'),
 				_1: {
 					ctor: '::',
-					_0: A2(_user$project$Types_ops['=>'], 'Maybe Duck Tower', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#434f80\",\"opacity\":0.8,\"shape\":\"Sphere\"}},{\"id\":1,\"label\":{\"color\":\"#7d740f\",\"opacity\":0.45,\"shape\":\"Sphere\"}},{\"id\":2,\"label\":{\"color\":\"#008080\",\"opacity\":0.6,\"shape\":\"Sphere\"}}],\"edges\":[{\"from\":2,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":0.6,\"z\":-0.1},\"scale\":{\"x\":1,\"y\":1.34,\"z\":1.08},\"rotation\":{\"x\":0,\"y\":349,\"z\":0}}},{\"from\":1,\"to\":1,\"label\":{\"translation\":{\"x\":0.4,\"y\":-0.6,\"z\":0.7},\"scale\":{\"x\":0.85,\"y\":0.6,\"z\":1.15},\"rotation\":{\"x\":0,\"y\":263,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":0.6,\"y\":1.09,\"z\":0.48},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":2.4,\"y\":-1.4,\"z\":-1.6},\"scale\":{\"x\":1.12,\"y\":0.5,\"z\":1.34},\"rotation\":{\"x\":0,\"y\":311,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-0.4,\"y\":2.8,\"z\":0.4},\"scale\":{\"x\":0.96,\"y\":1.5,\"z\":0.66},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}}]}'),
-					_1: {
-						ctor: '::',
-						_0: A2(_user$project$Types_ops['=>'], 'Smarties', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#00a8c1\",\"opacity\":0.22,\"shape\":\"Sphere\"}},{\"id\":1,\"label\":{\"color\":\"#cfb164\",\"opacity\":0.2,\"shape\":\"Sphere\"}},{\"id\":2,\"label\":{\"color\":\"#aa3bd9\",\"opacity\":0.16,\"shape\":\"Sphere\"}}],\"edges\":[{\"from\":2,\"to\":2,\"label\":{\"translation\":{\"x\":-0.5,\"y\":-1.1,\"z\":0},\"scale\":{\"x\":0.61,\"y\":0.65,\"z\":0.64},\"rotation\":{\"x\":360,\"y\":69,\"z\":59}}},{\"from\":2,\"to\":1,\"label\":{\"translation\":{\"x\":0,\"y\":0,\"z\":0},\"scale\":{\"x\":0.43,\"y\":0.43,\"z\":0.33},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":0.86,\"y\":0.86,\"z\":0.82},\"rotation\":{\"x\":0,\"y\":61,\"z\":0}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":-1,\"y\":-0.2,\"z\":1.3},\"scale\":{\"x\":0.94,\"y\":1,\"z\":1},\"rotation\":{\"x\":283,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-0.2,\"y\":0.6,\"z\":0.1},\"scale\":{\"x\":0.61,\"y\":0.68,\"z\":0.7},\"rotation\":{\"x\":0,\"y\":61,\"z\":0}}}]}'),
-						_1: {ctor: '[]'}
-					}
+					_0: A2(_user$project$Types_ops['=>'], 'Smarties', '{\"nodes\":[{\"id\":0,\"label\":{\"color\":\"#00a8c1\",\"opacity\":0.22,\"shape\":\"Sphere\"}},{\"id\":1,\"label\":{\"color\":\"#cfb164\",\"opacity\":0.2,\"shape\":\"Sphere\"}},{\"id\":2,\"label\":{\"color\":\"#aa3bd9\",\"opacity\":0.16,\"shape\":\"Sphere\"}}],\"edges\":[{\"from\":2,\"to\":2,\"label\":{\"translation\":{\"x\":-0.5,\"y\":-1.1,\"z\":0},\"scale\":{\"x\":0.61,\"y\":0.65,\"z\":0.64},\"rotation\":{\"x\":360,\"y\":69,\"z\":59}}},{\"from\":2,\"to\":1,\"label\":{\"translation\":{\"x\":0,\"y\":0,\"z\":0},\"scale\":{\"x\":0.43,\"y\":0.43,\"z\":0.33},\"rotation\":{\"x\":0,\"y\":0,\"z\":0}}},{\"from\":1,\"to\":0,\"label\":{\"translation\":{\"x\":0,\"y\":-0.2,\"z\":0.2},\"scale\":{\"x\":0.86,\"y\":0.86,\"z\":0.82},\"rotation\":{\"x\":0,\"y\":61,\"z\":0}}},{\"from\":0,\"to\":2,\"label\":{\"translation\":{\"x\":-1,\"y\":-0.2,\"z\":1.3},\"scale\":{\"x\":0.94,\"y\":1,\"z\":1},\"rotation\":{\"x\":283,\"y\":0,\"z\":0}}},{\"from\":0,\"to\":1,\"label\":{\"translation\":{\"x\":-0.2,\"y\":0.6,\"z\":0.1},\"scale\":{\"x\":0.61,\"y\":0.68,\"z\":0.7},\"rotation\":{\"x\":0,\"y\":61,\"z\":0}}}]}'),
+					_1: {ctor: '[]'}
 				}
 			}
 		}
@@ -31770,40 +31782,36 @@ var _user$project$View$viewNodeDetail = F2(
 					_0: A2(inputWithLabel, 'Opacity:', opacitySlider),
 					_1: {
 						ctor: '::',
-						_0: A2(inputWithLabel, 'Shape:', shapePicker),
+						_0: _mdgriffith$style_elements$Element$hairline(_user$project$MyStyles$Hairline),
 						_1: {
 							ctor: '::',
-							_0: _mdgriffith$style_elements$Element$hairline(_user$project$MyStyles$Hairline),
-							_1: {
-								ctor: '::',
-								_0: A3(
-									_mdgriffith$style_elements$Element$button,
-									_user$project$MyStyles$DeleteButton,
-									{
+							_0: A3(
+								_mdgriffith$style_elements$Element$button,
+								_user$project$MyStyles$DeleteButton,
+								{
+									ctor: '::',
+									_0: _mdgriffith$style_elements$Element_Attributes$height(
+										_mdgriffith$style_elements$Element_Attributes$px(50)),
+									_1: {
 										ctor: '::',
-										_0: _mdgriffith$style_elements$Element_Attributes$height(
-											_mdgriffith$style_elements$Element_Attributes$px(50)),
+										_0: _mdgriffith$style_elements$Element_Attributes$width(
+											_mdgriffith$style_elements$Element_Attributes$px(100)),
 										_1: {
 											ctor: '::',
-											_0: _mdgriffith$style_elements$Element_Attributes$width(
-												_mdgriffith$style_elements$Element_Attributes$px(100)),
+											_0: _mdgriffith$style_elements$Element_Events$onClick(
+												_user$project$Types$Delete(
+													_user$project$Types$Node(node.id))),
 											_1: {
 												ctor: '::',
-												_0: _mdgriffith$style_elements$Element_Events$onClick(
-													_user$project$Types$Delete(
-														_user$project$Types$Node(node.id))),
-												_1: {
-													ctor: '::',
-													_0: _user$project$View$hideUnless(
-														!_elm_lang$core$Native_Utils.eq(node.id, model.rootId)),
-													_1: {ctor: '[]'}
-												}
+												_0: _user$project$View$hideUnless(
+													!_elm_lang$core$Native_Utils.eq(node.id, model.rootId)),
+												_1: {ctor: '[]'}
 											}
 										}
-									},
-									_mdgriffith$style_elements$Element$text('Delete')),
-								_1: {ctor: '[]'}
-							}
+									}
+								},
+								_mdgriffith$style_elements$Element$text('Delete')),
+							_1: {ctor: '[]'}
 						}
 					}
 				}
@@ -32138,9 +32146,9 @@ var _user$project$Main$update = F2(
 							},
 							_elm_community$graph$Graph$nodeIdRange(model.graph)));
 					var entity = {
-						color: _elm_lang$core$Color$greyscale(0.75),
+						color: _elm_lang$core$Color$greyscale(0.65),
 						opacity: 0.75,
-						shape: _user$project$Types$Box
+						shape: _user$project$Types$Sphere
 					};
 					var node = {id: nextId, label: entity};
 					var newModel = _elm_lang$core$Native_Utils.update(
@@ -32161,7 +32169,9 @@ var _user$project$Main$update = F2(
 							_user$project$Types$emptyTransformation,
 							{
 								translation: _opensolid$geometry$OpenSolid_Geometry_Types$Vector3d(
-									{ctor: '_Tuple3', _0: -0.5, _1: 0, _2: 0})
+									{ctor: '_Tuple3', _0: -0.5, _1: 0, _2: 0}),
+								scale: _opensolid$geometry$OpenSolid_Geometry_Types$Vector3d(
+									{ctor: '_Tuple3', _0: 0.75, _1: 0.75, _2: 0.75})
 							}),
 						isAnimating: false,
 						animate: function (_p5) {
@@ -32337,24 +32347,21 @@ var _user$project$Main$init = function (flags) {
 			ctor: '_Tuple2',
 			_0: {
 				time: 0,
-				rootId: 0,
+				rootId: 1,
 				backgroundColor: A3(_elm_lang$core$Color$rgb, 100, 120, 160),
 				graph: _user$project$Examples$graph1,
 				examples: _user$project$Examples$loadJson,
 				editing: _elm_lang$core$Maybe$Just(
 					A2(_user$project$Types$Edge, 0, 1)),
 				focusedUi: _user$project$Types$NoElem,
-				device: A2(
-					_elm_lang$core$Debug$log,
-					'init size',
-					_mdgriffith$style_elements$Element$classifyDevice(
-						A2(_elm_lang$window$Window$Size, 0, 0))),
+				device: _mdgriffith$style_elements$Element$classifyDevice(
+					A2(_elm_lang$window$Window$Size, 0, 0)),
 				webGLSupport: flags.webGLSupport
 			},
 			_1: A2(_elm_lang$core$Task$perform, _user$project$Types$WindowResize, _elm_lang$window$Window$size)
 		},
 		_user$project$Main$update(
-			_user$project$Types$Load('Simple')));
+			_user$project$Types$Load('Starter')));
 };
 var _user$project$Main$main = _elm_lang$html$Html$programWithFlags(
 	{init: _user$project$Main$init, view: _user$project$View$root, update: _user$project$Main$update, subscriptions: _user$project$Main$subscriptions})(

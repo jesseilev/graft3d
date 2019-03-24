@@ -196,7 +196,7 @@ viewNodeDetail model node =
             [ Attr.spacing 20, Attr.padding 20 ]
             [ inputWithLabel "Color:" colorPicker
             , inputWithLabel "Opacity:" opacitySlider
-            , inputWithLabel "Shape:" shapePicker
+            -- , inputWithLabel "Shape:" shapePicker
             , El.hairline Hairline
             , El.button DeleteButton
                 [ Attr.height <| Attr.px 50
